@@ -5,10 +5,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.io.IOException;
+
 public class Main extends ApplicationAdapter {
 	public static int[] GAME_SIZE = {400, 225};
 	public static int MULTIPLIER = 4;
 	public static int[] SCREEN_SIZE = {GAME_SIZE[0] * MULTIPLIER, GAME_SIZE[1] * MULTIPLIER};
+	public static int TILE_SIZE = 20;
+	public static Map MAP;
+
 	SpriteBatch batch;
 	Player player;
 	OrthographicCamera camera;
@@ -18,7 +23,8 @@ public class Main extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		batch = new SpriteBatch();
 		player = new Player((float) GAME_SIZE[0] / 2 * MULTIPLIER, (float) GAME_SIZE[1] / 2 * MULTIPLIER);
-	}
+		MAP = new Map();
+    }
 
 	@Override
 	public void render () {
@@ -31,7 +37,9 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public void drawSprites(SpriteBatch batch) {
+		Map.draw(batch);
 		player.draw(batch);
+
 	}
 
 	public void updateSprites() {
