@@ -37,7 +37,7 @@ public class Map {
             for (int j = 0; j < tiles.length; j++) {
                 tiles[j] = Integer.parseInt(tilesString[j]);
                 mapData.get(i).add(tiles[j]);
-                mapTiles.add(new Tile((j * Main.TILE_SIZE - (tiles.length * Main.TILE_SIZE / 2) + Main.GAME_SIZE[0] / 2) * Main.MULTIPLIER, ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, tiles[j]));
+                mapTiles.add(new Tile((j * Main.TILE_SIZE - (tiles.length * Main.TILE_SIZE / 2) + Main.GAME_SIZE[0] / 2) * Main.MULTIPLIER, ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, j, i, tiles[j]));
             }
             line = bR.readLine();
             i++;
@@ -60,7 +60,9 @@ public class Map {
                 for (int j = 0; j < map[i].length; j++) {
                     lineString += map[i][j] + ",";
                 }
+
                 fW.write(lineString + "\n");
+                fW.flush();
             }
         } catch (IOException e) {
             System.out.println(e);
