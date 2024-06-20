@@ -47,6 +47,14 @@ public class Map {
         return map;
     }
 
+    public static void moveMap(float dx, float dy) {
+        for (Tile tile: mapTiles) {
+            tile.x -= dx;
+            tile.y -= dy;
+        }
+
+    }
+
     public static void draw(SpriteBatch batch) {
         for (Tile tile : mapTiles) {
             tile.draw(batch);

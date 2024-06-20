@@ -47,8 +47,10 @@ public class Player {
     }
 
     public void move() {
-        x += movement.x;
-        y += movement.y;
+        //x += movement.x;
+        //y += movement.y;
+
+        Map.moveMap(movement.x, movement.y);
     }
 
     public void update() {
@@ -57,6 +59,6 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, x - width, y - height, width, height);
+        batch.draw(texture, x - width / 2, y - height / 2, width, height);
     }
 }
