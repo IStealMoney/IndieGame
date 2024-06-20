@@ -21,9 +21,13 @@ public class Map {
     }
 
     public static int[][] loadEditableMap(String mapName) throws IOException {
-        BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("map/map-1.csv").toString()));
+        BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("map/map-1.csv").toString()));
         ArrayList<ArrayList<Integer>> mapData = new ArrayList<>();
-        
+
+        // Get map height
+        long mapLines = br.lines().count();
+        BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("map/map-1.csv").toString()));
+
         int i = 0;
         String line = bR.readLine();
         while (line != null) {
@@ -33,7 +37,7 @@ public class Map {
             for (int j = 0; j < tiles.length; j++) {
                 tiles[j] = Integer.parseInt(tilesString[j]);
                 mapData.get(i).add(tiles[j]);
-                mapTiles.add(new Tile(j * Main.TILE_SIZE * Main.MULTIPLIER, i * Main.TILE_SIZE * Main.MULTIPLIER, tiles[j]));
+                mapTiles.add(new Tile((j * Main.TILE_SIZE - (tiles.length * Main.TILE_SIZE / 2) + Main.GAME_SIZE[0] / 2) * Main.MULTIPLIER, ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, tiles[j]));
             }
             line = bR.readLine();
             i++;
@@ -47,6 +51,21 @@ public class Map {
         return map;
     }
 
+    public static void saveMap(String mapName) {
+        try {
+            FileWriter fW = new FileWriter(Gdx.files.internal("map/" + mapName + ".csv").toString());
+
+            for (int i = 0; i < map.length; i++) {
+                String lineString = "";
+                for (int j = 0; j < map[i].length; j++) {
+                    lineString += map[i][j] + ",";
+                }
+                fW.write(lineString + "\n");
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
     public static void moveMap(float dx, float dy) {
         for (Tile tile: mapTiles) {
             tile.rect.x -= dx;

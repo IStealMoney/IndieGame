@@ -30,6 +30,10 @@ public class Player {
 
     public void handleInput() {
         Input input = Gdx.input;
+        if (input.isKeyJustPressed(Keys.O)) {
+            Map.saveMap("map");
+        }
+
         if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
             movement.x = -speed;
         } else if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {

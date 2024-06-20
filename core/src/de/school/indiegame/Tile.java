@@ -32,6 +32,7 @@ public class Tile {
             if (this.rect.overlaps(Main.player.rect)) {
                 if (this.type == 0) {
                     this.type = 1;
+                    Map.map[((int) (rect.y / height))][(int) (rect.x / width)] = this.type;
                     refreshTexture();
                 }
             }
