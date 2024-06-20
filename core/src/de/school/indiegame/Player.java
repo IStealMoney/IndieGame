@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Input.Keys;
 
@@ -13,6 +14,7 @@ public class Player {
 
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/player.png"));
+    Rectangle rect;
     float x;
     float y;
     int width = texture.getWidth() * Main.MULTIPLIER;
@@ -23,8 +25,7 @@ public class Player {
     float speed = 5f;
 
     Player(float x, float y) {
-        this.x = x;
-        this.y = y;
+        rect = new Rectangle(x - width / 2, y - height / 2, width, height);
     }
 
     public void handleInput() {
@@ -47,9 +48,6 @@ public class Player {
     }
 
     public void move() {
-        //x += movement.x;
-        //y += movement.y;
-
         Map.moveMap(movement.x, movement.y);
     }
 
@@ -59,6 +57,6 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, x - width / 2, y - height / 2, width, height);
+        batch.draw(texture, this.rect.x, this.rect.y, this.width, this.height);
     }
 }

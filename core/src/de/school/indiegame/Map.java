@@ -49,8 +49,8 @@ public class Map {
 
     public static void moveMap(float dx, float dy) {
         for (Tile tile: mapTiles) {
-            tile.x -= dx;
-            tile.y -= dy;
+            tile.rect.x -= dx;
+            tile.rect.y -= dy;
         }
 
     }
@@ -58,6 +58,7 @@ public class Map {
     public static void draw(SpriteBatch batch) {
         for (Tile tile : mapTiles) {
             tile.draw(batch);
+            tile.update();
         }
     }
 }

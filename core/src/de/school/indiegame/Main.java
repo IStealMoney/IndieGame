@@ -15,7 +15,7 @@ public class Main extends ApplicationAdapter {
 	public static Map MAP;
 
 	SpriteBatch batch;
-	Player player;
+	public static Player player;
 	OrthographicCamera camera;
 
 	@Override
@@ -49,5 +49,10 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		player.texture.dispose();
+
+		for (Tile tile : Map.mapTiles) {
+			tile.texture.dispose();
+		}
 	}
 }
