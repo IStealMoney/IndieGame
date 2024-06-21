@@ -30,10 +30,12 @@ public class Player {
 
     public void handleInput() {
         Input input = Gdx.input;
+        // test map saving
         if (input.isKeyJustPressed(Keys.O)) {
             Map.saveMap("map");
         }
 
+        // set the x-movement vector according to the input
         if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
             movement.x = -speed;
         } else if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {
@@ -42,6 +44,9 @@ public class Player {
             movement.x = 0;
         }
 
+        // Add collision for each axis
+
+        // set the y-movement vector according to the input
         if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
             movement.y = speed;
         } else if (input.isKeyPressed(Keys.S) || input.isKeyPressed(Keys.DOWN)) {
@@ -52,6 +57,7 @@ public class Player {
     }
 
     public void move() {
+        // Move map instead of player
         Map.moveMap(movement.x, movement.y);
     }
 

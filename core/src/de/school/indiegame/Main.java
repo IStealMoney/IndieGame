@@ -31,23 +31,28 @@ public class Main extends ApplicationAdapter {
 		ScreenUtils.clear(1, 1, 1, 1);
 		camera.update();
 		batch.begin();
+
 		updateSprites();
 		drawSprites(batch);
+
 		batch.end();
 	}
 
 	public void drawSprites(SpriteBatch batch) {
+		// Draw all sprites here
 		Map.draw(batch);
 		player.draw(batch);
 
 	}
 
 	public void updateSprites() {
+		// update all sprites here
 		player.update();
 	}
 	
 	@Override
 	public void dispose () {
+		// Dispose every texture here
 		batch.dispose();
 		player.texture.dispose();
 

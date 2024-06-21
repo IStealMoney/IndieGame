@@ -14,34 +14,40 @@ public class Map {
 
     public Map() {
         try {
-            map = loadEditableMap("map-1");
+            map = loadEditableMap("map");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static int[][] loadEditableMap(String mapName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("map/map-1.csv").toString()));
+        // Get map height
+        BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("map/" + mapName + ".csv").toString()));
+        long mapLines = br.lines().count();
+
+        // Load map from file
+        BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("map/" + mapName + ".csv").toString()));
+
         ArrayList<ArrayList<Integer>> mapData = new ArrayList<>();
 
-        // Get map height
-        long mapLines = br.lines().count();
-        BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("map/map-1.csv").toString()));
-
+        // Iterate through file lines and save its data
         int i = 0;
         String line = bR.readLine();
         while (line != null) {
-            mapData.add(new ArrayList<Integer>());
+            mapData.add(new ArrayList<>());
             String[] tilesString = line.split(",");
             int[] tiles = new int[tilesString.length];
             for (int j = 0; j < tiles.length; j++) {
                 tiles[j] = Integer.parseInt(tilesString[j]);
                 mapData.get(i).add(tiles[j]);
+                // Offset map so the player spawn in the center of it
                 mapTiles.add(new Tile((j * Main.TILE_SIZE - (tiles.length * Main.TILE_SIZE / 2) + Main.GAME_SIZE[0] / 2) * Main.MULTIPLIER, ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, j, i, tiles[j]));
             }
             line = bR.readLine();
             i++;
         }
+
+        // set map to the loaded map data
         int[][] map = new int[mapData.size()][mapData.get(0).size()];
         for (int j = 0; j < mapData.size(); j++) {
             for (int k = 0; k < mapData.get(j).size(); k++) {
@@ -53,6 +59,7 @@ public class Map {
 
     public static void saveMap(String mapName) {
         try {
+            // Iterate through existing map and write it to the file
             FileWriter fW = new FileWriter(Gdx.files.internal("map/" + mapName + ".csv").toString());
 
             for (int i = 0; i < map.length; i++) {
@@ -73,7 +80,6 @@ public class Map {
             tile.rect.x -= dx;
             tile.rect.y -= dy;
         }
-
     }
 
     public static void draw(SpriteBatch batch) {
