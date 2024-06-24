@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Map {
 
@@ -54,6 +55,10 @@ public class Map {
                 map[j][k] = mapData.get(j).get(k);
             }
         }
+        for (Object test : mapData.toArray()) {
+            System.out.println(test);
+        }
+
         return map;
     }
 
