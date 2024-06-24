@@ -11,6 +11,7 @@ school project
 Website
 
 ## Nächste Schritte
+fullscreen?
 Bäume oder ähnliches hinzufügen
 Verschiedene Pflanzentypen
 Kollision hinzufügen
