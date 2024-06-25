@@ -2,10 +2,13 @@ package de.school.indiegame;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.awt.*;
 
 public class Main extends ApplicationAdapter {
 	public static int[] GAME_SIZE = {400, 225};
@@ -24,7 +27,7 @@ public class Main extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		player = new Player((float) GAME_SIZE[0] / 2 * MULTIPLIER, (float) GAME_SIZE[1] / 2 * MULTIPLIER);
 		MAP = new Map();
-    }
+	}
 
 	@Override
 	public void render () {

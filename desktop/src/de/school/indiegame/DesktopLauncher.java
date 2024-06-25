@@ -1,5 +1,6 @@
 package de.school.indiegame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
@@ -9,7 +10,8 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("IndieGame");
-		config.setWindowedMode(Main.SCREEN_SIZE[0], Main.SCREEN_SIZE[1]);
+		config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+		//config.setWindowedMode(Main.SCREEN_SIZE[0], Main.SCREEN_SIZE[1]);
 		new Lwjgl3Application(new Main(), config);
 	}
 }
