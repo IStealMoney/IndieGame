@@ -56,9 +56,6 @@ public class Map {
                 map[j][k] = mapData.get(j).get(k);
             }
         }
-        for (Object test : mapData.toArray()) {
-            System.out.println(test);
-        }
 
         return map;
     }

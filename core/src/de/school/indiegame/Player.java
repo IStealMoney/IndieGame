@@ -45,6 +45,10 @@ public class Player {
         }
 
         // Add collision for each axis
+        // x-Axis collision
+        if (movement.x < 0) {
+
+        }
 
         // set the y-movement vector according to the input
         if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
