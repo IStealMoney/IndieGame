@@ -3,6 +3,7 @@ package de.school.indiegame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +15,7 @@ public class Player {
 
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/player.png"));
+    Sprite sprite;
     Rectangle rect;
     float x;
     float y;
@@ -23,12 +25,16 @@ public class Player {
     // Moving
     Vector2 movement = new Vector2(0,0);
     float speed = 5f;
+    boolean isScrolling = true;
 
     Player(float x, float y) {
-        rect = new Rectangle(x - width / 2, y - height / 2, width, height);
+        this.rect = new Rectangle(x - width / 2, y - height / 2, width, height);
+
+        sprite = new Sprite(texture);
+        sprite.setBounds(x, y, width, height);
     }
 
-    public void handleInput() {
+    public void handleMovement() {
         Input input = Gdx.input;
         // test map saving
         if (input.isKeyJustPressed(Keys.O)) {
@@ -44,11 +50,27 @@ public class Player {
             movement.x = 0;
         }
 
+        // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || x-Axis
+        move();
+
+
         // Add collision for each axis
         // x-Axis collision
-        if (movement.x < 0) {
-
+        for (Tile tile : Map.mapTiles) {
+            if (tile.isBlockable) {
+                if (this.rect.overlaps(tile.hitbox)) {
+                    if (movement.x < 0) {
+                        float moveAmount =  this.rect.x - (tile.hitbox.x + tile.hitbox.width); // Distance between tile and player
+                        Map.moveMap(-moveAmount, 0);
+                    }
+                    if (movement.x > 0) {
+                        float moveAmount = (tile.hitbox.x - tile.hitbox.width) - this.rect.x; // Distance between tile and player
+                        Map.moveMap(moveAmount, 0);
+                    }
+                }
+            }
         }
+        movement.x = 0;
 
         // set the y-movement vector according to the input
         if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
@@ -58,19 +80,40 @@ public class Player {
         } else {
             movement.y = 0;
         }
+
+        // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || y-Axis
+        move();
+
+        // y-Axis collision
+        for (Tile tile : Map.mapTiles) {
+            if (tile.isBlockable) {
+                if (this.rect.overlaps(tile.hitbox)) {
+                    if (movement.y < 0) {
+                        float moveAmount =  this.rect.y - (tile.hitbox.y + tile.hitbox.height); // Distance between tile and player
+                        Map.moveMap(0, -moveAmount);
+                    }
+                    if (movement.y > 0) {
+                        float moveAmount =  (tile.hitbox.y - this.rect.height) - this.rect.y; // Distance between tile and player
+                        Map.moveMap(0, moveAmount);
+                        this.rect.y = tile.hitbox.y - this.height;
+                    }
+                }
+            }
+        }
+        movement.y = 0;
     }
 
     public void move() {
         // Move map instead of player
         Map.moveMap(movement.x, movement.y);
+        this.sprite.setPosition(this.rect.x, this.rect.y);
     }
 
     public void update() {
-        handleInput();
-        move();
+        handleMovement();
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, this.rect.x, this.rect.y, this.width, this.height);
+        this.sprite.draw(batch);
     }
 }

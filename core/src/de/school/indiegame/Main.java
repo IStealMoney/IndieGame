@@ -33,18 +33,21 @@ public class Main extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(1, 1, 1, 1);
 		camera.update();
+
 		batch.begin();
 
 		updateSprites();
 		drawSprites(batch);
 
 		batch.end();
+
 	}
 
 	public void drawSprites(SpriteBatch batch) {
 		// Draw all sprites here
 		Map.draw(batch);
 		player.draw(batch);
+		Map.drawBlockables(batch);
 
 	}
 
@@ -61,6 +64,7 @@ public class Main extends ApplicationAdapter {
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();
+			tile.sprite.getTexture().dispose();
 		}
 	}
 }

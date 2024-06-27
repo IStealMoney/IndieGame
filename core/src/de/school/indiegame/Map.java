@@ -23,12 +23,14 @@ public class Map {
 
     public static int[][] loadEditableMap(String mapName) throws IOException {
         // Get map height
-        BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("map/" + mapName + ".csv").toString()));
+        BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("maps/" + mapName + ".csv").toString()));
         long mapLines = br.lines().count();
 
         // Load map from file
-        BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("map/" + mapName + ".csv").toString()));
+        BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("maps/" + mapName + ".csv").toString()));
         ArrayList<ArrayList<Integer>> mapData = new ArrayList<ArrayList<Integer>>();
+
+        int groundTileAmount = Gdx.files.internal("tiles/ground/").list().length;
 
         // Iterate through file lines and save its data
         int i = 0;
@@ -41,9 +43,17 @@ public class Map {
                 tiles[j] = Integer.parseInt(tilesString[j]);
                 mapData.get(i).add(tiles[j]);
 
+                boolean isBlockable = false;
+                String group = "ground";
+
+                if (tiles[j] >= groundTileAmount) {  // check if type is above ground tiles limit
+                    isBlockable = true;
+                    group = "blockable";
+                }
+
                 // Offset map so the player spawn in the center of it
                 mapTiles.add(new Tile((j * Main.TILE_SIZE - (tiles.length * Main.TILE_SIZE / 2) + Main.GAME_SIZE[0] / 2) * Main.MULTIPLIER,
-                        ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, j, i, tiles[j]));
+                        ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, j, i, tiles[j], isBlockable, group));
             }
             line = bR.readLine();
             i++;
@@ -82,13 +92,28 @@ public class Map {
         for (Tile tile: mapTiles) {
             tile.rect.x -= dx;
             tile.rect.y -= dy;
+            tile.hitbox.x -= dx;
+            tile.hitbox.y -= dy;
+            tile.sprite.setPosition(tile.rect.x, tile.rect.y);
+
         }
     }
 
     public static void draw(SpriteBatch batch) {
         for (Tile tile : mapTiles) {
-            tile.draw(batch);
-            tile.update();
+            if (!tile.isBlockable) {
+                tile.draw(batch);
+                tile.update();
+            }
+        }
+    }
+
+    public static void drawBlockables(SpriteBatch batch) {
+        for (Tile tile : mapTiles) {
+            if (tile.isBlockable) {
+                tile.draw(batch);
+                tile.update();
+            }
         }
     }
 }

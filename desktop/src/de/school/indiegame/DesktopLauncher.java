@@ -18,7 +18,6 @@ public class DesktopLauncher {
 			if (mode.height == 1080 && mode.width == 1920) {
 				usedMode = mode;
 			}
-			System.out.println(mode.height);
 		}
 		config.setFullscreenMode(usedMode);
 		//config.setWindowedMode(Main.SCREEN_SIZE[0], Main.SCREEN_SIZE[1]);
