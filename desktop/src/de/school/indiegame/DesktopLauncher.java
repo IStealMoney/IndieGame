@@ -11,16 +11,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("IndieGame");
-		Graphics.Monitor primary = Lwjgl3ApplicationConfiguration.getPrimaryMonitor();
-		Graphics.DisplayMode[] modes = Lwjgl3ApplicationConfiguration.getDisplayModes(primary);
-		Graphics.DisplayMode usedMode = null;
-		for (Graphics.DisplayMode mode : modes) {
-			if (mode.height == 1080 && mode.width == 1920 && mode.refreshRate == 60) {
-				usedMode = mode;
-			}
-		}
-		config.setFullscreenMode(usedMode);
-		config.setResizable(false);
+		config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		//config.setWindowedMode(Main.SCREEN_SIZE[0], Main.SCREEN_SIZE[1]);
 		new Lwjgl3Application(new Main(), config);
 	}
