@@ -15,11 +15,12 @@ public class DesktopLauncher {
 		Graphics.DisplayMode[] modes = Lwjgl3ApplicationConfiguration.getDisplayModes(primary);
 		Graphics.DisplayMode usedMode = null;
 		for (Graphics.DisplayMode mode : modes) {
-			if (mode.height == 1080 && mode.width == 1920) {
+			if (mode.height == 1080 && mode.width == 1920 && mode.refreshRate == 60) {
 				usedMode = mode;
 			}
 		}
 		config.setFullscreenMode(usedMode);
+		config.setResizable(false);
 		//config.setWindowedMode(Main.SCREEN_SIZE[0], Main.SCREEN_SIZE[1]);
 		new Lwjgl3Application(new Main(), config);
 	}
