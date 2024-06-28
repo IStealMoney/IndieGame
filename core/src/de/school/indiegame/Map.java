@@ -51,9 +51,11 @@ public class Map {
                     group = "blockable";
                 }
 
+                float mapXOffset = (tiles.length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[0] / 2; // Half of the map
+                float mapYOffset = ((float) mapLines / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[1] / 2; // Half of the map
                 // Offset map so the player spawn in the center of it
-                mapTiles.add(new Tile((j * Main.TILE_SIZE - (tiles.length * Main.TILE_SIZE / 2) + Main.GAME_SIZE[0] / 2) * Main.MULTIPLIER,
-                        ((float) (((mapLines * Main.TILE_SIZE / 2)) - i * Main.TILE_SIZE) + (Main.GAME_SIZE[1] / 2)) * Main.MULTIPLIER, j, i, tiles[j], isBlockable, group));
+                mapTiles.add(new Tile((j * Main.TILE_SIZE * Main.MULTIPLIER) - mapXOffset,
+                        ((mapLines - 1) - i) * Main.TILE_SIZE * Main.MULTIPLIER - mapYOffset, j, i, tiles[j], isBlockable, group));
             }
             line = bR.readLine();
             i++;

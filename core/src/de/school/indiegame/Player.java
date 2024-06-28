@@ -19,8 +19,8 @@ public class Player {
     Rectangle rect;
     float x;
     float y;
-    int width = texture.getWidth() * Main.MULTIPLIER;
-    int height = texture.getHeight() * Main.MULTIPLIER;
+    float width = texture.getWidth() * Main.MULTIPLIER;
+    float height = texture.getHeight() * Main.MULTIPLIER;
 
     // Moving
     Vector2 movement = new Vector2(0,0);
