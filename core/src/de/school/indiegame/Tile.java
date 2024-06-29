@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Arrays;
 
 public class Tile {
-    String[] types = {"grass", "dirt", "wall", "tree"};
+    String[] types = {"grass", "dirt", "wall", "tree", "big_tree"};
 
     Texture texture;
     Texture groundTexture; // Texture beneath the tree for example
@@ -27,7 +27,8 @@ public class Tile {
     String group;
 
     // Appearance
-    float visibility = 1f;
+    float opacity = 1f;
+    float minOpacity = 0.4f;
 
     Tile(float x, float y, int mapX, int mapY, int type, boolean isBlockable, String group) {
         // loadTileNames(); add MAYBE
@@ -74,7 +75,6 @@ public class Tile {
         this.types = types;
     }
 
-
     public void refreshTexture() {
         this.texture = new Texture("tiles/" + this.group + "/" + types[type] + ".png");
         sprite.setTexture(this.texture);
@@ -101,17 +101,17 @@ public class Tile {
             batch.draw(groundTexture, this.rect.x, this.rect.y, this.hitbox.width, this.hitbox.height);
 
             if (Main.player.rect.overlaps(this.rect)) { // Change visibility of for example tree, when player is under it.
-                visibility -= 0.05f;
-                if (visibility <= 0.3f) {
-                    visibility = 0.3f;
+                opacity -= 0.05f;
+                if (opacity <= minOpacity) {
+                    opacity = minOpacity;
                 }
-                this.sprite.setAlpha(visibility);
+                this.sprite.setAlpha(opacity);
             } else {
-                visibility += 0.05f;
-                if (visibility >= 1f) {
-                    visibility = 1f;
+                opacity += 0.05f;
+                if (opacity >= 1f) {
+                    opacity = 1f;
                 }
-                this.sprite.setAlpha(visibility);
+                this.sprite.setAlpha(opacity);
             }
         }
         this.sprite.draw(batch);

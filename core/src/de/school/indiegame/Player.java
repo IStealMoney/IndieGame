@@ -12,7 +12,6 @@ import com.badlogic.gdx.Input.Keys;
 import java.io.File;
 
 public class Player {
-
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/player.png"));
     Sprite sprite;
@@ -24,7 +23,7 @@ public class Player {
 
     // Moving
     Vector2 movement = new Vector2(0,0);
-    float speed = 5f;
+    float speed = 5f * Main.MULTIPLIER * 0.25f;
     boolean isScrolling = true;
 
     Player(float x, float y) {
