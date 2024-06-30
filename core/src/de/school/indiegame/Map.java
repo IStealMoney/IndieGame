@@ -3,24 +3,20 @@ package de.school.indiegame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Map {
 
-    public static ArrayList<Tile> mapTiles = new ArrayList<Tile>();
+    public static ArrayList<Tile> mapTiles = new ArrayList<>();
     public static HashMap<String, int[][]> maps = new HashMap<>();
     public static HashMap<String, Pixmap[][]> tilesetPixmaps = new HashMap<>();
     public static int tilesetSize = 512 / Main.TILE_SIZE;
     public static  String[] tilesets = {"ground", "blockable", "environment"}; // add in according layer | first = lowest layer
+    static ArrayList<Tile> tilesToRemove = new ArrayList<>();
 
     public Map() {
         try {
@@ -63,14 +59,14 @@ public class Map {
 
             // Load map from file
             BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal(mapPath).toString()));
-            ArrayList<ArrayList<Integer>> mapData = new ArrayList<ArrayList<Integer>>();
+            ArrayList<ArrayList<Integer>> mapData = new ArrayList<>();
 
             int i = 0;
             String line = bR.readLine();
 
             while (line != null) {
                 // Iterate through file lines and save its data
-                mapData.add(new ArrayList<Integer>());
+                mapData.add(new ArrayList<>());
                 String[] tilesString = line.split(",");
                 int[] tiles = new int[tilesString.length];
 
@@ -137,19 +133,14 @@ public class Map {
 
     public static void draw(SpriteBatch batch) {
         for (Tile tile : mapTiles) {
-            if (!tile.isBlockable) {
-                tile.draw(batch);
+            if (tile.type != -1) {
                 tile.update();
+                tile.draw(batch);
+            } else {
+                Map.tilesToRemove.add(tile);
             }
         }
-    }
-
-    public static void drawBlockables(SpriteBatch batch) {
-        for (Tile tile : mapTiles) {
-            if (tile.isBlockable) {
-                tile.draw(batch);
-                tile.update();
-            }
-        }
+        Map.mapTiles.removeAll(Map.tilesToRemove);
+        Map.tilesToRemove.clear();
     }
 }

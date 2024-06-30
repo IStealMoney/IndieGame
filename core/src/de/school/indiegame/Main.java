@@ -6,6 +6,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.awt.*;
@@ -18,7 +19,9 @@ public class Main extends ApplicationAdapter {
 	public static Map MAP;
 
 	SpriteBatch batch;
+	ShapeRenderer shape;
 	public static Player player;
+	public static Tool tool;
 
 	@Override
 	public void create () {
@@ -26,20 +29,25 @@ public class Main extends ApplicationAdapter {
 		SCREEN_SIZE[1] = Gdx.graphics.getHeight();
 		MULTIPLIER = (SCREEN_SIZE[0] / GAME_SIZE[0] + SCREEN_SIZE[1] / GAME_SIZE[1]) / 2;
 		batch = new SpriteBatch();
+		shape = new ShapeRenderer();
+		shape.setAutoShapeType(true);
 		player = new Player((float) SCREEN_SIZE[0] / 2, (float) SCREEN_SIZE[1] / 2);
+		tool = new Tool(player.rect.x, player.rect.y, 0);
 		MAP = new Map();
 	}
 
 	@Override
 	public void render () {
 		ScreenUtils.clear(1, 1, 1, 1);
-
+		shape.begin();
 		batch.begin();
+
 
 		updateSprites();
 		drawSprites(batch);
 
 		batch.end();
+		shape.end();
 
 	}
 
@@ -47,13 +55,13 @@ public class Main extends ApplicationAdapter {
 		// Draw all sprites here
 		Map.draw(batch);
 		player.draw(batch);
-		Map.drawBlockables(batch);
-
+		tool.draw(batch);
 	}
 
 	public void updateSprites() {
 		// update all sprites here
 		player.update();
+		tool.update();
 	}
 	
 	@Override
@@ -61,6 +69,7 @@ public class Main extends ApplicationAdapter {
 		// Dispose every texture here
 		batch.dispose();
 		player.texture.dispose();
+		tool.texture.dispose();
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();

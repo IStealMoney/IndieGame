@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Tile {
     Texture texture;
@@ -30,11 +31,18 @@ public class Tile {
     boolean isBlockable;
     boolean isTranslucent;
     boolean isHarvestable;
+    boolean isAxeable;
     String group;
 
     // Appearance
     float opacity = 1f;
-    float minOpacity = 0.4f;
+
+    // Breaking
+    int health;
+    boolean canPress = false;
+    double pressedTime = Main.tool.pressedTime;
+    double pressedStartTime = System.currentTimeMillis();
+    double currentPressedTime;
 
     Tile(String tileset, int[] textureIndex, float x, float y, int mapX, int mapY, int type) {
         this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
@@ -59,6 +67,8 @@ public class Tile {
         }
         if (tileset.equals("environment")) {
             isTranslucent = true;
+            isAxeable = true;
+            this.health = new Random().nextInt(3,6);
         }
 
         if (tileset.equals("ground")) {
@@ -75,8 +85,19 @@ public class Tile {
     }
 
     public void refreshTexture() {
+        this.textureIndex = new int[] {this.type % Map.tilesetSize, this.type / Map.tilesetSize};
         this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
         sprite.setTexture(this.texture);
+    }
+
+    public void updateTileOnMap() {
+        Map.maps.get(tileset)[mapY][mapX] = this.type;
+        // Delete tile, before error occurs when refreshing texture
+        if (this.type == -1) {
+            return;
+        }
+        refreshTexture();
+
     }
 
     public void harvest() {
@@ -84,10 +105,42 @@ public class Tile {
             if (this.rect.overlaps(Main.player.rect)) {
                 if (this.type == 0) {
                     this.type = 1;
-                    this.textureIndex = new int[] {this.type % Map.tilesetSize, this.type / Map.tilesetSize};
-                    Map.maps.get(tileset)[mapY][mapX] = this.type;
-                    refreshTexture();
+                    updateTileOnMap();
                 }
+            }
+        }
+
+        // Calculate if player can press again
+        currentPressedTime = System.currentTimeMillis();
+        if (currentPressedTime - pressedStartTime >= pressedTime) {
+            canPress = true;
+            pressedStartTime = System.currentTimeMillis();
+        }
+
+        // Tool harvest
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (canPress) {
+                if (this.rect.overlaps(Main.tool.hitbox)) {
+                    if (Main.tool.weaponType == 0) { // axe
+                        if (isAxeable) {
+                            this.health -= 1;
+                            if (this.health == 0) {
+                                this.type = -1;
+                            }
+                            updateTileOnMap();
+                        }
+                    }
+                    if (Main.tool.weaponType == 2) {
+                        if (isHarvestable) {
+                            if (this.type == 0) {
+                                this.type = 1;
+                                updateTileOnMap();
+                            }
+                        }
+                    }
+
+                }
+                canPress = false;
             }
         }
     }

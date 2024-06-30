@@ -26,7 +26,6 @@ public class Player {
     // Moving
     Vector2 movement = new Vector2(0,0);
     float speed = 5f * Main.MULTIPLIER * 0.25f;
-    boolean isScrolling = true;
 
     // Effects
     Circle translucentCircle;
