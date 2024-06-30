@@ -12,8 +12,6 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Arrays;
 
 public class Tile {
-    String[] types = {"grass", "dirt", "wall", "tree", "big_tree"};
-
     Texture texture;
     int[] textureIndex;
     String tileset;
@@ -47,34 +45,6 @@ public class Tile {
         this.type = type;
         this.group = group;
         this.isBlockable = isBlockable;
-    }
-
-    public void loadTileNames() {
-        // Add new tile directories here
-        String path = "tiles/";
-        String[] directories = {"ground", "blockable"};
-
-        int typesLength = 0;
-
-        for (int i = 0; i < directories.length; i++) {
-            typesLength += (int) Gdx.files.internal(path + directories[i] + "/").length();
-        }
-
-        String[] types = new String[typesLength];
-
-        int counter = 0;
-
-        for (int i = 0; i < directories.length; i++) {
-            FileHandle[] tiles = Gdx.files.internal(path + directories[i] + "/").list();
-            for (int j = 0; j < tiles.length; j++) {
-                String tileName = tiles[j].name().replace(".png", "");
-                System.out.println(tileName);
-                types[counter] = tileName;
-                counter++;
-            }
-        }
-
-        this.types = types;
     }
 
     public void refreshTexture() {

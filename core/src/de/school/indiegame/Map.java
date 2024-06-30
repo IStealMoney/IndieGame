@@ -20,8 +20,7 @@ public class Map {
     public static HashMap<String, int[][]> maps = new HashMap<>();
     public static HashMap<String, Pixmap[][]> tilesetPixmaps = new HashMap<>();
     public static int tilesetSize = 512 / Main.TILE_SIZE;
-    public static  String[] tilesets = {"ground", "blockable"}; // add in according layer | first = bottom
-
+    public static  String[] tilesets = {"ground", "blockable"}; // add in according layer | first = lowest layer
 
     public Map() {
         try {
@@ -115,7 +114,6 @@ public class Map {
                     for (int j = 0; j < maps.get(tileset)[i].length; j++) {
                         lineString += maps.get(tileset)[i][j] + ",";
                     }
-                    System.out.println(lineString);
 
                     fW.write(lineString + "\n");
                     fW.flush();
@@ -124,7 +122,6 @@ public class Map {
         } catch (IOException e) {
             e.getMessage();
         }
-        System.out.println("Saved Map");
     }
     public static void moveMap(float dx, float dy) {
         for (Tile tile: mapTiles) {

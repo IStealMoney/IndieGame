@@ -26,7 +26,6 @@ public class Main extends ApplicationAdapter {
 		SCREEN_SIZE[1] = Gdx.graphics.getHeight();
 		MULTIPLIER = (SCREEN_SIZE[0] / GAME_SIZE[0] + SCREEN_SIZE[1] / GAME_SIZE[1]) / 2;
 		batch = new SpriteBatch();
-		System.out.println(SCREEN_SIZE[0]);
 		player = new Player((float) SCREEN_SIZE[0] / 2, (float) SCREEN_SIZE[1] / 2);
 		MAP = new Map();
 	}
