@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Arrays;
@@ -14,7 +15,8 @@ public class Tile {
     String[] types = {"grass", "dirt", "wall", "tree", "big_tree"};
 
     Texture texture;
-    Texture groundTexture; // Texture beneath the tree for example
+    int[] textureIndex;
+    String tileset;
     Sprite sprite;
     Rectangle rect;
     Rectangle hitbox;
@@ -30,10 +32,10 @@ public class Tile {
     float opacity = 1f;
     float minOpacity = 0.4f;
 
-    Tile(float x, float y, int mapX, int mapY, int type, boolean isBlockable, String group) {
-        // loadTileNames(); add MAYBE
-        this.texture = new Texture("tiles/" + group + "/" + types[type] + ".png");
-        this.groundTexture = new Texture("tiles/ground/dirt.png");
+    Tile(String tileset, int[] textureIndex, float x, float y, int mapX, int mapY, int type, boolean isBlockable) {
+        this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
+        this.textureIndex = textureIndex;
+        this.tileset = tileset;
         this.width = (float) texture.getWidth() * Main.MULTIPLIER;
         this.height = (float) texture.getHeight() * Main.MULTIPLIER; // width and height adjust to texture size
         sprite = new Sprite(this.texture);
@@ -76,7 +78,7 @@ public class Tile {
     }
 
     public void refreshTexture() {
-        this.texture = new Texture("tiles/" + this.group + "/" + types[type] + ".png");
+        this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
         sprite.setTexture(this.texture);
     }
 
@@ -85,7 +87,8 @@ public class Tile {
             if (this.rect.overlaps(Main.player.rect)) {
                 if (this.type == 0) {
                     this.type = 1;
-                    Map.map[this.mapY][this.mapX] = this.type;
+                    this.textureIndex = new int[] {this.type % Map.tilesetSize, this.type / Map.tilesetSize};
+                    Map.maps.get(tileset)[mapY][mapX] = this.type;
                     refreshTexture();
                 }
             }
@@ -98,8 +101,6 @@ public class Tile {
 
     public void draw(SpriteBatch batch) {
         if (isBlockable) {
-            batch.draw(groundTexture, this.rect.x, this.rect.y, this.hitbox.width, this.hitbox.height);
-
             if (Main.player.rect.overlaps(this.rect)) { // Change visibility of for example tree, when player is under it.
                 opacity -= 0.05f;
                 if (opacity <= minOpacity) {

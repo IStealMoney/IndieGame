@@ -37,7 +37,7 @@ public class Player {
         Input input = Gdx.input;
         // test map saving
         if (input.isKeyJustPressed(Keys.O)) {
-            Map.saveMap("map");
+            Map.saveMap();
         }
 
         // set the x-movement vector according to the input
