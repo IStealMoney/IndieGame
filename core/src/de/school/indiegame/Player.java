@@ -18,8 +18,6 @@ public class Player {
     Texture texture = new Texture(Gdx.files.internal("player/player.png"));
     Sprite sprite;
     Rectangle rect;
-    float x;
-    float y;
     float width = texture.getWidth() * Main.MULTIPLIER;
     float height = texture.getHeight() * Main.MULTIPLIER;
 

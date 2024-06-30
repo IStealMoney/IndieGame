@@ -78,39 +78,51 @@ public class Tool {
 
         // Flip Sprite
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            sprite.setFlip(false, false);
-            sprite.setRotation(defaultRotation);
-            sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) + offset[0]);
+            if (sprite.isFlipX()) {
+                sprite.setFlip(false, false);
+                sprite.setRotation(defaultRotation);
+                sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) + offset[0]);
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            sprite.setFlip(true, false);
-            sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
-            sprite.setRotation(-defaultRotation);
+            if (!sprite.isFlipX()) {
+                sprite.setFlip(true, false);
+                sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
+                sprite.setRotation(-defaultRotation);
+            }
+
         }
     }
 
     public void animate() {
         if (isPressed) {
             currentPressedTime = System.currentTimeMillis();
+
+            // flip rotation
             if (sprite.isFlipX()) {
                 sprite.rotate(-rotationAmount);
             } else {
                 sprite.rotate(rotationAmount);
             }
 
-
             if (currentPressedTime - pressedStartTime >= pressedTime) {
                 isPressed = false;
-                sprite.setRotation(defaultRotation);
+                if (sprite.isFlipX()) {
+                    sprite.setRotation(-defaultRotation);
+                } else {
+                    sprite.setRotation(defaultRotation);
+                }
+
                 pressedStartTime = System.currentTimeMillis();
             }
         }
     }
 
     public void update() {
+        calculateHitbox();
         handleInput();
         animate();
-        calculateHitbox();
+
     }
 
     public void draw(SpriteBatch batch) {
