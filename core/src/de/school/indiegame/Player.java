@@ -5,11 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Input.Keys;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Player {
     // Drawing
@@ -26,11 +28,34 @@ public class Player {
     float speed = 5f * Main.MULTIPLIER * 0.25f;
     boolean isScrolling = true;
 
+    // Effects
+    Circle translucentCircle;
+    float translucentRadius = 200f;
+    float minDistance = 60f; // Controls opacity of tree
+
     Player(float x, float y) {
         this.rect = new Rectangle(x - width / 2, y - height / 2, width, height);
 
         sprite = new Sprite(texture);
         sprite.setBounds(x, y, width, height);
+        this.translucentCircle = new Circle(this.rect.x, this.rect.y, translucentRadius);
+
+    }
+
+    public void calculateTranslucentTiles() {
+        for (Tile tile : Map.mapTiles) {
+            if (tile.tileset.equals("environment")) {
+                float dx = Math.abs(tile.rect.x - this.rect.x);
+                float dy = Math.abs(tile.rect.y - this.rect.y);
+                double tileDistance = Math.sqrt((dx * dx) + (dy * dy));
+
+                if (tileDistance < translucentRadius) {
+                    if (tileDistance > minDistance) {
+                        tile.opacity = (float) (tileDistance / translucentRadius);
+                    }
+                }
+            }
+        }
     }
 
     public void handleMovement() {
@@ -106,6 +131,8 @@ public class Player {
         // Move map instead of player
         Map.moveMap(movement.x, movement.y);
         this.sprite.setPosition(this.rect.x, this.rect.y);
+        this.translucentCircle.setPosition(this.rect.x, this.rect.y);
+
     }
 
     public void update() {
@@ -114,5 +141,6 @@ public class Player {
 
     public void draw(SpriteBatch batch) {
         this.sprite.draw(batch);
+        calculateTranslucentTiles();
     }
 }

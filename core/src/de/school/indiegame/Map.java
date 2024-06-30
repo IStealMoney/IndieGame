@@ -55,12 +55,14 @@ public class Map {
             // save them for global access
             tilesetPixmaps.put(tileset, pixmaps);
 
+            String mapPath = "maps/map_" + tileset + ".csv";
+
             // Get map height
-            BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("maps/map_" + tileset + ".csv").toString()));
+            BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal(mapPath).toString()));
             long mapLines = br.lines().count();
 
             // Load map from file
-            BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("maps/map_" + tileset + ".csv").toString()));
+            BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal(mapPath).toString()));
             ArrayList<ArrayList<Integer>> mapData = new ArrayList<ArrayList<Integer>>();
 
             int i = 0;

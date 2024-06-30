@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Tile {
@@ -19,6 +21,7 @@ public class Tile {
     Sprite sprite;
     Rectangle rect;
     Rectangle hitbox;
+
     int mapX;
     int mapY;
     float width;
@@ -26,6 +29,7 @@ public class Tile {
     int type;
     boolean isBlockable;
     boolean isTranslucent;
+    boolean isHarvestable;
     String group;
 
     // Appearance
@@ -56,7 +60,19 @@ public class Tile {
         if (tileset.equals("environment")) {
             isTranslucent = true;
         }
-     }
+
+        if (tileset.equals("ground")) {
+            isHarvestable = true;
+        }
+        // Set ground tiles, that are beneath blockable tiles to not harvestable
+        if (tileset.equals("blockable")) {
+            for (Tile tile : Map.mapTiles) {
+                if (tile.tileset.equals("ground") && tile.mapX == this.mapX && tile.mapY == this.mapY) {
+                    tile.isHarvestable = false;
+                }
+            }
+        }
+    }
 
     public void refreshTexture() {
         this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
@@ -82,20 +98,9 @@ public class Tile {
 
     public void draw(SpriteBatch batch) {
         if (isTranslucent) {
-            if (Main.player.rect.overlaps(this.rect)) { // Change visibility of for example tree, when player is under it.
-                opacity -= 0.05f;
-                if (opacity <= minOpacity) {
-                    opacity = minOpacity;
-                }
-                this.sprite.setAlpha(opacity);
-            } else {
-                opacity += 0.05f;
-                if (opacity >= 1f) {
-                    opacity = 1f;
-                }
-                this.sprite.setAlpha(opacity);
-            }
+            this.sprite.setAlpha(opacity);
         }
+
         this.sprite.draw(batch);
     }
 }
