@@ -52,6 +52,12 @@ public class Player {
         // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || x-Axis
         move();
 
+        // exit with esc button
+        // exit menu?
+        if (input.isKeyJustPressed(Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
+
 
         // Add collision for each axis
         // x-Axis collision
