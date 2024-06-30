@@ -3,6 +3,7 @@ package de.school.indiegame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,13 +25,14 @@ public class Tile {
     float height;
     int type;
     boolean isBlockable;
+    boolean isTranslucent;
     String group;
 
     // Appearance
     float opacity = 1f;
     float minOpacity = 0.4f;
 
-    Tile(String tileset, int[] textureIndex, float x, float y, int mapX, int mapY, int type, boolean isBlockable) {
+    Tile(String tileset, int[] textureIndex, float x, float y, int mapX, int mapY, int type) {
         this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
         this.textureIndex = textureIndex;
         this.tileset = tileset;
@@ -44,8 +46,17 @@ public class Tile {
         this.mapY = mapY;
         this.type = type;
         this.group = group;
-        this.isBlockable = isBlockable;
+        setProperties();
     }
+
+    public void setProperties() {
+        if (tileset.equals("blockable")) {
+            isBlockable = true;
+        }
+        if (tileset.equals("environment")) {
+            isTranslucent = true;
+        }
+     }
 
     public void refreshTexture() {
         this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
@@ -70,7 +81,7 @@ public class Tile {
     }
 
     public void draw(SpriteBatch batch) {
-        if (isBlockable) {
+        if (isTranslucent) {
             if (Main.player.rect.overlaps(this.rect)) { // Change visibility of for example tree, when player is under it.
                 opacity -= 0.05f;
                 if (opacity <= minOpacity) {

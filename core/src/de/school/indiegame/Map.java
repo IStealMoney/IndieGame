@@ -20,7 +20,7 @@ public class Map {
     public static HashMap<String, int[][]> maps = new HashMap<>();
     public static HashMap<String, Pixmap[][]> tilesetPixmaps = new HashMap<>();
     public static int tilesetSize = 512 / Main.TILE_SIZE;
-    public static  String[] tilesets = {"ground", "blockable"}; // add in according layer | first = lowest layer
+    public static  String[] tilesets = {"ground", "blockable", "environment"}; // add in according layer | first = lowest layer
 
     public Map() {
         try {
@@ -56,18 +56,12 @@ public class Map {
             tilesetPixmaps.put(tileset, pixmaps);
 
             // Get map height
-            BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("maps/" + tileset + ".csv").toString()));
+            BufferedReader br = new BufferedReader(new FileReader(Gdx.files.internal("maps/map_" + tileset + ".csv").toString()));
             long mapLines = br.lines().count();
 
             // Load map from file
-            BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("maps/" + tileset + ".csv").toString()));
+            BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal("maps/map_" + tileset + ".csv").toString()));
             ArrayList<ArrayList<Integer>> mapData = new ArrayList<ArrayList<Integer>>();
-
-            // Set according tile properties for tileset
-            boolean isBlockable = false;
-            if (tileset.equals("blockable")) {
-                isBlockable = true;
-            }
 
             int i = 0;
             String line = bR.readLine();
@@ -82,11 +76,16 @@ public class Map {
                     tiles[j] = Integer.parseInt(tilesString[j]);
                     mapData.get(i).add(tiles[j]);
 
+                    // Offset map so the player spawn in the center of it
                     float mapXOffset = ((float) tiles.length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[0] / 2; // Half of the map
                     float mapYOffset = ((float) mapLines / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[1] / 2; // Half of the map
-                    // Offset map so the player spawn in the center of it
-                    mapTiles.add(new Tile(tileset, new int[]{tiles[j] % tilesetSize, tiles[j] / tilesetSize}, (j * Main.TILE_SIZE * Main.MULTIPLIER) - mapXOffset,
-                            ((mapLines - 1) - i) * Main.TILE_SIZE * Main.MULTIPLIER - mapYOffset, j, i, tiles[j], isBlockable));
+
+                    // Dont create tile, if type is -1
+                    if (tiles[j] != -1) {
+                        mapTiles.add(new Tile(tileset, new int[]{tiles[j] % tilesetSize, tiles[j] / tilesetSize}, (j * Main.TILE_SIZE * Main.MULTIPLIER) - mapXOffset,
+                                ((mapLines - 1) - i) * Main.TILE_SIZE * Main.MULTIPLIER - mapYOffset, j, i, tiles[j]));
+                    }
+
                 }
                 line = bR.readLine();
                 i++;
@@ -107,7 +106,7 @@ public class Map {
         try {
             for (String tileset : tilesets) {
                 // Iterate through existing map and write it to the file
-                FileWriter fW = new FileWriter(Gdx.files.internal("maps/" + tileset + ".csv").toString());
+                FileWriter fW = new FileWriter(Gdx.files.internal("maps/map_" + tileset + ".csv").toString());
 
                 for (int i = 0; i < maps.get(tileset).length; i++) {
                     String lineString = "";
