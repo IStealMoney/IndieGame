@@ -31,6 +31,7 @@ public class Tile {
     boolean isBlockable;
     boolean isTranslucent;
     boolean isHarvestable;
+    boolean isDestructible;
     boolean isAxeable;
     String group;
 
@@ -62,8 +63,13 @@ public class Tile {
     }
 
     public void setProperties() {
-        if (tileset.equals("blockable")) {
+        if (tileset.equals("indestructible")) {
             isBlockable = true;
+        }
+        if (tileset.equals("destructible")) {
+            isBlockable = true;
+            isDestructible = true;
+            this.health = new Random().nextInt(1,4);
         }
         if (tileset.equals("environment")) {
             isTranslucent = true;
@@ -74,8 +80,9 @@ public class Tile {
         if (tileset.equals("ground")) {
             isHarvestable = true;
         }
-        // Set ground tiles, that are beneath blockable tiles to not harvestable
-        if (tileset.equals("blockable")) {
+
+        // Set ground tiles, that are beneath destructible tiles to not harvestable
+        if (tileset.equals("destructible")) {
             for (Tile tile : Map.mapTiles) {
                 if (tile.tileset.equals("ground") && tile.mapX == this.mapX && tile.mapY == this.mapY) {
                     tile.isHarvestable = false;
@@ -97,7 +104,6 @@ public class Tile {
             return;
         }
         refreshTexture();
-
     }
 
     public void harvest() {
@@ -130,7 +136,16 @@ public class Tile {
                             updateTileOnMap();
                         }
                     }
-                    if (Main.tool.weaponType == 2) {
+                    if (Main.tool.weaponType == 1) { // pickaxe
+                        if (isDestructible) {
+                            this.health--;
+                            if (this.health == 0) {
+                                this.type = -1;
+                            }
+                            updateTileOnMap();
+                        }
+                    }
+                    if (Main.tool.weaponType == 2) { // hoe
                         if (isHarvestable) {
                             if (this.type == 0) {
                                 this.type = 1;
@@ -138,7 +153,6 @@ public class Tile {
                             }
                         }
                     }
-
                 }
                 canPress = false;
             }

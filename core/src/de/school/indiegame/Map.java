@@ -15,7 +15,7 @@ public class Map {
     public static HashMap<String, int[][]> maps = new HashMap<>();
     public static HashMap<String, Pixmap[][]> tilesetPixmaps = new HashMap<>();
     public static int tilesetSize = 512 / Main.TILE_SIZE;
-    public static  String[] tilesets = {"ground", "blockable", "environment"}; // add in according layer | first = lowest layer
+    public static  String[] tilesets = {"ground", "destructible", "environment", "indestructible"}; // add in according layer | first = lowest layer
     static ArrayList<Tile> tilesToRemove = new ArrayList<>();
 
     public Map() {
