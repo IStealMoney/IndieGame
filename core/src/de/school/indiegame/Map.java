@@ -11,12 +11,12 @@ import java.util.HashMap;
 
 public class Map {
 
-    public static ArrayList<Tile> mapTiles = new ArrayList<>();
-    public static HashMap<String, int[][]> maps = new HashMap<>();
-    public static HashMap<String, Pixmap[][]> tilesetPixmaps = new HashMap<>();
+    public static ArrayList<Tile> mapTiles = new ArrayList<Tile>();
+    public static HashMap<String, int[][]> maps = new HashMap<String, int[][]>();
+    public static HashMap<String, Pixmap[][]> tilesetPixmaps = new HashMap<String, Pixmap[][]>();
     public static int tilesetSize = 512 / Main.TILE_SIZE;
     public static  String[] tilesets = {"ground", "destructible", "environment", "indestructible"}; // add in according layer | first = lowest layer
-    static ArrayList<Tile> tilesToRemove = new ArrayList<>();
+    static ArrayList<Tile> tilesToRemove = new ArrayList<Tile>();
 
     public Map() {
         try {
@@ -59,14 +59,14 @@ public class Map {
 
             // Load map from file
             BufferedReader bR = new BufferedReader(new FileReader(Gdx.files.internal(mapPath).toString()));
-            ArrayList<ArrayList<Integer>> mapData = new ArrayList<>();
+            ArrayList<ArrayList<Integer>> mapData = new ArrayList<ArrayList<Integer>>();
 
             int i = 0;
             String line = bR.readLine();
 
             while (line != null) {
                 // Iterate through file lines and save its data
-                mapData.add(new ArrayList<>());
+                mapData.add(new ArrayList<Integer>());
                 String[] tilesString = line.split(",");
                 int[] tiles = new int[tilesString.length];
 
