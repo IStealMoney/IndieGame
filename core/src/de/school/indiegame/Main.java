@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.awt.*;
-//email commit test
+//lol
 public class Main extends ApplicationAdapter {
 	public static int[] GAME_SIZE = {480, 270};
 	public static float MULTIPLIER;
