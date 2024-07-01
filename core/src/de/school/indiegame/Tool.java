@@ -18,7 +18,7 @@ public class Tool {
 
     // Appearance
     boolean isPressed = false;
-    double pressedTime = 250f;
+    double pressedTime = 200f;
     double pressedStartTime = System.currentTimeMillis();
     double currentPressedTime;
     int defaultRotation = 10;
