@@ -10,9 +10,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Input.Keys;
 
-import java.io.File;
-import java.util.ArrayList;
-
 public class Player {
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/player.png"));
@@ -73,12 +70,6 @@ public class Player {
 
         // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || x-Axis
         move();
-
-        // exit with esc button
-        // exit menu?
-        if (input.isKeyJustPressed(Keys.ESCAPE)) {
-            Gdx.app.exit();
-        }
 
 
         // Add collision for each axis
