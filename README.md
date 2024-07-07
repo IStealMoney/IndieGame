@@ -1,23 +1,25 @@
 # IndieGame
-pixel
-school project
+Schulprojekt
 
 
 ## Ziel
-2D Spiel, in dem es um eine Farm geht, das auf  Linux und Windows kompatibel ist.
-
+2D Spiel, das unter Linux und Windows kompatibel ist, in dem es um eine Farm geht, auf der man mithilfe von erwirtschaftetem Geld Erweiterungen kaufen kann.
 
 ## Nicht-Ziel
 Website
 
 ## Nächste Schritte
-fullscreen?
-Bäume oder ähnliches hinzufügen
-Verschiedene Pflanzentypen
-Kollision hinzufügen
-Inventarsystem -> Rucksack und Toolbar
+fullscreen ✓
+Kollision hinzufügen ✓
+Bäume oder ähnliches hinzufügen 
+verschiedene Pflanzentypen
+
+Inventarsystem 
+- Rucksack
+- Toolbar
+
 Geldsystem
-Maperweiterung kaufbar machen bzw. hinzufügen
+Map-Erweiterung kaufbar machen bzw. hinzufügen
 Markt zum Verkaufen
 
 ## Weitere Ideen
