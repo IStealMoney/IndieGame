@@ -1,12 +1,10 @@
 package de.school.indiegame;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
-import static de.school.indiegame.MenuScreen.game;
 
 // Main doesn't contain any logic or rendering code bcs it extends Game
 // class for shared resources
@@ -23,14 +21,21 @@ public class Main extends Game {
 	public static Player player;
 	public static Tool tool;
 	public static BitmapFont font;
+
 	private GameScreen gameScreen;
 	private MenuScreen menuScreen;
 
-	@Override
+
+    @Override
 	public void create () {
 		// for GameScreen
 		gameScreen = new GameScreen(this);
-		//menuScreen = new MenuScreen(this);
+		//menuScreen = new MenuScreen(this);	//wenn auskommentiert, dann kacke
+		setScreen(new GameScreen(this));
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//gameScreen.render(0);
+
 		SCREEN_SIZE[0] = Gdx.graphics.getWidth();
 		SCREEN_SIZE[1] = Gdx.graphics.getHeight();
 		MULTIPLIER = (SCREEN_SIZE[0] / GAME_SIZE[0] + SCREEN_SIZE[1] / GAME_SIZE[1]) / 2;
@@ -41,7 +46,6 @@ public class Main extends Game {
 		player = new Player((float) SCREEN_SIZE[0] / 2, (float) SCREEN_SIZE[1] / 2);
 		tool = new Tool(player.rect.x, player.rect.y, 0);
 		MAP = new Map();
-		setScreen(new GameScreen(this));
 	}
 	
 	@Override
@@ -59,9 +63,13 @@ public class Main extends Game {
 
 	public void switchToMenuScreen() {
 		setScreen(menuScreen);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//menuScreen.render(0);
 	}
 
 	public void switchToGameScreen() {
 		setScreen(gameScreen);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//gameScreen.render(0);
 	}
 }

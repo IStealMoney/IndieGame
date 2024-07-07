@@ -16,23 +16,26 @@ import static de.school.indiegame.Main.shape;
 
 public class GameScreen implements Screen {
 
-    Main game;
+    private final Main game;
     private Stage gameStage;
+    private boolean paused;
 
     public GameScreen(Main game) {
         this.game = game;
+        this.paused = false;
+        gameStage = new Stage(new ScreenViewport());
     }
 
     @Override
     public void show() {
-        gameStage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(gameStage);
+        //Gdx.input.setInputProcessor(gameStage);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {
                 // from GameScreen to MenuScreen
                 if (keyCode == Input.Keys.ESCAPE) {
+                    paused = true;
                     game.switchToMenuScreen();
                     return true;
                 }
@@ -44,33 +47,26 @@ public class GameScreen implements Screen {
     @Override
     public void render (float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        gameStage.act(delta);
+        gameStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         gameStage.draw();
 
-        ScreenUtils.clear(1, 1, 1, 1);
-        shape.begin();
-        batch.begin();
+        if (!paused) {
+            ScreenUtils.clear(1, 1, 1, 1);
+            shape.begin();
+            batch.begin();
 
-        updateSprites();
-        drawSprites(batch);
+            updateSprites();
+            drawSprites(batch);
 
-        batch.end();
-        shape.end();
+            batch.end();
+            shape.end();
+        }
+
     }
 
     @Override
     public void resize(int width, int height) {
         gameStage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 
     public void drawSprites(SpriteBatch batch) {
@@ -87,12 +83,24 @@ public class GameScreen implements Screen {
     }
 
     @Override
+    public void pause() {
+        paused = true;
+    }
+
+    @Override
+    public void resume() {
+        paused = false;
+    }
+
+    @Override
     public void hide() {
-        Gdx.input.setInputProcessor(null);
+
     }
 
     @Override
     public void dispose() {
-        gameStage.dispose();
+        if (gameStage != null) {
+            gameStage.dispose();
+        }
     }
 }
