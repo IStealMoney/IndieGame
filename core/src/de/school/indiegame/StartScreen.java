@@ -64,6 +64,9 @@ public class StartScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameScreen.paused = false;
+                // game screen needs to be in beginning state
+                // also calls showGameScreen method
+                // game.resetGame();
                 game.showGameScreen();
             }
         });

@@ -31,6 +31,10 @@ public class Main extends Game {
 
     @Override
 	public void create () {
+		initializeGame();
+	}
+
+	public void initializeGame() {
 		// for GameScreen
 		gameScreen = new GameScreen(this);
 		pauseScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke -> jetzt doch nicht mehr :)
@@ -38,7 +42,6 @@ public class Main extends Game {
 		setScreen(new StartScreen(this));
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//gameScreen.render(0);
 
 		SCREEN_SIZE[0] = Gdx.graphics.getWidth();
 		SCREEN_SIZE[1] = Gdx.graphics.getHeight();
@@ -78,5 +81,17 @@ public class Main extends Game {
 
 	public void showStartScreen() {
 		setScreen(startScreen);
+	}
+
+	public void resetGame() {
+		// dispose current screens
+		if (gameScreen != null) {
+			gameScreen.dispose();
+		}
+		if (pauseScreen != null) {
+			pauseScreen.dispose();
+		}
+		// new Instance
+		initializeGame();
 	}
 }
