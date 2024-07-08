@@ -10,56 +10,56 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-public class PauseScreen implements Screen {
+public class StartScreen implements Screen {
     private final Main game;
-    private Stage menuStage;
+    private Stage startStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
 
-    private ImageButton continueBtn;
-    private Texture continueTexture;
+    private ImageButton startGameBtn;
+    private Texture startGameTexture;
     private ImageButton quitBtn;
     private Texture quitTexture;
 
 
-    private Table menuTable;
-    Label menuLabel;
+    private Table startTable;
+    Label startLabel;
     BitmapFont font;
 
-    public PauseScreen(final Main game) {
+    public StartScreen(final Main game) {
         this.game = game;
         font = new BitmapFont();
 
         // stage
-        menuStage = new Stage(new StretchViewport(1920, 1080));
+        startStage = new Stage(new StretchViewport(1920, 1080));
         //table
-        menuTable = new Table();
-        menuTable.setFillParent(true);
+        startTable = new Table();
+        startTable.setFillParent(true);
         //menuTable.center();
         //menuTable.setDebug(true);
-        menuStage.addActor(menuTable);
+        startStage.addActor(startTable);
 
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.font.getData().setScale(10);
-        menuLabel = new Label("Pause", labelStyle);
+        startLabel = new Label("Welcome!", labelStyle);
 
         // quit btn
         quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
         textureRegion = new TextureRegion(quitTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         quitBtn = new ImageButton(textureRegionDrawable);
-        menuTable.addActor(quitBtn);
-        // continue btn
-        continueTexture = new Texture(Gdx.files.internal("menu/test.png"));
-        textureRegion = new TextureRegion(continueTexture);
+        startTable.addActor(quitBtn);
+        // start game btn
+        startGameTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        textureRegion = new TextureRegion(startGameTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
-        continueBtn = new ImageButton(textureRegionDrawable);
-        menuTable.addActor(continueBtn);
+        startGameBtn = new ImageButton(textureRegionDrawable);
+        startTable.addActor(startGameBtn);
 
         // Listener
-        continueBtn.addListener(new ChangeListener() {
+        startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameScreen.paused = false;
@@ -74,14 +74,14 @@ public class PauseScreen implements Screen {
         });
 
         // add elements to table
-        menuTable.add(menuLabel).row();
-        menuTable.add(continueBtn).row();
-        menuTable.add(quitBtn).row();
+        startTable.add(startLabel).row();
+        startTable.add(startGameBtn).row();
+        startTable.add(quitBtn).row();
     }
 
     @Override
     public void show() {
-        menuStage.addListener(new InputListener() {
+        startStage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ESCAPE) {
@@ -92,18 +92,18 @@ public class PauseScreen implements Screen {
                 return false;
             }
         });
-        Gdx.input.setInputProcessor(menuStage);
+        Gdx.input.setInputProcessor(startStage);
     }
 
     @Override
     public void render(float delta) {
-        menuStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        menuStage.draw();
+        startStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        startStage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        menuStage.getViewport().update(width, height, true);
+        startStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -123,8 +123,9 @@ public class PauseScreen implements Screen {
 
     @Override
     public void dispose() {
-        if (menuStage != null) {
-            menuStage.dispose();
+        if (startStage != null) {
+            startStage.dispose();
         }
     }
 }
+

@@ -24,14 +24,16 @@ public class Main extends Game {
 
 	private GameScreen gameScreen;
 	private PauseScreen menuScreen;
+	private StartScreen startScreen;
 
 
     @Override
 	public void create () {
 		// for GameScreen
 		gameScreen = new GameScreen(this);
-		menuScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke
-		setScreen(new GameScreen(this));
+		menuScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke -> jetzt doch nicht mehr :)
+		startScreen = new StartScreen(this);
+		setScreen(new StartScreen(this));
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//gameScreen.render(0);
