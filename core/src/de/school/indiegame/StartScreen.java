@@ -1,6 +1,7 @@
 package de.school.indiegame;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,35 +36,35 @@ public class StartScreen implements Screen {
         //table
         startTable = new Table();
         startTable.setFillParent(true);
-        //menuTable.center();
-        //menuTable.setDebug(true);
+        //startTable.center();
+        //startTable.setDebug(true);
         startStage.addActor(startTable);
 
-        // menu text
+        // Welcome text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.font.getData().setScale(10);
         startLabel = new Label("Welcome!", labelStyle);
 
-        // quit btn
-        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
-        textureRegion = new TextureRegion(quitTexture);
-        textureRegionDrawable = new TextureRegionDrawable(textureRegion);
-        quitBtn = new ImageButton(textureRegionDrawable);
-        startTable.addActor(quitBtn);
         // start game btn
         startGameTexture = new Texture(Gdx.files.internal("menu/test.png"));
         textureRegion = new TextureRegion(startGameTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         startGameBtn = new ImageButton(textureRegionDrawable);
         startTable.addActor(startGameBtn);
+        // quit btn
+        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        textureRegion = new TextureRegion(quitTexture);
+        textureRegionDrawable = new TextureRegionDrawable(textureRegion);
+        quitBtn = new ImageButton(textureRegionDrawable);
+        startTable.addActor(quitBtn);
 
         // Listener
         startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameScreen.paused = false;
-                game.switchToGameScreen();
+                game.showGameScreen();
             }
         });
         quitBtn.addListener(new ChangeListener() {
@@ -86,7 +87,8 @@ public class StartScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        startStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        startStage.act(delta);
         startStage.draw();
     }
 

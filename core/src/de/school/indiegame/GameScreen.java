@@ -33,10 +33,10 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {
-                // from GameScreen to MenuScreen
+                // from GameScreen to PauseScreen
                 if (keyCode == Input.Keys.ESCAPE) {
                     paused = true;
-                    game.switchToMenuScreen();
+                    game.showPauseScreen();
                     return true;
                 }
                 return false;

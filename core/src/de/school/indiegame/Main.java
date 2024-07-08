@@ -23,7 +23,7 @@ public class Main extends Game {
 	public static BitmapFont font;
 
 	private GameScreen gameScreen;
-	private PauseScreen menuScreen;
+	private PauseScreen pauseScreen;
 	private StartScreen startScreen;
 
 
@@ -31,7 +31,7 @@ public class Main extends Game {
 	public void create () {
 		// for GameScreen
 		gameScreen = new GameScreen(this);
-		menuScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke -> jetzt doch nicht mehr :)
+		pauseScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke -> jetzt doch nicht mehr :)
 		startScreen = new StartScreen(this);
 		setScreen(new StartScreen(this));
 
@@ -63,15 +63,15 @@ public class Main extends Game {
 		}
 	}
 
-	public void switchToMenuScreen() {
-		setScreen(menuScreen);
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//menuScreen.render(0);
+	public void showPauseScreen() {
+		setScreen(pauseScreen);
 	}
 
-	public void switchToGameScreen() {
+	public void showGameScreen() {
 		setScreen(gameScreen);
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//gameScreen.render(0);
+	}
+
+	public void showStartScreen() {
+		setScreen(startScreen);
 	}
 }

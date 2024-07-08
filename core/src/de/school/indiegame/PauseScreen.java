@@ -1,6 +1,7 @@
 package de.school.indiegame;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,22 +9,25 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class PauseScreen implements Screen {
     private final Main game;
-    private Stage menuStage;
+    public static Stage pauseStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
 
-    private ImageButton continueBtn;
-    private Texture continueTexture;
     private ImageButton quitBtn;
     private Texture quitTexture;
+    private ImageButton continueBtn;
+    private Texture continueTexture;
+    private ImageButton homeBtn;
+    private Texture homeTexture;
 
 
-    private Table menuTable;
-    Label menuLabel;
+    private Table pauseTable;
+    private Label pauseLabel;
     BitmapFont font;
 
     public PauseScreen(final Main game) {
@@ -31,39 +35,54 @@ public class PauseScreen implements Screen {
         font = new BitmapFont();
 
         // stage
-        menuStage = new Stage(new StretchViewport(1920, 1080));
-        //table
-        menuTable = new Table();
-        menuTable.setFillParent(true);
+        pauseStage = new Stage(new StretchViewport(1920, 1080));
+
+        // table
+        pauseTable = new Table();
+        pauseTable.setFillParent(true);
         //menuTable.center();
         //menuTable.setDebug(true);
-        menuStage.addActor(menuTable);
+        pauseStage.addActor(pauseTable);
 
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.font.getData().setScale(10);
-        menuLabel = new Label("Pause", labelStyle);
+        pauseLabel = new Label("Pause", labelStyle);
 
-        // quit btn
-        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
-        textureRegion = new TextureRegion(quitTexture);
-        textureRegionDrawable = new TextureRegionDrawable(textureRegion);
-        quitBtn = new ImageButton(textureRegionDrawable);
-        menuTable.addActor(quitBtn);
         // continue btn
         continueTexture = new Texture(Gdx.files.internal("menu/test.png"));
         textureRegion = new TextureRegion(continueTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         continueBtn = new ImageButton(textureRegionDrawable);
-        menuTable.addActor(continueBtn);
+        pauseTable.addActor(continueBtn);
+        // home btn
+        homeTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        textureRegion = new TextureRegion(homeTexture);
+        textureRegionDrawable = new TextureRegionDrawable(textureRegion);
+        homeBtn = new ImageButton(textureRegionDrawable);
+        pauseTable.addActor(homeBtn);
+        // quit btn
+        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        textureRegion = new TextureRegion(quitTexture);
+        textureRegionDrawable = new TextureRegionDrawable(textureRegion);
+        quitBtn = new ImageButton(textureRegionDrawable);
+        pauseTable.addActor(quitBtn);
 
         // Listener
         continueBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameScreen.paused = false;
-                game.switchToGameScreen();
+                game.showGameScreen();
+            }
+        });
+        homeBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                GameScreen.paused = true;
+                game.showStartScreen();
+                // game screen sollte in den Anfangszustand zurückkehren und nicht zu sehen sein
             }
         });
         quitBtn.addListener(new ChangeListener() {
@@ -74,36 +93,38 @@ public class PauseScreen implements Screen {
         });
 
         // add elements to table
-        menuTable.add(menuLabel).row();
-        menuTable.add(continueBtn).row();
-        menuTable.add(quitBtn).row();
+        pauseTable.add(pauseLabel).row();
+        pauseTable.add(continueBtn).row();
+        pauseTable.add(homeBtn).row();
+        pauseTable.add(quitBtn).row();
     }
 
     @Override
     public void show() {
-        menuStage.addListener(new InputListener() {
+        pauseStage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ESCAPE) {
                     GameScreen.paused = false;
-                    game.switchToGameScreen();
+                    game.showGameScreen();
                     return true;
                 }
                 return false;
             }
         });
-        Gdx.input.setInputProcessor(menuStage);
+        Gdx.input.setInputProcessor(pauseStage);
     }
 
     @Override
     public void render(float delta) {
-        menuStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        menuStage.draw();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        pauseStage.act(delta);
+        pauseStage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        menuStage.getViewport().update(width, height, true);
+        pauseStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -123,8 +144,8 @@ public class PauseScreen implements Screen {
 
     @Override
     public void dispose() {
-        if (menuStage != null) {
-            menuStage.dispose();
+        if (pauseStage != null) {
+            pauseStage.dispose();
         }
     }
 }
