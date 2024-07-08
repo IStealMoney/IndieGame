@@ -15,16 +15,18 @@ public class Main extends Game {
 	public static float[] SCREEN_SIZE = new float[2];
 	public static int TILE_SIZE = 16;
 	public static Map MAP;
+	public static Inventory inventory;
 
 	static SpriteBatch batch;
 	static ShapeRenderer shape;
 	public static Player player;
 	public static Tool tool;
+	public static boolean mouseAboveHud = false;
 	public static BitmapFont font;
 
 	private GameScreen gameScreen;
 	private PauseScreen pauseScreen;
-	private StartScreen startScreen;
+	StartScreen startScreen;
 
 
     @Override
@@ -44,10 +46,11 @@ public class Main extends Game {
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
 		shape.setAutoShapeType(true);
-		BitmapFont font = new BitmapFont();
+		font = new BitmapFont();
 		player = new Player((float) SCREEN_SIZE[0] / 2, (float) SCREEN_SIZE[1] / 2);
 		tool = new Tool(player.rect.x, player.rect.y, 0);
 		MAP = new Map();
+		inventory = new Inventory(SCREEN_SIZE[0] - SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 8);
 	}
 	
 	@Override
@@ -56,6 +59,8 @@ public class Main extends Game {
 		batch.dispose();
 		player.texture.dispose();
 		tool.texture.dispose();
+		inventory.backgroundTexture.dispose();
+		inventory.selectedSlotTexture.dispose();
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();

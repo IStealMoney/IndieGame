@@ -58,7 +58,6 @@ public class Tile {
         this.mapX = mapX;
         this.mapY = mapY;
         this.type = type;
-        this.group = group;
         setProperties();
     }
 

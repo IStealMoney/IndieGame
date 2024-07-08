@@ -56,12 +56,16 @@ public class Tool {
     }
 
     public void handleInput() {
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (!isPressed) {
-                isPressed = true;
-                pressedStartTime = System.currentTimeMillis();
+        // Check if mouse is not above hud
+        if (!Main.mouseAboveHud) {
+            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                if (!isPressed) {
+                    isPressed = true;
+                    pressedStartTime = System.currentTimeMillis();
+                }
             }
         }
+
         // Change tool
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             this.weaponType = 0;
