@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 // add btns to table and table to stage
 
@@ -36,7 +38,7 @@ public class MenuScreen implements Screen {
         font = new BitmapFont();
 
         // stage
-        menuStage = new Stage(new ScreenViewport());
+        menuStage = new Stage(new StretchViewport(1920, 1080));
         //table
         menuTable = new Table();
         menuTable.setFillParent(true);
@@ -79,10 +81,9 @@ public class MenuScreen implements Screen {
         });
 
         // add elements to table
-        menuTable.add(menuLabel).padBottom(3 * Main.MULTIPLIER).row();
-        menuTable.add(continueBtn).padBottom(2 * Main.MULTIPLIER).row();
-        menuTable.add(quitBtn).padBottom(1 * Main.MULTIPLIER).row();
-
+        menuTable.add(menuLabel).row();
+        menuTable.add(continueBtn).row();
+        menuTable.add(quitBtn).row();
     }
 
     @Override
