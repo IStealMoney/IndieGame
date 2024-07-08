@@ -77,14 +77,14 @@ public class Tool {
         }
 
         // Flip Sprite
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (sprite.isFlipX()) {
                 sprite.setFlip(false, false);
                 sprite.setRotation(defaultRotation);
                 sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) + offset[0]);
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if (!sprite.isFlipX()) {
                 sprite.setFlip(true, false);
                 sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
