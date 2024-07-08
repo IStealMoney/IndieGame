@@ -81,17 +81,6 @@ public class StartScreen implements Screen {
 
     @Override
     public void show() {
-        startStage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.ESCAPE) {
-                    GameScreen.paused = false;
-                    game.switchToGameScreen();
-                    return true;
-                }
-                return false;
-            }
-        });
         Gdx.input.setInputProcessor(startStage);
     }
 
