@@ -23,14 +23,14 @@ public class Main extends Game {
 	public static BitmapFont font;
 
 	private GameScreen gameScreen;
-	private MenuScreen menuScreen;
+	private PauseScreen menuScreen;
 
 
     @Override
 	public void create () {
 		// for GameScreen
 		gameScreen = new GameScreen(this);
-		menuScreen = new MenuScreen(this);	//wenn auskommentiert, dann kacke
+		menuScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke
 		setScreen(new GameScreen(this));
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

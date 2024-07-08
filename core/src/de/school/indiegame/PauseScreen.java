@@ -1,8 +1,6 @@
 package de.school.indiegame;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,14 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 // add btns to table and table to stage
 
-public class MenuScreen implements Screen {
+public class PauseScreen implements Screen {
     private final Main game;
     private Stage menuStage;
     private TextureRegion textureRegion;
@@ -33,7 +28,7 @@ public class MenuScreen implements Screen {
     Label menuLabel;
     BitmapFont font;
 
-    public MenuScreen(Main game) {
+    public PauseScreen(Main game) {
         this.game = game;
         font = new BitmapFont();
 
@@ -50,7 +45,7 @@ public class MenuScreen implements Screen {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.font.getData().setScale(10);
-        menuLabel = new Label("Menu", labelStyle);
+        menuLabel = new Label("Pause", labelStyle);
 
         // quit btn
         quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
