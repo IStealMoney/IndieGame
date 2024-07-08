@@ -79,9 +79,10 @@ public class MenuScreen implements Screen {
         });
 
         // add elements to table
-        menuTable.add(menuLabel).padBottom(15).row();
-        menuTable.add(continueBtn).padBottom(10).row();
-        menuTable.add(quitBtn);
+        menuTable.add(menuLabel).padBottom(3 * Main.MULTIPLIER).row();
+        menuTable.add(continueBtn).padBottom(2 * Main.MULTIPLIER).row();
+        menuTable.add(quitBtn).padBottom(1 * Main.MULTIPLIER).row();
+
     }
 
     @Override
