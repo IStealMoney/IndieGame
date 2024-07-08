@@ -47,13 +47,13 @@ public class StartScreen implements Screen {
         startLabel = new Label("Welcome!", labelStyle);
 
         // start game btn
-        startGameTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        startGameTexture = new Texture(Gdx.files.internal("menu/startGameBtn.png"));
         textureRegion = new TextureRegion(startGameTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         startGameBtn = new ImageButton(textureRegionDrawable);
         startTable.addActor(startGameBtn);
         // quit btn
-        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        quitTexture = new Texture(Gdx.files.internal("menu/quitBtn.png"));
         textureRegion = new TextureRegion(quitTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         quitBtn = new ImageButton(textureRegionDrawable);

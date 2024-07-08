@@ -51,19 +51,19 @@ public class PauseScreen implements Screen {
         pauseLabel = new Label("Pause", labelStyle);
 
         // continue btn
-        continueTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        continueTexture = new Texture(Gdx.files.internal("menu/continueBtn.png"));
         textureRegion = new TextureRegion(continueTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         continueBtn = new ImageButton(textureRegionDrawable);
         pauseTable.addActor(continueBtn);
         // home btn
-        homeTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        homeTexture = new Texture(Gdx.files.internal("menu/homeBtn.png"));
         textureRegion = new TextureRegion(homeTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         homeBtn = new ImageButton(textureRegionDrawable);
         pauseTable.addActor(homeBtn);
         // quit btn
-        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        quitTexture = new Texture(Gdx.files.internal("menu/quitBtn.png"));
         textureRegion = new TextureRegion(quitTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         quitBtn = new ImageButton(textureRegionDrawable);
