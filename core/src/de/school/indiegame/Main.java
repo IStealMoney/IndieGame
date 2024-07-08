@@ -30,7 +30,7 @@ public class Main extends Game {
 	public void create () {
 		// for GameScreen
 		gameScreen = new GameScreen(this);
-		//menuScreen = new MenuScreen(this);	//wenn auskommentiert, dann kacke
+		menuScreen = new MenuScreen(this);	//wenn auskommentiert, dann kacke
 		setScreen(new GameScreen(this));
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

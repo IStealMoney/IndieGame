@@ -18,11 +18,11 @@ public class GameScreen implements Screen {
 
     private final Main game;
     private Stage gameStage;
-    private boolean paused;
+    public static boolean paused;
 
     public GameScreen(Main game) {
         this.game = game;
-        this.paused = false;
+        GameScreen.paused = false;
         gameStage = new Stage(new ScreenViewport());
     }
 

@@ -1,6 +1,7 @@
 package de.school.indiegame;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 // add btns to table and table to stage
@@ -18,26 +20,23 @@ public class MenuScreen implements Screen {
     private Stage menuStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
-    private BitmapFont font;
+
     private ImageButton continueBtn;
-    private Image continueImage;
     private Texture continueTexture;
     private ImageButton quitBtn;
-    private Image quitImage;
     private Texture quitTexture;
 
-    private Label menuLabel;
 
     private Table menuTable;
-    private TextButton.TextButtonStyle textButtonStyle;
-    private Skin skin;
+    Label menuLabel;
+    BitmapFont font;
 
     public MenuScreen(Main game) {
         this.game = game;
+        font = new BitmapFont();
+
         // stage
         menuStage = new Stage(new ScreenViewport());
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
-
         //table
         menuTable = new Table();
         menuTable.setFillParent(true);
@@ -45,8 +44,11 @@ public class MenuScreen implements Screen {
         //menuTable.setDebug(true);
         menuStage.addActor(menuTable);
 
-        //label
-        menuLabel = new Label("Menu", skin);
+        // menu text
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = font;
+        labelStyle.font.getData().setScale(10);
+        menuLabel = new Label("Menu", labelStyle);
 
         // quit btn
         quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
@@ -55,7 +57,7 @@ public class MenuScreen implements Screen {
         quitBtn = new ImageButton(textureRegionDrawable);
         menuTable.addActor(quitBtn);
         // continue btn
-        quitTexture = new Texture(Gdx.files.internal("menu/test.png"));
+        continueTexture = new Texture(Gdx.files.internal("menu/test.png"));
         textureRegion = new TextureRegion(continueTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         continueBtn = new ImageButton(textureRegionDrawable);
@@ -65,6 +67,7 @@ public class MenuScreen implements Screen {
         continueBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                GameScreen.paused = false;
                 game.switchToGameScreen();
             }
         });
@@ -76,32 +79,29 @@ public class MenuScreen implements Screen {
         });
 
         // add elements to table
-        menuTable.add(menuLabel).padBottom(20).row();
+        menuTable.add(menuLabel).padBottom(15).row();
         menuTable.add(continueBtn).padBottom(10).row();
         menuTable.add(quitBtn);
     }
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(menuStage);
-
-        // from MenuScreen to GameScreen by pressing ESCAPE
-        /*Gdx.input.setInputProcessor(new InputAdapter() {
+        menuStage.addListener(new InputListener() {
             @Override
-            public boolean keyDown(int keyCode) {
-                // from MenuScreen to GameScreen
-                if (keyCode == Input.Keys.ESCAPE) {
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    GameScreen.paused = false;
                     game.switchToGameScreen();
                     return true;
                 }
                 return false;
             }
-        });*/
+        });
+        Gdx.input.setInputProcessor(menuStage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         menuStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         menuStage.draw();
     }
@@ -130,9 +130,6 @@ public class MenuScreen implements Screen {
     public void dispose() {
         if (menuStage != null) {
             menuStage.dispose();
-        }
-        if (skin != null) {
-            skin.dispose();
         }
     }
 }
