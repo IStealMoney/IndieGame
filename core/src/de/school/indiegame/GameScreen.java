@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
     @Override
     public void render (float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        gameStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        gameStage.act(delta);
         gameStage.draw();
 
         if (!paused) {

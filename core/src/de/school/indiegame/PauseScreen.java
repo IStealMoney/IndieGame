@@ -80,9 +80,9 @@ public class PauseScreen implements Screen {
         homeBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                GameScreen.paused = true;
-                game.showStartScreen();
-                // game screen sollte in den Anfangszustand zurückkehren und nicht zu sehen sein
+                //GameScreen.paused = true;
+                //game.showStartScreen();
+                game.resetGame();
             }
         });
         quitBtn.addListener(new ChangeListener() {
@@ -96,7 +96,7 @@ public class PauseScreen implements Screen {
         pauseTable.add(pauseLabel).row();
         pauseTable.add(continueBtn).row();
         pauseTable.add(homeBtn).row();
-        pauseTable.add(quitBtn).row();
+        pauseTable.add(quitBtn);
     }
 
     @Override
