@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -12,9 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import static de.school.indiegame.StartScreen.btnSize;
+
 public class PauseScreen implements Screen {
     private final Main game;
-    public static Stage pauseStage;
+    private Stage pauseStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
 
@@ -36,13 +39,12 @@ public class PauseScreen implements Screen {
 
         // stage
         pauseStage = new Stage(new StretchViewport(1920, 1080));
+        float xPosition = 1920/3;
+        float yPosition = 1080/3 * 2;
 
         // table
         pauseTable = new Table();
         pauseTable.setFillParent(true);
-        //menuTable.center();
-        //menuTable.setDebug(true);
-        pauseStage.addActor(pauseTable);
 
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
@@ -55,19 +57,25 @@ public class PauseScreen implements Screen {
         textureRegion = new TextureRegion(continueTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         continueBtn = new ImageButton(textureRegionDrawable);
-        pauseTable.addActor(continueBtn);
+        continueBtn.setSize(300, 300);
+        continueBtn.setTransform(true);
+        continueBtn.getImageCell().expand().fill();
         // home btn
         homeTexture = new Texture(Gdx.files.internal("menu/homeBtn.png"));
         textureRegion = new TextureRegion(homeTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         homeBtn = new ImageButton(textureRegionDrawable);
-        pauseTable.addActor(homeBtn);
+        homeBtn.setSize(300, 300);
+        homeBtn.setTransform(true);
+        homeBtn.getImageCell().expand().fill();
         // quit btn
         quitTexture = new Texture(Gdx.files.internal("menu/quitBtn.png"));
         textureRegion = new TextureRegion(quitTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         quitBtn = new ImageButton(textureRegionDrawable);
-        pauseTable.addActor(quitBtn);
+        quitBtn.setSize(300, 300);
+        homeBtn.setTransform(true);
+        quitBtn.getImageCell().expand().fill();
 
         // Listener
         continueBtn.addListener(new ChangeListener() {
@@ -80,8 +88,6 @@ public class PauseScreen implements Screen {
         homeBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //GameScreen.paused = true;
-                //game.showStartScreen();
                 game.resetGame();
             }
         });
@@ -94,10 +100,19 @@ public class PauseScreen implements Screen {
 
         // add elements to table
         pauseTable.add(pauseLabel).row();
-        pauseTable.add(continueBtn).row();
-        pauseTable.add(homeBtn).row();
+//        pauseTable.add(continueBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
+//        pauseTable.add(homeBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
+//        pauseTable.add(quitBtn).size(StartScreen.btnSize, StartScreen.btnSize);
+
+        pauseTable.add(continueBtn);
+        pauseTable.add(homeBtn);
         pauseTable.add(quitBtn);
+
+
+        pauseStage.addActor(pauseTable);
     }
+
+
 
     @Override
     public void show() {
@@ -112,12 +127,12 @@ public class PauseScreen implements Screen {
                 return false;
             }
         });
-        Gdx.input.setInputProcessor(pauseStage);
+        //Gdx.input.setInputProcessor(pauseStage);
     }
 
     @Override
     public void render(float delta) {
-       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         pauseStage.act(delta);
         pauseStage.draw();
     }
@@ -146,6 +161,15 @@ public class PauseScreen implements Screen {
     public void dispose() {
         if (pauseStage != null) {
             pauseStage.dispose();
+        }
+        if (continueBtn != null) {
+            continueTexture.dispose();
+        }
+        if (homeBtn != null) {
+            homeTexture.dispose();
+        }
+        if (quitBtn != null) {
+            quitTexture.dispose();
         }
     }
 }

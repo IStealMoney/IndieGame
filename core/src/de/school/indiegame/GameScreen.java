@@ -30,7 +30,6 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         //Gdx.input.setInputProcessor(gameStage);
-
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {

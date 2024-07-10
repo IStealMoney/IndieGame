@@ -21,13 +21,11 @@ public class Main extends Game {
 	static ShapeRenderer shape;
 	public static Player player;
 	public static Tool tool;
+	public static StartScreen startScreen;
+	public static PauseScreen pauseScreen;
+	public static GameScreen gameScreen;
 	public static boolean mouseAboveHud = false;
 	public static BitmapFont font;
-
-	private GameScreen gameScreen;
-	private PauseScreen pauseScreen;
-	StartScreen startScreen;
-
 
     @Override
 	public void create () {
@@ -35,9 +33,8 @@ public class Main extends Game {
 	}
 
 	public void initializeGame() {
-		// for GameScreen
 		gameScreen = new GameScreen(this);
-		pauseScreen = new PauseScreen(this);	//wenn auskommentiert, dann kacke -> jetzt doch nicht mehr :)
+		pauseScreen = new PauseScreen(this);
 		startScreen = new StartScreen(this);
 		setScreen(new StartScreen(this));
 
@@ -62,6 +59,11 @@ public class Main extends Game {
 		batch.dispose();
 		player.texture.dispose();
 		tool.texture.dispose();
+//		startScreen.startGameTexture.dispose();
+//		startScreen.quitTexture.dispose();
+//		pauseScreen.quitTexture.dispose();
+//		pauseScreen.continueTexture.dispose();
+//		pauseScreen.homeTexture.dispose();
 		inventory.backgroundTexture.dispose();
 		inventory.selectedSlotTexture.dispose();
 
@@ -90,6 +92,9 @@ public class Main extends Game {
 		}
 		if (pauseScreen != null) {
 			pauseScreen.dispose();
+		}
+		if (startScreen != null) {
+			startScreen.dispose();
 		}
 		// new Instance
 		initializeGame();

@@ -13,15 +13,17 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class StartScreen implements Screen {
     private final Main game;
+
     private Stage startStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
 
     private ImageButton startGameBtn;
-    private Texture startGameTexture;
+    Texture startGameTexture;
     private ImageButton quitBtn;
-    private Texture quitTexture;
+    Texture quitTexture;
 
+    public static float btnSize;
 
     private Table startTable;
     Label startLabel;
@@ -33,12 +35,10 @@ public class StartScreen implements Screen {
 
         // stage
         startStage = new Stage(new StretchViewport(1920, 1080));
+
         //table
         startTable = new Table();
         startTable.setFillParent(true);
-        //startTable.center();
-        //startTable.setDebug(true);
-        startStage.addActor(startTable);
 
         // Welcome text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
@@ -51,22 +51,23 @@ public class StartScreen implements Screen {
         textureRegion = new TextureRegion(startGameTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         startGameBtn = new ImageButton(textureRegionDrawable);
-        startTable.addActor(startGameBtn);
+        startGameBtn.setTransform(true);
+        startGameBtn.getImageCell().expand().fill();
         // quit btn
         quitTexture = new Texture(Gdx.files.internal("menu/quitBtn.png"));
         textureRegion = new TextureRegion(quitTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         quitBtn = new ImageButton(textureRegionDrawable);
-        startTable.addActor(quitBtn);
+        quitBtn.setTransform(true);
+        quitBtn.getImageCell().expand().fill();
+
+        btnSize = 1920/8;  //all btns are equal sized
 
         // Listener
         startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameScreen.paused = false;
-                // game screen needs to be in beginning state
-                // also calls showGameScreen method
-                // game.resetGame();
                 game.showGameScreen();
             }
         });
@@ -79,8 +80,10 @@ public class StartScreen implements Screen {
 
         // add elements to table
         startTable.add(startLabel).row();
-        startTable.add(startGameBtn).row();
-        startTable.add(quitBtn).row();
+        startTable.add(startGameBtn).size(btnSize, btnSize).row();
+        startTable.add(quitBtn).size(btnSize, btnSize);
+
+        startStage.addActor(startTable);
     }
 
     @Override
@@ -119,6 +122,12 @@ public class StartScreen implements Screen {
     public void dispose() {
         if (startStage != null) {
             startStage.dispose();
+        }
+        if (startGameBtn != null) {
+            startGameTexture.dispose();
+        }
+        if (quitBtn != null) {
+            quitTexture.dispose();
         }
     }
 }
