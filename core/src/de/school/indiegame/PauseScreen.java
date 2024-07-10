@@ -39,8 +39,6 @@ public class PauseScreen implements Screen {
 
         // stage
         pauseStage = new Stage(new StretchViewport(1920, 1080));
-        float xPosition = 1920/3;
-        float yPosition = 1080/3 * 2;
 
         // table
         pauseTable = new Table();

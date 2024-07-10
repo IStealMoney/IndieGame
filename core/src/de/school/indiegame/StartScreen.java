@@ -80,8 +80,8 @@ public class StartScreen implements Screen {
 
         // add elements to table
         startTable.add(startLabel).row();
-        startTable.add(startGameBtn).size(btnSize, btnSize).row();
-        startTable.add(quitBtn).size(btnSize, btnSize);
+        startTable.add(startGameBtn).size(200, 200).padBottom(100).row();
+        startTable.add(quitBtn).size(200, 200);
 
         startStage.addActor(startTable);
     }
