@@ -103,6 +103,7 @@ public class PauseScreen implements Screen {
         pauseTable.add(continueBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
         pauseTable.add(homeBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
         pauseTable.add(quitBtn).size(StartScreen.btnSize, StartScreen.btnSize);
+        //asdf
 
 
         pauseStage.addActor(pauseTable);
