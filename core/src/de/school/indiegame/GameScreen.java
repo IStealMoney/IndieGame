@@ -14,7 +14,6 @@ import static de.school.indiegame.Main.shape;
 
 
 // class contains all of our game logic
-
 public class GameScreen implements Screen {
 
     private final Main game;

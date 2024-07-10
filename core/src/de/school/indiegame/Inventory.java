@@ -64,6 +64,37 @@ public class Inventory {
     }
 
     public void findAvailableSlot(int id, int amount) {
+        for (int i = 0; i < size[1]; i++) {
+            for (int j = 0; j < size[0]; j++) {
+                int invAmount = inventory[i][j][1];
+
+                if (inventory[i][j][0] == id && invAmount < maxAmount) {
+                    distributeAmount(id, new int[] {j, i}, amount);
+                }
+            }
+        }
+    }
+
+    public void distributeAmount(int id, int[] startSlot, int amount) {
+        if (amount > 0) {
+            int invId = inventory[startSlot[1]][startSlot[0]][0];
+            int invAmount = inventory[startSlot[1]][startSlot[0]][1];
+
+            if (invId == id) {
+                if (invAmount < maxAmount) {
+                    int difAmount = maxAmount - invAmount;
+
+                    if (difAmount > amount) {
+                        amount -= difAmount;
+                        inventory[startSlot[1]][startSlot[0]][1] += difAmount;
+                    } else {
+                        amount -= amount - difAmount;
+                    }
+                }
+            }
+        } else {
+            return;
+        }
 
     }
 
@@ -100,6 +131,8 @@ public class Inventory {
         // Handle visibility
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
             isVisible = !isVisible;
+            selectedSlot[0] = -1;
+            selectedSlot[1] = -1;
         }
 
         // Handle click
@@ -125,8 +158,11 @@ public class Inventory {
             batch.draw(backgroundTexture, rect.x, rect.y, rect.width, rect.height);
 
             // draw selectedSlot
-            float[] selectedSlotOffset = {scaler * selectedSlot[0] * Main.MULTIPLIER + (selectedSlot[0] * Main.MULTIPLIER * scaler), selectedSlot[1] * Main.MULTIPLIER * scaler + (selectedSlot[1] * Main.MULTIPLIER * scaler)};
-            batch.draw(selectedSlotTexture, rect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[0], rect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[1], slotSize * Main.MULTIPLIER * scaler, slotSize * Main.MULTIPLIER * scaler);
+            if (selectedSlot[0] != -1 && selectedSlot[1] != -1) {
+                float[] selectedSlotOffset = {scaler * selectedSlot[0] * Main.MULTIPLIER + (selectedSlot[0] * Main.MULTIPLIER * scaler), selectedSlot[1] * Main.MULTIPLIER * scaler + (selectedSlot[1] * Main.MULTIPLIER * scaler)};
+                batch.draw(selectedSlotTexture, rect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[0],
+                        rect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[1], slotSize * Main.MULTIPLIER * scaler, slotSize * Main.MULTIPLIER * scaler);
+            }
 
             // draw item amount
             for (int i = 0; i < size[1]; i++) {

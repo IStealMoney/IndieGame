@@ -100,13 +100,9 @@ public class PauseScreen implements Screen {
 
         // add elements to table
         pauseTable.add(pauseLabel).row();
-//        pauseTable.add(continueBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
-//        pauseTable.add(homeBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
-//        pauseTable.add(quitBtn).size(StartScreen.btnSize, StartScreen.btnSize);
-
-        pauseTable.add(continueBtn);
-        pauseTable.add(homeBtn);
-        pauseTable.add(quitBtn);
+        pauseTable.add(continueBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
+        pauseTable.add(homeBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
+        pauseTable.add(quitBtn).size(StartScreen.btnSize, StartScreen.btnSize);
 
 
         pauseStage.addActor(pauseTable);
@@ -127,7 +123,7 @@ public class PauseScreen implements Screen {
                 return false;
             }
         });
-        //Gdx.input.setInputProcessor(pauseStage);
+        Gdx.input.setInputProcessor(pauseStage);
     }
 
     @Override
