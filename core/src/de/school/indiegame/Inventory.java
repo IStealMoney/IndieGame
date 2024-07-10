@@ -161,7 +161,9 @@ public class Inventory {
             if (selectedSlot[0] != -1 && selectedSlot[1] != -1) {
                 float[] selectedSlotOffset = {scaler * selectedSlot[0] * Main.MULTIPLIER + (selectedSlot[0] * Main.MULTIPLIER * scaler), selectedSlot[1] * Main.MULTIPLIER * scaler + (selectedSlot[1] * Main.MULTIPLIER * scaler)};
                 batch.draw(selectedSlotTexture, rect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[0],
-                        rect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[1], slotSize * Main.MULTIPLIER * scaler, slotSize * Main.MULTIPLIER * scaler);
+                        rect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[1],
+                        slotSize * Main.MULTIPLIER * scaler,
+                        slotSize * Main.MULTIPLIER * scaler);
             }
 
             // draw item amount

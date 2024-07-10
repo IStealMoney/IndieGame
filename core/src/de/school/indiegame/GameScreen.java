@@ -74,6 +74,7 @@ public class GameScreen implements Screen {
         Main.player.draw(batch);
         Main.tool.draw(batch);
         Main.inventory.draw(batch);
+        Main.toolbar.draw(batch);
     }
 
     public void updateSprites() {
@@ -81,6 +82,7 @@ public class GameScreen implements Screen {
         Main.player.update();
         Main.tool.update();
         Main.inventory.update();
+        Main.toolbar.update();
     }
 
     @Override

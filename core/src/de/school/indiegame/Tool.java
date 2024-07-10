@@ -9,10 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Tool {
+    public Object rectangle;
     String[] weapons = new String[] {"axe", "pickaxe", "hoe"};
     Texture texture;
     Rectangle hitbox;
-    int weaponType;
+    public static int weaponType;
     Sprite sprite;
     float[] offset;
 
@@ -25,7 +26,7 @@ public class Tool {
     int rotationAmount = 10;
 
     Tool(float x, float y, int weaponType) {
-        this.weaponType = weaponType;
+        Tool.weaponType = weaponType;
         this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
         float width = texture.getWidth() * Main.MULTIPLIER;
         float height = texture.getHeight() * Main.MULTIPLIER;
@@ -68,15 +69,18 @@ public class Tool {
 
         // Change tool
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
-            this.weaponType = 0;
+            weaponType = 0;
+            Toolbar.changeSelectToolbar();
             refreshTexture();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
-            this.weaponType = 1;
+            weaponType = 1;
+            Toolbar.changeSelectToolbar();
             refreshTexture();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
-            this.weaponType = 2;
+            weaponType = 2;
+            Toolbar.changeSelectToolbar();
             refreshTexture();
         }
 
