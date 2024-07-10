@@ -49,7 +49,7 @@ public class PauseScreen implements Screen {
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
-        labelStyle.font.getData().setScale(10);
+        labelStyle.font.getData().setScale(7);
         pauseLabel = new Label("Pause", labelStyle);
 
         // continue btn
@@ -57,7 +57,6 @@ public class PauseScreen implements Screen {
         textureRegion = new TextureRegion(continueTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         continueBtn = new ImageButton(textureRegionDrawable);
-        continueBtn.setSize(300, 300);
         continueBtn.setTransform(true);
         continueBtn.getImageCell().expand().fill();
         // home btn
@@ -65,7 +64,6 @@ public class PauseScreen implements Screen {
         textureRegion = new TextureRegion(homeTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         homeBtn = new ImageButton(textureRegionDrawable);
-        homeBtn.setSize(300, 300);
         homeBtn.setTransform(true);
         homeBtn.getImageCell().expand().fill();
         // quit btn
@@ -73,7 +71,6 @@ public class PauseScreen implements Screen {
         textureRegion = new TextureRegion(quitTexture);
         textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         quitBtn = new ImageButton(textureRegionDrawable);
-        quitBtn.setSize(300, 300);
         homeBtn.setTransform(true);
         quitBtn.getImageCell().expand().fill();
 
@@ -99,12 +96,10 @@ public class PauseScreen implements Screen {
         });
 
         // add elements to table
-        pauseTable.add(pauseLabel).row();
-        pauseTable.add(continueBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
-        pauseTable.add(homeBtn).size(StartScreen.btnSize, StartScreen.btnSize).row();
-        pauseTable.add(quitBtn).size(StartScreen.btnSize, StartScreen.btnSize);
-        //asdf
-
+        pauseTable.add(pauseLabel).padBottom(100).row();
+        pauseTable.add(continueBtn).size(200, 200).padRight(100);
+        pauseTable.add(homeBtn).size(200,200).padRight(100);
+        pauseTable.add(quitBtn).size(200,200);
 
         pauseStage.addActor(pauseTable);
     }
