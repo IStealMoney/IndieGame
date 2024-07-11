@@ -21,13 +21,13 @@ public class Inventory {
     Gson gson = new Gson();
     String inventoryPath = "inventory/inventory.json";
     GlyphLayout layout = new GlyphLayout();
-    HashMap<Integer, Texture> itemTextures = new HashMap<>();
+    public static HashMap<Integer, Texture> itemTextures = new HashMap<>();
     ArrayList<HashMap<String, Object>> itemData = new ArrayList<>();
 
     public static int[] size = new int[] {9, 3};
     public static int[][][] inventory = new int[size[1]][size[0]][2]; // in the left column store the item id, in the right column store the item amount
     public static int[] selectedSlot = {-1, -1};
-    public static int[] draggedSlot = {-2, -2};
+    public static int[] draggedSlot = {-1, -1};
 
     Texture backgroundTexture = new Texture(Gdx.files.internal("inventory/background.png"));
     Texture selectedSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
@@ -54,6 +54,12 @@ public class Inventory {
     float draggedAmountY;
     String draggedAmount;
 
+    // active item
+    int[] activeItem = new int[2];
+    float activeItemX = Toolbar.xPosition + inventoryBorder + 4.5f * Main.MULTIPLIER;
+    float activeItemY = Toolbar.yPosition + inventoryBorder + 4.5f * Main.MULTIPLIER + itemSize * 5.35f;
+    Rectangle activeItemRect = new Rectangle(activeItemX, activeItemY, 16 * Main.MULTIPLIER, 16 * Main.MULTIPLIER);
+
     public static boolean isVisible;
 
     Inventory(float x, float y) {
@@ -67,6 +73,7 @@ public class Inventory {
         pickup(1, 129);
         pickup(4, 90);
         pickup(5, 70);
+
         add(new int[] {2, 2}, 2, 20);
     }
 
@@ -83,15 +90,22 @@ public class Inventory {
 
     public void loadInventory() {
         inventory = json.fromJson(inventory.getClass(), Gdx.files.internal(inventoryPath));
+
+        activeItem = gson.fromJson(Gdx.files.internal("inventory/active_item.json").reader(), activeItem.getClass());
     }
 
     public void saveInventory() {
         String inventoryString = json.toJson(inventory);
+        String activeItemString = json.toJson(activeItem);
 
         try {
             FileWriter fileWriter = new FileWriter(Gdx.files.internal(inventoryPath).toString());
             fileWriter.write(inventoryString);
             fileWriter.close();
+
+            FileWriter itemFileWriter = new FileWriter(Gdx.files.internal("inventory/active_item.json").toString());
+            itemFileWriter.write(activeItemString);
+            itemFileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -123,12 +137,18 @@ public class Inventory {
                 int invAmount = inventory[i][j][1];
                 int difAmount = maxAmount - invAmount;
 
+                if (amount < maxAmount) {
+                    difAmount = amount;
+                }
+
+
                 if (invId == id && invAmount < maxAmount && amount > 0) {
                     inventory[i][j][1] += difAmount;
                     amount -= difAmount;
                 }
             }
         }
+        System.out.println(amount);
         distributeAmount(id, new int[] {0, 0}, amount);
     }
 
@@ -176,18 +196,49 @@ public class Inventory {
             clearSlots();
         }
 
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            boolean exists = true;
+
+            // coordinate system begins in lower left corner
+            float dx = mouseX - clickableRect.x;
+            float dy = mouseY - clickableRect.y;
+
+            if (activeItem[0] == -1 && activeItem[1] == 0) {
+                exists = false;
+            }
+
+            if (clickableRect.contains(mouseRect)) {
+                // check if selected item is put into active item slot
+                if (!exists) {
+                    activeItem[0] = inventory[(int) dy / itemSize][(int) dx/itemSize][0];
+                    activeItem[1] = inventory[(int) dy / itemSize][(int) dx/itemSize][1];
+                    inventory[(int) dy / itemSize][(int) dx/itemSize][0] = -1;
+                    inventory[(int) dy / itemSize][(int) dx/itemSize][1] = 0;
+                }
+            }
+
+        }
+
         // Handle click
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            boolean isDragged = false;
+
+            if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
+                isDragged = true;
+            }
+
+            if (activeItemRect.contains(mouseRect) && (activeItem[0] != -1 && activeItem[1] != 0)) {
+                // check if active item is put back into inventory
+                pickup(activeItem[0], activeItem[1]);
+                // reset active item
+                activeItem[0] = -1;
+                activeItem[1] = 0;
+            }
+
             if (clickableRect.contains(mouseRect)) {
                 // coordinate system begins in lower left corner
                 float dx = mouseX - clickableRect.x;
                 float dy = mouseY - clickableRect.y;
-
-                boolean isDragged = false;
-
-                if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
-                    isDragged = true;
-                }
 
                 // check if item is dragged on same slot
                 if (draggedSlot[0] == (int) dx / itemSize && draggedSlot[1] == (int) dy / itemSize) {
@@ -223,10 +274,6 @@ public class Inventory {
                     }
                 }
 
-
-
-
-
                 if (isDragged) {
                     int[] newSlot = new int[] {(int) (dx / itemSize), (int) (dy / itemSize)};
                     add(newSlot, inventory[selectedSlot[1]][selectedSlot[0]][0], inventory[selectedSlot[1]][selectedSlot[0]][1]);
@@ -251,6 +298,16 @@ public class Inventory {
     }
 
     public void draw(SpriteBatch batch) {
+        // draw active item
+        if (activeItem[0] != -1) {
+            batch.draw(itemTextures.get(activeItem[0]), activeItemX, activeItemY, 16*Main.MULTIPLIER * 0.8f, 16*Main.MULTIPLIER * 0.8f);
+
+            // draw active item amount
+            String activeItemAmount = String.valueOf(activeItem[1]);
+            layout.setText(Main.font, activeItemAmount);
+            Main.font.draw(batch, String.valueOf(activeItem[1]), activeItemX + 16 * Main.MULTIPLIER * 0.8f - layout.width * 0.9f, activeItemY + inventoryBorder / 2);
+        }
+
         if (isVisible) {
             // draw background
             batch.draw(backgroundTexture, rect.x, rect.y, rect.width, rect.height);

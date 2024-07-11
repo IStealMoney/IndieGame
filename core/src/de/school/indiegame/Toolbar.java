@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Toolbar {
-    private static SpriteBatch batch;
     public static Sprite spriteTb;
     public static Sprite spriteStb;
     public static Texture toolbarTexture;
@@ -16,8 +15,8 @@ public class Toolbar {
     public static int xPosition;
     public static int yPosition;
 
+
     Toolbar() {
-        batch = new SpriteBatch();
         toolbarTexture = new Texture(Gdx.files.internal("toolbar/background.png"));
         widthTb = toolbarTexture.getWidth() * Main.MULTIPLIER;
         heightTb = toolbarTexture.getHeight() * Main.MULTIPLIER;
@@ -32,7 +31,6 @@ public class Toolbar {
     }
 
     public static void createSelectToolbar() {
-        batch = new SpriteBatch();
         selectSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
         widthSs = selectSlotTexture.getWidth() * Main.MULTIPLIER;
         heightSs = selectSlotTexture.getHeight() * Main.MULTIPLIER;
