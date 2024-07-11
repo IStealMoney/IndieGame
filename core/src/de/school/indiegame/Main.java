@@ -61,8 +61,8 @@ public class Main extends Game {
 		batch.dispose();
 		player.texture.dispose();
 		tool.texture.dispose();
-		toolbar.toolbarTexture.dispose();
-		toolbar.selectSlotTexture.dispose();
+		Toolbar.toolbarTexture.dispose();
+		Toolbar.selectSlotTexture.dispose();
 		inventory.backgroundTexture.dispose();
 		inventory.selectedSlotTexture.dispose();
 

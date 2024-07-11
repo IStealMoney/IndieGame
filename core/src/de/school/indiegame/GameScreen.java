@@ -80,7 +80,6 @@ public class GameScreen implements Screen {
         Main.player.update();
         Main.tool.update();
         Main.inventory.update();
-        Main.toolbar.update();
     }
 
     @Override

@@ -12,7 +12,6 @@ public class Toolbar {
     public static Texture toolbarTexture;
     public static Texture selectSlotTexture;
     float widthTb, heightTb;
-    public static float xPos, yPos;
     public static float widthSs, heightSs;
     public static int xPosition;
     public static int yPosition;
@@ -34,30 +33,22 @@ public class Toolbar {
         selectSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
         widthSs = selectSlotTexture.getWidth() * Main.MULTIPLIER;
         heightSs = selectSlotTexture.getHeight() * Main.MULTIPLIER;
-        xPos = xPosition;
-        yPos = yPosition;
         spriteStb = new Sprite(selectSlotTexture);
     }
 
     public static void changeSelectToolbar() {
         if (Tool.weaponType == 0) {
-            spriteStb.setBounds(xPos+4*Main.MULTIPLIER, yPos+4*Main.MULTIPLIER, widthSs, heightSs);
+            spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*2+4*Main.MULTIPLIER, widthSs, heightSs);
         } else if (Tool.weaponType == 1) {
-            xPos = xPosition;
-            yPos = yPosition;
+            spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER+2*Main.MULTIPLIER, widthSs, heightSs);
         } else if (Tool.weaponType == 2) {
-            xPos = xPosition;
-            yPos = yPosition;
+            spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, yPosition+4*Main.MULTIPLIER, widthSs, heightSs);
         }
     }
 
     public void draw(SpriteBatch batch) {
         spriteTb.draw(batch);
         spriteStb.draw(batch);
-    }
-
-    public void update() {
-
     }
 }
 
