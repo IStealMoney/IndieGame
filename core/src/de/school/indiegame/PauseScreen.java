@@ -4,19 +4,23 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import static de.school.indiegame.StartScreen.btnSize;
+import static de.school.indiegame.StartScreen.bgHeight;
+import static de.school.indiegame.StartScreen.bgWidth;
 
 public class PauseScreen implements Screen {
     private final Main game;
+    private SpriteBatch batch;
+    Sprite sprite;
+    Texture backgroundTexture;
     private Stage pauseStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
@@ -36,9 +40,16 @@ public class PauseScreen implements Screen {
     public PauseScreen(final Main game) {
         this.game = game;
         font = new BitmapFont();
+        batch = new SpriteBatch();
 
         // stage
         pauseStage = new Stage(new StretchViewport(1920, 1080));
+
+        //background
+        backgroundTexture = new Texture("menu/sky.png");
+        Image backgroundPS = new Image(backgroundTexture);
+        backgroundPS.setSize(1920, 1080);
+        backgroundPS.setPosition(0, 0);
 
         // table
         pauseTable = new Table();
@@ -47,7 +58,7 @@ public class PauseScreen implements Screen {
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
-        labelStyle.font.getData().setScale(7);
+        labelStyle.font.getData().setScale(10);
         pauseLabel = new Label("Pause", labelStyle);
 
         // continue btn
@@ -123,6 +134,9 @@ public class PauseScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0, StartScreen.bgWidth, StartScreen.bgHeight);
+        batch.end();
         pauseStage.act(delta);
         pauseStage.draw();
     }
@@ -161,5 +175,7 @@ public class PauseScreen implements Screen {
         if (quitBtn != null) {
             quitTexture.dispose();
         }
+        batch.dispose();
+        backgroundTexture.dispose();
     }
 }

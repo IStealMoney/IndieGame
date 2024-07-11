@@ -4,6 +4,8 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -13,28 +15,39 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class StartScreen implements Screen {
     private final Main game;
+    private SpriteBatch batch;
+    Sprite sprite;
+    Texture backgroundTexture;
 
     private Stage startStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
-
+    public static float bgWidth;
+    public static float bgHeight;
     private ImageButton startGameBtn;
     Texture startGameTexture;
     private ImageButton quitBtn;
     Texture quitTexture;
-
-    public static float btnSize;
 
     private Table startTable;
     Label startLabel;
     BitmapFont font;
 
     public StartScreen(final Main game) {
+        batch = new SpriteBatch();
         this.game = game;
         font = new BitmapFont();
 
         // stage
         startStage = new Stage(new StretchViewport(1920, 1080));
+
+        //background
+        backgroundTexture = new Texture("menu/sky.png");
+        Image backgroundSS = new Image(backgroundTexture);
+        backgroundSS.setSize(1920, 1080);
+        backgroundSS.setPosition(0, 0);
+        bgWidth = (float) (backgroundTexture.getWidth()*(1920/backgroundTexture.getWidth())*2);
+        bgHeight = (float) (backgroundTexture.getHeight()*(1080/backgroundTexture.getHeight())*2);
 
         //table
         startTable = new Table();
@@ -61,7 +74,6 @@ public class StartScreen implements Screen {
         quitBtn.setTransform(true);
         quitBtn.getImageCell().expand().fill();
 
-        btnSize = 1920/8;  //all btns are equal sized
 
         // Listener
         startGameBtn.addListener(new ChangeListener() {
@@ -94,6 +106,9 @@ public class StartScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0, bgWidth, bgHeight);
+        batch.end();
         startStage.act(delta);
         startStage.draw();
     }
@@ -129,6 +144,8 @@ public class StartScreen implements Screen {
         if (quitBtn != null) {
             quitTexture.dispose();
         }
+        batch.dispose();
+        backgroundTexture.dispose();
     }
 }
 

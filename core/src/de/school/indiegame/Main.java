@@ -21,6 +21,7 @@ public class Main extends Game {
 	static ShapeRenderer shape;
 	public static Player player;
 	public static Tool tool;
+	public static Toolbar toolbar;
 	public static StartScreen startScreen;
 	public static PauseScreen pauseScreen;
 	public static GameScreen gameScreen;
@@ -49,6 +50,7 @@ public class Main extends Game {
 		font = new BitmapFont();
 		player = new Player((float) SCREEN_SIZE[0] / 2, (float) SCREEN_SIZE[1] / 2);
 		tool = new Tool(player.rect.x, player.rect.y, 0);
+		toolbar = new Toolbar();
 		MAP = new Map();
 		inventory = new Inventory(SCREEN_SIZE[0] - SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 8);
 	}
@@ -59,11 +61,8 @@ public class Main extends Game {
 		batch.dispose();
 		player.texture.dispose();
 		tool.texture.dispose();
-//		startScreen.startGameTexture.dispose();
-//		startScreen.quitTexture.dispose();
-//		pauseScreen.quitTexture.dispose();
-//		pauseScreen.continueTexture.dispose();
-//		pauseScreen.homeTexture.dispose();
+		Toolbar.toolbarTexture.dispose();
+		Toolbar.selectSlotTexture.dispose();
 		inventory.backgroundTexture.dispose();
 		inventory.selectedSlotTexture.dispose();
 
