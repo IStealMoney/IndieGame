@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Tool {
-    public Object rectangle;
     String[] weapons = new String[] {"", "basket", "axe", "pickaxe", "hoe"};
     Texture texture;
     Rectangle hitbox;
@@ -24,13 +23,14 @@ public class Tool {
     double currentPressedTime;
     int defaultRotation = 10;
     int rotationAmount = 10;
+    public static boolean isActive = true;
 
     Tool(float x, float y, int weaponType) {
         Tool.weaponType = weaponType;
         this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
         float width = texture.getWidth() * Main.MULTIPLIER;
         float height = texture.getHeight() * Main.MULTIPLIER;
-        offset = new float[] {-width / 2, height / 2 + 10};
+        offset = new float[] {-width / 2 + 7, height / 2 + 10};
         x = x + offset[0];
         y = y + offset[1];
         this.hitbox = new Rectangle(x, y, width, height/2);
@@ -110,7 +110,6 @@ public class Tool {
                 sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
                 sprite.setRotation(-defaultRotation);
             }
-
         }
     }
 
@@ -139,13 +138,16 @@ public class Tool {
     }
 
     public void update() {
-        calculateHitbox();
-        handleInput();
-        animate();
-
+        if (isActive) {
+            calculateHitbox();
+            handleInput();
+            animate();
+        }
     }
 
     public void draw(SpriteBatch batch) {
-        sprite.draw(batch);
+        if (isActive) {
+            sprite.draw(batch);
+        }
     }
 }

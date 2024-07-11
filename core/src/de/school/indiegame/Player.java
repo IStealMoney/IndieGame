@@ -12,7 +12,7 @@ import com.badlogic.gdx.Input.Keys;
 
 public class Player {
     // Drawing
-    Texture texture = new Texture(Gdx.files.internal("player/player.png"));
+    Texture texture = new Texture(Gdx.files.internal("player/Bob_vorne.png"));
     Sprite sprite;
     Rectangle rect;
     float width = texture.getWidth() * Main.MULTIPLIER;
@@ -52,6 +52,19 @@ public class Player {
         }
     }
 
+    public void changeTexture(String textureName) {
+        Texture newTexture = new Texture(Gdx.files.internal("player/" + textureName + ".png"));
+        this.sprite.setTexture(newTexture);
+        this.texture = newTexture;
+
+        // disable/enable tool
+        if (textureName.contains("hinten")) {
+            Tool.isActive = false;
+        } else {
+            Tool.isActive = true;
+        }
+    }
+
     public void handleMovement() {
         Input input = Gdx.input;
         // test map saving
@@ -62,8 +75,10 @@ public class Player {
         // set the x-movement vector according to the input
         if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
             movement.x = -speed;
+            changeTexture("Bob_links");
         } else if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {
             movement.x = speed;
+            changeTexture("Bob_rechts");
         } else {
             movement.x = 0;
         }
@@ -93,8 +108,10 @@ public class Player {
         // set the y-movement vector according to the input
         if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
             movement.y = speed;
+            changeTexture("Bob_hinten");
         } else if (input.isKeyPressed(Keys.S) || input.isKeyPressed(Keys.DOWN)) {
             movement.y = -speed;
+            changeTexture("Bob_vorne");
         } else {
             movement.y = 0;
         }
@@ -119,6 +136,20 @@ public class Player {
             }
         }
         movement.y = 0;
+
+        // "animate" rest of inputs
+        if ((Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) && (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP))) {
+            changeTexture("Bob_hinten_links");
+        }
+        if ((Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) && (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP))) {
+            changeTexture("Bob_hinten_rechts");
+        }
+        if ((Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) && (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN))) {
+            changeTexture("Bob_vorne_links");
+        }
+        if ((Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) && (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN))) {
+            changeTexture("Bob_vorne_rechts");
+        }
     }
 
     public void move() {

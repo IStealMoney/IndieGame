@@ -26,6 +26,9 @@ public class Toolbar {
         spriteTb = new Sprite(toolbarTexture);
         spriteTb.setBounds(xPosition, yPosition, widthTb, heightTb);
         createSelectToolbar();
+
+        // start with axe selected
+        spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*2+4*Main.MULTIPLIER, widthSs, heightSs);
     }
 
     public static void createSelectToolbar() {
