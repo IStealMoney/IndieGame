@@ -21,8 +21,8 @@ public class Inventory {
     Gson gson = new Gson();
     String inventoryPath = "inventory/inventory.json";
     GlyphLayout layout = new GlyphLayout();
-    public static HashMap<Integer, Texture> itemTextures = new HashMap<>();
-    ArrayList<HashMap<String, Object>> itemData = new ArrayList<>();
+    public static HashMap<Integer, Texture> itemTextures = new HashMap<Integer, Texture>();
+    ArrayList<HashMap<String, Object>> itemData = new ArrayList<HashMap<String, Object>>();
 
     public static int[] size = new int[] {9, 3};
     public static int[][][] inventory = new int[size[1]][size[0]][2]; // in the left column store the item id, in the right column store the item amount
@@ -78,7 +78,7 @@ public class Inventory {
     }
 
     public void loadItemTextures() {
-        ArrayList<LinkedTreeMap> plantsArray = new ArrayList<>();
+        ArrayList<LinkedTreeMap> plantsArray = new ArrayList<LinkedTreeMap>();
         plantsArray = gson.fromJson(Gdx.files.internal("data/plants.json").reader(), plantsArray.getClass());
 
         for (int i = 0; i < plantsArray.size(); i++) {
