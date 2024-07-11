@@ -15,7 +15,7 @@ import static de.school.indiegame.Main.shape;
 public class GameScreen implements Screen {
 
     private final Main game;
-    private Stage gameStage;
+    private final Stage gameStage;
     public static boolean paused;
 
     public GameScreen(Main game) {
