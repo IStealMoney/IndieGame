@@ -1,28 +1,32 @@
 package de.school.indiegame;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Inventory {
     Json json = new Json();
+    Gson gson = new Gson();
     String inventoryPath = "inventory/inventory.json";
     GlyphLayout layout = new GlyphLayout();
+    HashMap<Integer, Texture> itemTextures = new HashMap<>();
+    ArrayList<HashMap<String, Object>> itemData = new ArrayList<>();
 
     public static int[] size = new int[] {9, 3};
     public static int[][][] inventory = new int[size[1]][size[0]][2]; // in the left column store the item id, in the right column store the item amount
-    public static int[] selectedSlot = {0, 0};
+    public static int[] selectedSlot = {-1, -1};
+    public static int[] draggedSlot = {-2, -2};
 
     Texture backgroundTexture = new Texture(Gdx.files.internal("inventory/background.png"));
     Texture selectedSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
@@ -39,12 +43,36 @@ public class Inventory {
     int maxAmount = 64;
     int itemSize = (int) ((slotSize + offset) * Main.MULTIPLIER * scaler);
 
+    // dragged item
+    float draggedItemX;
+    float draggedItemY;
+    Texture draggedItemTexture;
+
+    // dragged amount
+    float draggedAmountX;
+    float draggedAmountY;
+    String draggedAmount;
+
     public static boolean isVisible;
 
     Inventory(float x, float y) {
         rect = new Rectangle(x, y, width, height);
         clickableRect = new Rectangle(x +  inventoryBorder, y + inventoryBorder, width - (inventoryBorder * 2), height - (inventoryBorder * 2)); // Rectangle without texture borders
+        loadItemTextures();
         loadInventory();
+
+        pickup(0, 67);
+    }
+
+    public void loadItemTextures() {
+        ArrayList<LinkedTreeMap> plantsArray = new ArrayList<>();
+        plantsArray = gson.fromJson(Gdx.files.internal("data/plants.json").reader(), plantsArray.getClass());
+
+        for (int i = 0; i < plantsArray.size(); i++) {
+            itemData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), new HashMap<String, Object>().getClass()));
+
+            itemTextures.put(i, new Texture(Gdx.files.internal("items/" + itemData.get(i).get("item_texture").toString() + ".png")));
+        }
     }
 
     public void loadInventory() {
@@ -63,39 +91,40 @@ public class Inventory {
         }
     }
 
-    public void findAvailableSlot(int id, int amount) {
-        for (int i = 0; i < size[1]; i++) {
-            for (int j = 0; j < size[0]; j++) {
+    public void distributeAmount(int id, int[] startSlot, int amount) {
+        for (int i = startSlot[1]; i < size[1]; i++) {
+            for (int j = startSlot[0]; j < size[0]; j++) {
                 int invAmount = inventory[i][j][1];
+                int difAmount = 64;
 
-                if (inventory[i][j][0] == id && invAmount < maxAmount) {
-                    distributeAmount(id, new int[] {j, i}, amount);
+                if (amount < 64) {
+                    difAmount = amount;
+                }
+
+                if (invAmount >= 0 && invAmount < 64 && amount > 0) {
+                    inventory[i][j][1] += difAmount;
+                    inventory[i][j][0] = id;
+                    amount -= difAmount;
                 }
             }
         }
     }
 
-    public void distributeAmount(int id, int[] startSlot, int amount) {
-        if (amount > 0) {
-            int invId = inventory[startSlot[1]][startSlot[0]][0];
-            int invAmount = inventory[startSlot[1]][startSlot[0]][1];
+    public void pickup(int id, int amount) {
+        for (int i = 0; i < size[1]; i++) {
+            for (int j = 0; j < size[0]; j++) {
+                int invId = inventory[i][j][0];
+                int invAmount = inventory[i][j][1];
+                int difAmount = 64 - invAmount;
 
-            if (invId == id) {
-                if (invAmount < maxAmount) {
-                    int difAmount = maxAmount - invAmount;
 
-                    if (difAmount > amount) {
-                        amount -= difAmount;
-                        inventory[startSlot[1]][startSlot[0]][1] += difAmount;
-                    } else {
-                        amount -= amount - difAmount;
-                    }
+                if (invId == id && invAmount < 64 && amount > 0) {
+                    inventory[i][j][1] += difAmount;
+                    amount -= difAmount;
                 }
             }
-        } else {
-            return;
         }
-
+        distributeAmount(id, new int[] {0, 0}, amount);
     }
 
     public void add(int[] slot, int id, int amount) {
@@ -114,12 +143,20 @@ public class Inventory {
         }
     }
 
+    public void clearSlots() {
+        selectedSlot[0] = -1;
+        selectedSlot[1] = -1;
+        draggedSlot[0] = -1;
+        draggedSlot[1] = -1;
+        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
+        draggedItemTexture = null;
+        draggedAmount = null;
+    }
+
     public void handleInput() {
         // Check if mouse is hovering over inventory
         float mouseX = Gdx.input.getX();
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
-        //System.out.println(mouseX  +" " + mouseY);
-        //System.out.println(rect.x + " " + rect.y);
         mouseRect.setPosition(mouseX, mouseY);
 
         if (rect.contains(mouseRect) && isVisible) {
@@ -131,8 +168,7 @@ public class Inventory {
         // Handle visibility
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
             isVisible = !isVisible;
-            selectedSlot[0] = -1;
-            selectedSlot[1] = -1;
+            clearSlots();
         }
 
         // Handle click
@@ -142,9 +178,28 @@ public class Inventory {
                 float dx = mouseX - clickableRect.x;
                 float dy = mouseY - clickableRect.y;
 
-                selectedSlot[0] = (int) (dx / itemSize);
-                selectedSlot[1] = (int) (dy / itemSize);
+                // check if item is dragged on its slot
+                if (draggedSlot[0] == (int) dx / itemSize && draggedSlot[1] == (int) dy / itemSize) {
+                    clearSlots();
+                    return;
+                }
+
+                if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
+                    int[] newSlot = new int[] {(int) (dx / itemSize), (int) (dy / itemSize)};
+                    add(newSlot, inventory[selectedSlot[1]][selectedSlot[0]][0], inventory[selectedSlot[1]][selectedSlot[0]][1]);
+                    remove(selectedSlot, inventory[selectedSlot[1]][selectedSlot[0]][1]);
+                    clearSlots();
+                    return;
+                }
+                if (inventory[(int) dy / itemSize][(int) dx / itemSize][1] > 0) { // if slot is not empty
+                    Gdx.graphics.setSystemCursor(Cursor.SystemCursor.None);
+                    selectedSlot[0] = (int) (dx / itemSize);
+                    selectedSlot[1] = (int) (dy / itemSize);
+                    draggedSlot = selectedSlot;
+                }
+
             }
+
         }
     }
 
@@ -160,21 +215,71 @@ public class Inventory {
             // draw selectedSlot
             if (selectedSlot[0] != -1 && selectedSlot[1] != -1) {
                 float[] selectedSlotOffset = {scaler * selectedSlot[0] * Main.MULTIPLIER + (selectedSlot[0] * Main.MULTIPLIER * scaler), selectedSlot[1] * Main.MULTIPLIER * scaler + (selectedSlot[1] * Main.MULTIPLIER * scaler)};
+
                 batch.draw(selectedSlotTexture, rect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[0],
                         rect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[1],
                         slotSize * Main.MULTIPLIER * scaler,
                         slotSize * Main.MULTIPLIER * scaler);
             }
 
-            // draw item amount
+            // draw item amount and items
             for (int i = 0; i < size[1]; i++) {
                 for (int j = 0; j < size[0]; j++) {
+                    boolean isDragged = false;
+
+                    if (draggedSlot[0] == j && draggedSlot[1] == i) {
+                        isDragged = true;
+                    }
+                        // items
+                    int itemId =  inventory[i][j][0];
+                    if (itemId != -1) {
+                        float itemX = clickableRect.x + (j * itemSize) + inventoryBorder / 2;
+                        float itemY = clickableRect.y + (i * itemSize) + inventoryBorder / 2;
+
+                        if (isDragged) {
+                            itemX = mouseRect.x - (16 * Main.MULTIPLIER * scaler / 2);
+                            itemY = mouseRect.y - (16 * Main.MULTIPLIER * scaler / 2);
+                        }
+
+                        if (!isDragged) {
+                            batch.draw(itemTextures.get(itemId), itemX, itemY,16 * Main.MULTIPLIER * scaler, 16 * Main.MULTIPLIER * scaler);
+                        } else {
+                            draggedItemTexture = itemTextures.get(itemId);
+                            draggedItemX = itemX;
+                            draggedItemY = itemY;
+                        }
+                    }
+
+                    // item amount
                     String amount = String.valueOf(inventory[i][j][1]);
                     layout.setText(Main.font, amount);
                     float fontHeight = layout.height;
                     float fontWidth = layout.width;
-                    Main.font.draw(batch, amount, clickableRect.x + (j * itemSize) + slotSize * Main.MULTIPLIER * scaler - fontWidth - itemSize * 0.125f, clickableRect.y + (i * itemSize) + (fontHeight) + itemSize * 0.125f);
+                    float amountX = clickableRect.x + (j * itemSize) + slotSize * Main.MULTIPLIER * scaler - fontWidth - itemSize * 0.125f;
+                    float amountY = clickableRect.y + (i * itemSize) + (fontHeight) + itemSize * 0.125f;
+
+                    if (isDragged) {
+                        amountX = mouseRect.x + slotSize * Main.MULTIPLIER * scaler - fontWidth - Main.MULTIPLIER * scaler * 16 * 0.8f;
+                        amountY = mouseRect.y - fontHeight;
+                    }
+
+                    if (!isDragged) {
+                        Main.font.draw(batch, amount, amountX, amountY);
+                    } else {
+                        draggedAmountX = amountX;
+                        draggedAmountY = amountY;
+                        draggedAmount = amount;
+                    }
                 }
+            }
+            // draw dragged item, so its always on top
+            if (draggedItemTexture != null) {
+                batch.draw(draggedItemTexture, draggedItemX, draggedItemY, 16 * Main.MULTIPLIER * scaler, 16 * Main.MULTIPLIER * scaler);
+            }
+
+            // draw dragged amount, so its always on top
+            if (draggedAmount != null) {
+                Main.font.draw(batch, draggedAmount, draggedAmountX, draggedAmountY);
             }
         }
     }

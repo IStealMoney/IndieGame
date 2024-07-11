@@ -1,3 +1,3 @@
-{"plants": [
-  {"id": 0, "name": "wheat", "item_texture":  "wheat"}
-]}
+[
+    {"id": 0, "name": "wheat", "item_texture":  "wheat", "growth_0_texture":"wheat_0", "growth_1_texture": "wheat_1", "growth_2_texture": "wheat_2"}
+]
