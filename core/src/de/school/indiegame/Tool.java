@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Tool {
     public Object rectangle;
-    String[] weapons = new String[] {"axe", "pickaxe", "hoe"};
+    String[] weapons = new String[] {"", "basket", "axe", "pickaxe", "hoe"};
     Texture texture;
     Rectangle hitbox;
     public static int weaponType;
@@ -42,8 +42,10 @@ public class Tool {
     }
 
     public void refreshTexture() {
-        this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
-        sprite.setTexture(this.texture);
+        if (weaponType != 0) {
+            this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
+            sprite.setTexture(this.texture);
+        }
     }
 
     public void calculateHitbox() {
@@ -80,6 +82,16 @@ public class Tool {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
             weaponType = 2;
+            Toolbar.changeSelectToolbar();
+            refreshTexture();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
+            weaponType = 3;
+            Toolbar.changeSelectToolbar();
+            refreshTexture();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
+            weaponType = 4;
             Toolbar.changeSelectToolbar();
             refreshTexture();
         }

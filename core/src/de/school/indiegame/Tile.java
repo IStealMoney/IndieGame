@@ -126,7 +126,7 @@ public class Tile {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (canPress) {
                 if (this.rect.overlaps(Main.tool.hitbox)) {
-                    if (Main.tool.weaponType == 0) { // axe
+                    if (Tool.weaponType == 2) { // axe
                         if (isAxeable) {
                             this.health -= 1;
                             if (this.health == 0) {
@@ -135,7 +135,7 @@ public class Tile {
                             updateTileOnMap();
                         }
                     }
-                    if (Main.tool.weaponType == 1) { // pickaxe
+                    if (Tool.weaponType == 3) { // pickaxe
                         if (isDestructible) {
                             this.health--;
                             if (this.health == 0) {
@@ -144,7 +144,7 @@ public class Tile {
                             updateTileOnMap();
                         }
                     }
-                    if (Main.tool.weaponType == 2) { // hoe
+                    if (Tool.weaponType == 4) { // hoe
                         if (isHarvestable) {
                             if (this.type == 0) {
                                 this.type = 1;

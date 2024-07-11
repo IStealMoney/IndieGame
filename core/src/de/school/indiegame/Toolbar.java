@@ -37,11 +37,11 @@ public class Toolbar {
     }
 
     public static void changeSelectToolbar() {
-        if (Tool.weaponType == 0) {
+        if (Tool.weaponType == 2) {
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*2+4*Main.MULTIPLIER, widthSs, heightSs);
-        } else if (Tool.weaponType == 1) {
+        } else if (Tool.weaponType == 3) {
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER+2*Main.MULTIPLIER, widthSs, heightSs);
-        } else if (Tool.weaponType == 2) {
+        } else if (Tool.weaponType == 4) {
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, yPosition+4*Main.MULTIPLIER, widthSs, heightSs);
         }
     }

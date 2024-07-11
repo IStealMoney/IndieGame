@@ -189,6 +189,12 @@ public class Inventory {
                     isDragged = true;
                 }
 
+                // check if item is dragged on same slot
+                if (draggedSlot[0] == (int) dx / itemSize && draggedSlot[1] == (int) dy / itemSize) {
+                    clearSlots();
+                    return;
+                }
+
                 if (isDragged) {
                     // check if item is dragged but released onto other item and slot is not empty
                     if (inventory[(int) dy / itemSize][(int) dx / itemSize][0] != inventory[draggedSlot[1]][draggedSlot[0]][0] && inventory[(int) dy / itemSize][(int) dx / itemSize][0] != -1) {
@@ -219,11 +225,7 @@ public class Inventory {
 
 
 
-                // check if item is dragged on same slot
-                if (draggedSlot[0] == (int) dx / itemSize && draggedSlot[1] == (int) dy / itemSize) {
-                    clearSlots();
-                    return;
-                }
+
 
                 if (isDragged) {
                     int[] newSlot = new int[] {(int) (dx / itemSize), (int) (dy / itemSize)};
