@@ -3,8 +3,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 
 // Main doesn't contain any logic or rendering code bcs it extends Game
 // class for shared resources
@@ -16,6 +19,7 @@ public class Main extends Game {
 	public static int TILE_SIZE = 16;
 	public static Map MAP;
 	public static Inventory inventory;
+	public static MoneySystem moneyValue;
 
 	static SpriteBatch batch;
 	static ShapeRenderer shape;
@@ -27,6 +31,7 @@ public class Main extends Game {
 	public static GameScreen gameScreen;
 	public static boolean mouseAboveHud = false;
 	public static BitmapFont font;
+	public static Skin skin;
 
     @Override
 	public void create () {
@@ -48,6 +53,7 @@ public class Main extends Game {
 		shape = new ShapeRenderer();
 		shape.setAutoShapeType(true);
 		font = new BitmapFont();
+		font.getData().setScale(3.0f);
 		player = new Player(SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2);
 		tool = new Tool(player.rect.x, player.rect.y, 2);
 		toolbar = new Toolbar();
@@ -59,6 +65,7 @@ public class Main extends Game {
 	public void dispose () {
 		// Dispose every texture here
 		batch.dispose();
+		font.dispose();
 		player.texture.dispose();
 		tool.texture.dispose();
 		Toolbar.toolbarTexture.dispose();

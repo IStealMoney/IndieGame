@@ -4,19 +4,24 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import static de.school.indiegame.Main.batch;
-import static de.school.indiegame.Main.shape;
+import javax.swing.*;
+
+import static de.school.indiegame.Main.*;
+import static de.school.indiegame.MoneySystem.*;
 
 
 // class contains all of our game logic
 public class GameScreen implements Screen {
 
     private final Main game;
-    private final Stage gameStage;
+    public static Stage gameStage;
     public static boolean paused;
+    int number;
+
 
     public GameScreen(Main game) {
         this.game = game;
@@ -58,7 +63,6 @@ public class GameScreen implements Screen {
             batch.end();
             shape.end();
         }
-
     }
 
     @Override
@@ -79,7 +83,7 @@ public class GameScreen implements Screen {
 
         Main.toolbar.draw(batch);
         Main.inventory.draw(batch);
-
+        font.draw(batch, currentMoney + " " + MoneySystem.currency, Main.SCREEN_SIZE[0]-SCREEN_SIZE[0]/8, Main.SCREEN_SIZE[1]- SCREEN_SIZE[1]/15);
     }
 
     public void updateSprites() {
@@ -108,6 +112,9 @@ public class GameScreen implements Screen {
     public void dispose() {
         if (gameStage != null) {
             gameStage.dispose();
+        }
+        if (skin != null) {
+            skin.dispose();
         }
     }
 }
