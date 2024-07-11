@@ -13,6 +13,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Inventory {
@@ -60,8 +61,13 @@ public class Inventory {
         clickableRect = new Rectangle(x +  inventoryBorder, y + inventoryBorder, width - (inventoryBorder * 2), height - (inventoryBorder * 2)); // Rectangle without texture borders
         loadItemTextures();
         loadInventory();
-
-        pickup(0, 67);
+        pickup(0, 20);
+        pickup(2, 30);
+        pickup(3, 40);
+        pickup(1, 129);
+        pickup(4, 90);
+        pickup(5, 70);
+        add(new int[] {2, 2}, 2, 20);
     }
 
     public void loadItemTextures() {
@@ -95,13 +101,13 @@ public class Inventory {
         for (int i = startSlot[1]; i < size[1]; i++) {
             for (int j = startSlot[0]; j < size[0]; j++) {
                 int invAmount = inventory[i][j][1];
-                int difAmount = 64;
+                int difAmount = maxAmount;
 
-                if (amount < 64) {
+                if (amount < maxAmount) {
                     difAmount = amount;
                 }
 
-                if (invAmount >= 0 && invAmount < 64 && amount > 0) {
+                if (invAmount >= 0 && invAmount < maxAmount && amount > 0 && inventory[i][j][0] == -1) {
                     inventory[i][j][1] += difAmount;
                     inventory[i][j][0] = id;
                     amount -= difAmount;
@@ -115,10 +121,9 @@ public class Inventory {
             for (int j = 0; j < size[0]; j++) {
                 int invId = inventory[i][j][0];
                 int invAmount = inventory[i][j][1];
-                int difAmount = 64 - invAmount;
+                int difAmount = maxAmount - invAmount;
 
-
-                if (invId == id && invAmount < 64 && amount > 0) {
+                if (invId == id && invAmount < maxAmount && amount > 0) {
                     inventory[i][j][1] += difAmount;
                     amount -= difAmount;
                 }
@@ -178,13 +183,49 @@ public class Inventory {
                 float dx = mouseX - clickableRect.x;
                 float dy = mouseY - clickableRect.y;
 
-                // check if item is dragged on its slot
+                boolean isDragged = false;
+
+                if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
+                    isDragged = true;
+                }
+
+                if (isDragged) {
+                    // check if item is dragged but released onto other item and slot is not empty
+                    if (inventory[(int) dy / itemSize][(int) dx / itemSize][0] != inventory[draggedSlot[1]][draggedSlot[0]][0] && inventory[(int) dy / itemSize][(int) dx / itemSize][0] != -1) {
+                        clearSlots();
+                        return;
+                    }
+
+                    // check if item is dropped onto same item
+                    if (inventory[(int) dy / itemSize][(int) dx / itemSize][0] == inventory[draggedSlot[1]][draggedSlot[0]][0]) {
+                        int sameItemAmount = inventory[(int) dy / itemSize][(int) dx / itemSize][1];
+                        int itemAmount = inventory[draggedSlot[1]][draggedSlot[0]][1];
+                        if (sameItemAmount < maxAmount) {
+                            int difAmount = maxAmount - sameItemAmount;
+                            if (difAmount > itemAmount) {
+                                difAmount = itemAmount;
+                                inventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
+                            }
+                            System.out.println(difAmount);
+
+                            inventory[(int) dy / itemSize][(int) dx / itemSize][1] += difAmount;
+                            inventory[draggedSlot[1]][draggedSlot[0]][1] -= difAmount;
+                        }
+
+                        clearSlots();
+                        return;
+                    }
+                }
+
+
+
+                // check if item is dragged on same slot
                 if (draggedSlot[0] == (int) dx / itemSize && draggedSlot[1] == (int) dy / itemSize) {
                     clearSlots();
                     return;
                 }
 
-                if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
+                if (isDragged) {
                     int[] newSlot = new int[] {(int) (dx / itemSize), (int) (dy / itemSize)};
                     add(newSlot, inventory[selectedSlot[1]][selectedSlot[0]][0], inventory[selectedSlot[1]][selectedSlot[0]][1]);
                     remove(selectedSlot, inventory[selectedSlot[1]][selectedSlot[0]][1]);
@@ -195,9 +236,9 @@ public class Inventory {
                     Gdx.graphics.setSystemCursor(Cursor.SystemCursor.None);
                     selectedSlot[0] = (int) (dx / itemSize);
                     selectedSlot[1] = (int) (dy / itemSize);
-                    draggedSlot = selectedSlot;
+                    draggedSlot[0] = (int) (dx / itemSize);
+                    draggedSlot[1] = (int) (dy / itemSize);
                 }
-
             }
 
         }
