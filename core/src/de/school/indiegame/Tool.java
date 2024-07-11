@@ -48,7 +48,6 @@ public class Tool {
             sprite.setTexture(this.texture);
             sprite.setSize(width, height);
 
-
             // Fix flip bug
             if (sprite.isFlipX()) {
                 sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
@@ -166,12 +165,12 @@ public class Tool {
     public void update() {
         calculateHitbox();
         handleInput();
-        if (!isHidden) {
-            animate();
-        }
+        animate();
     }
 
     public void draw(SpriteBatch batch) {
-        sprite.draw(batch);
+        if (!isHidden) {
+            sprite.draw(batch);
+        }
     }
 }
