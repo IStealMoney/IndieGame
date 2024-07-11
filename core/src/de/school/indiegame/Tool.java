@@ -5,13 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Tool {
     String[] weapons = new String[] {"", "basket", "axe", "pickaxe", "hoe"};
     Texture texture;
-    Rectangle hitbox;
+    public static Rectangle hitbox;
     public static int weaponType;
     Sprite sprite;
     float[] offset;
@@ -23,7 +22,7 @@ public class Tool {
     double currentPressedTime;
     int defaultRotation = 10;
     int rotationAmount = 10;
-    public static boolean isActive = true;
+    public static boolean isHidden = true;
     float width;
     float height;
 
@@ -35,7 +34,7 @@ public class Tool {
         offset = new float[] {-width / 2 + 7, height / 2 + 10};
         x = x + offset[0];
         y = y + offset[1];
-        this.hitbox = new Rectangle(x, y, width, height/2);
+        hitbox = new Rectangle(x, y, width, height/2);
         this.sprite = new Sprite(this.texture);
         this.sprite.setBounds(x, y, width, height);
         sprite.setOrigin(width / 2, 0); // Set rotation origin to bottom middle
@@ -66,13 +65,21 @@ public class Tool {
     }
 
     public void calculateHitbox() {
-        this.hitbox = this.sprite.getBoundingRectangle();
-        if (sprite.isFlipX()) {
-            this.hitbox.width = this.hitbox.width / 2;
-            this.hitbox.x += this.hitbox.width;
+        if (isHidden) {
+            hitbox.x = Main.player.rect.x;
+            hitbox.y = Main.player.rect.y + Main.player.height / 2;
+            hitbox.width = Main.player.width;
+            hitbox.height = Main.player.height;
         } else {
-            this.hitbox.width = this.hitbox.width / 2;
+            this.hitbox = this.sprite.getBoundingRectangle();
+            if (sprite.isFlipX()) {
+                this.hitbox.width = this.hitbox.width / 2;
+                this.hitbox.x += this.hitbox.width;
+            } else {
+                this.hitbox.width = this.hitbox.width / 2;
+            }
         }
+
     }
 
     public void handleInput() {
@@ -159,12 +166,12 @@ public class Tool {
     public void update() {
         calculateHitbox();
         handleInput();
-        animate();
+        if (!isHidden) {
+            animate();
+        }
     }
 
     public void draw(SpriteBatch batch) {
-        if (isActive) {
-            sprite.draw(batch);
-        }
+        sprite.draw(batch);
     }
 }

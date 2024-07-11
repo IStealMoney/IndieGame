@@ -28,7 +28,7 @@ public class Player {
     float minDistance = 80f; // Controls opacity of tree
 
     Player(float x, float y) {
-        this.rect = new Rectangle(x - width / 2, y - height / 2, width, height);
+        this.rect = new Rectangle(x - width / 2, y - height / 2, width, height - height / 2);
 
         sprite = new Sprite(texture);
         sprite.setBounds(x, y, width, height);
@@ -59,9 +59,9 @@ public class Player {
 
         // disable/enable tool
         if (textureName.contains("hinten")) {
-            Tool.isActive = false;
+            Tool.isHidden = true;
         } else {
-            Tool.isActive = true;
+            Tool.isHidden = false;
         }
     }
 
@@ -130,7 +130,6 @@ public class Player {
                     if (movement.y > 0) {
                         float moveAmount =  (tile.hitbox.y - this.rect.height) - this.rect.y; // Distance between tile and player
                         Map.moveMap(0, moveAmount);
-                        this.rect.y = tile.hitbox.y - this.height;
                     }
                 }
             }

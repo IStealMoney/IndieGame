@@ -69,8 +69,14 @@ public class GameScreen implements Screen {
     public void drawSprites(SpriteBatch batch) {
         // Draw all sprites here
         Map.draw(batch);
-        Main.player.draw(batch);
-        Main.tool.draw(batch);
+        if (Tool.isHidden) {
+            Main.tool.draw(batch);
+            Main.player.draw(batch);
+        } else {
+            Main.player.draw(batch);
+            Main.tool.draw(batch);
+        }
+
         Main.toolbar.draw(batch);
         Main.inventory.draw(batch);
 
