@@ -55,7 +55,7 @@ public class Inventory {
     String draggedAmount;
 
     // active item
-    int[] activeItem = new int[2];
+    public static int[] activeItem = new int[2];
     float activeItemX = Toolbar.xPosition + inventoryBorder + 4.5f * Main.MULTIPLIER;
     float activeItemY = Toolbar.yPosition + inventoryBorder + 4.5f * Main.MULTIPLIER + itemSize * 5.35f;
     Rectangle activeItemRect = new Rectangle(activeItemX, activeItemY, 16 * Main.MULTIPLIER, 16 * Main.MULTIPLIER);
@@ -148,7 +148,7 @@ public class Inventory {
                 }
             }
         }
-        System.out.println(amount);
+
         distributeAmount(id, new int[] {0, 0}, amount);
     }
 
@@ -196,7 +196,7 @@ public class Inventory {
             clearSlots();
         }
 
-        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             boolean exists = true;
 
             // coordinate system begins in lower left corner
@@ -214,6 +214,22 @@ public class Inventory {
                     activeItem[1] = inventory[(int) dy / itemSize][(int) dx/itemSize][1];
                     inventory[(int) dy / itemSize][(int) dx/itemSize][0] = -1;
                     inventory[(int) dy / itemSize][(int) dx/itemSize][1] = 0;
+                    Tool.weaponType = 0;
+                    Main.tool.refreshTexture();
+                    return;
+                }
+                if (exists) {
+                    int[] tempItem = new int[] {activeItem[0], activeItem[1]};
+
+                    activeItem[0] = inventory[(int) dy / itemSize][(int)dx / itemSize][0];
+                    activeItem[1] = inventory[(int) dy / itemSize][(int)dx / itemSize][1];
+
+                    inventory[(int) dy / itemSize][(int)dx / itemSize][0] = tempItem[0];
+                    inventory[(int) dy / itemSize][(int)dx / itemSize][1] = tempItem[1];
+
+                    Tool.weaponType = 0;
+                    Main.tool.refreshTexture();
+                    return;
                 }
             }
 
@@ -233,6 +249,9 @@ public class Inventory {
                 // reset active item
                 activeItem[0] = -1;
                 activeItem[1] = 0;
+
+                Tool.weaponType = 2;
+                Main.tool.refreshTexture();
             }
 
             if (clickableRect.contains(mouseRect)) {

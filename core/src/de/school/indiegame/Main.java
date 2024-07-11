@@ -48,7 +48,7 @@ public class Main extends Game {
 		shape = new ShapeRenderer();
 		shape.setAutoShapeType(true);
 		font = new BitmapFont();
-		player = new Player((float) SCREEN_SIZE[0] / 2, (float) SCREEN_SIZE[1] / 2);
+		player = new Player(SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2);
 		tool = new Tool(player.rect.x, player.rect.y, 2);
 		toolbar = new Toolbar();
 		MAP = new Map();

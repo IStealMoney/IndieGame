@@ -24,12 +24,14 @@ public class Tool {
     int defaultRotation = 10;
     int rotationAmount = 10;
     public static boolean isActive = true;
+    float width;
+    float height;
 
     Tool(float x, float y, int weaponType) {
         Tool.weaponType = weaponType;
         this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
-        float width = texture.getWidth() * Main.MULTIPLIER;
-        float height = texture.getHeight() * Main.MULTIPLIER;
+        width = texture.getWidth() * Main.MULTIPLIER;
+        height = texture.getHeight() * Main.MULTIPLIER;
         offset = new float[] {-width / 2 + 7, height / 2 + 10};
         x = x + offset[0];
         y = y + offset[1];
@@ -45,6 +47,21 @@ public class Tool {
         if (weaponType != 0) {
             this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
             sprite.setTexture(this.texture);
+            sprite.setSize(width, height);
+
+
+            // Fix flip bug
+            if (sprite.isFlipX()) {
+                sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
+                sprite.setRotation(-defaultRotation);
+            }
+        }
+        if (weaponType == 0) {
+            if (Inventory.activeItem[0] != -1) {
+                this.texture = Inventory.itemTextures.get(Inventory.activeItem[0]);
+                sprite.setTexture(this.texture);
+                sprite.setSize(width * 0.75f, height * 0.75f);
+            }
         }
     }
 
@@ -71,9 +88,11 @@ public class Tool {
 
         // Change tool
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
-            weaponType = 0;
-            Toolbar.changeSelectToolbar();
-            refreshTexture();
+            if (Inventory.activeItem[0] != -1) { // if active item exists
+                weaponType = 0;
+                Toolbar.changeSelectToolbar();
+                refreshTexture();
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             weaponType = 1;
@@ -138,11 +157,9 @@ public class Tool {
     }
 
     public void update() {
-        if (isActive) {
-            calculateHitbox();
-            handleInput();
-            animate();
-        }
+        calculateHitbox();
+        handleInput();
+        animate();
     }
 
     public void draw(SpriteBatch batch) {
