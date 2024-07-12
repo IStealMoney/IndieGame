@@ -43,7 +43,7 @@ public class Tool {
     }
 
     public void refreshTexture() {
-        if (weaponType != 0) {
+        if (weaponType != 0 && weaponType != 1) {
             this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
             sprite.setTexture(this.texture);
             sprite.setSize(width, height);
@@ -60,6 +60,11 @@ public class Tool {
                 sprite.setTexture(this.texture);
                 sprite.setSize(width * 0.75f, height * 0.75f);
             }
+        }
+        if (weaponType == 1) {
+            this.texture = new Texture(Gdx.files.internal("tools/" + weapons[weaponType] + ".png"));
+            sprite.setTexture(this.texture);
+            sprite.setSize(width * 0.75f, height * 0.75f);
         }
     }
 

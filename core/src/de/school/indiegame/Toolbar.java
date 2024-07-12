@@ -15,7 +15,6 @@ public class Toolbar {
     public static int xPosition;
     public static int yPosition;
 
-
     Toolbar() {
         toolbarTexture = new Texture(Gdx.files.internal("toolbar/background.png"));
         widthTb = toolbarTexture.getWidth() * Main.MULTIPLIER;
@@ -38,7 +37,11 @@ public class Toolbar {
     }
 
     public static void changeSelectToolbar() {
-        if (Tool.weaponType == 2) {
+        if (Tool.weaponType == 0) {
+            spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*4+8*Main.MULTIPLIER, widthSs, heightSs);
+        } else if (Tool.weaponType == 1) {
+            spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*3+6*Main.MULTIPLIER, widthSs, heightSs);
+        } else if (Tool.weaponType == 2) {
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*2+4*Main.MULTIPLIER, widthSs, heightSs);
         } else if (Tool.weaponType == 3) {
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER+2*Main.MULTIPLIER, widthSs, heightSs);
