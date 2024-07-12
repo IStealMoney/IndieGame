@@ -317,6 +317,8 @@ public class Inventory {
     }
 
     public void draw(SpriteBatch batch) {
+        Main.font.getData().setScale(1);
+
         // draw active item
         if (activeItem[0] != -1) {
             batch.draw(itemTextures.get(activeItem[0]), activeItemX, activeItemY, 16*Main.MULTIPLIER * 0.8f, 16*Main.MULTIPLIER * 0.8f);
