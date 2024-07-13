@@ -43,9 +43,9 @@ public class StartScreen implements Screen {
 
         //background
         backgroundTexture = new Texture("menu/sky.png");
-        Image backgroundSS = new Image(backgroundTexture);
-        backgroundSS.setSize(1920, 1080);
-        backgroundSS.setPosition(0, 0);
+        Image backgroundSs = new Image(backgroundTexture);
+        backgroundSs.setSize(1920, 1080);
+        backgroundSs.setPosition(0, 0);
         bgWidth = (float) (backgroundTexture.getWidth()*(1920/backgroundTexture.getWidth())*2);
         bgHeight = (float) (backgroundTexture.getHeight()*(1080/backgroundTexture.getHeight())*2);
 
