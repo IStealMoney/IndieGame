@@ -91,6 +91,7 @@ public class GameScreen implements Screen {
         // update all sprites here
         Main.player.update();
         Main.tool.update();
+        Main.toolbar.update();
         Main.inventory.update();
     }
 
