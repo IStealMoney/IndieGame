@@ -186,6 +186,6 @@ public class Tool {
         if (!isHidden) {
             sprite.draw(batch);
         }
-        shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        //shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 }

@@ -75,9 +75,12 @@ public class Player {
 
         // sprinting
         if (input.isKeyPressed(Keys.SHIFT_LEFT)) {
-            speedModifier = 8f;
-            speed = speedModifier * Main.MULTIPLIER * 0.25f;
+            speedModifier = 6f;
+        } else {
+            speedModifier = 5f;
         }
+        speed = speedModifier * Main.MULTIPLIER * 0.25f;
+
 
         // set the x-movement vector according to the input
         if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {

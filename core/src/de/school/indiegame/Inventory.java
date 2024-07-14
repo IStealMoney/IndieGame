@@ -80,7 +80,7 @@ public class Inventory {
 
     public void loadItemTextures() {
         ArrayList<LinkedTreeMap> plantsArray = new ArrayList<LinkedTreeMap>();
-        plantsArray = gson.fromJson(Gdx.files.internal("data/plants.json").reader(), plantsArray.getClass());
+        plantsArray = gson.fromJson(Gdx.files.internal("plants/plants.json").reader(), plantsArray.getClass());
 
         for (int i = 0; i < plantsArray.size(); i++) {
             itemData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), new HashMap<String, Object>().getClass()));
@@ -219,28 +219,35 @@ public class Inventory {
             }
 
             if (clickableRect.contains(mouseRect)) {
+                boolean isDragged = false;
                 // check if selected item is put into active item slot
-                if (!exists) {
-                    activeItem[0] = inventory[(int) dy / itemSize][(int) dx/itemSize][0];
-                    activeItem[1] = inventory[(int) dy / itemSize][(int) dx/itemSize][1];
-                    inventory[(int) dy / itemSize][(int) dx/itemSize][0] = -1;
-                    inventory[(int) dy / itemSize][(int) dx/itemSize][1] = 0;
-                    Tool.weaponType = 0;
-                    Main.tool.refreshTexture();
-                    return;
+                if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
+                    isDragged = true;
                 }
-                if (exists) {
-                    int[] tempItem = new int[] {activeItem[0], activeItem[1]};
 
-                    activeItem[0] = inventory[(int) dy / itemSize][(int)dx / itemSize][0];
-                    activeItem[1] = inventory[(int) dy / itemSize][(int)dx / itemSize][1];
+                if (!isDragged) {
+                    if (!exists) {
+                        activeItem[0] = inventory[(int) dy / itemSize][(int) dx/itemSize][0];
+                        activeItem[1] = inventory[(int) dy / itemSize][(int) dx/itemSize][1];
+                        inventory[(int) dy / itemSize][(int) dx/itemSize][0] = -1;
+                        inventory[(int) dy / itemSize][(int) dx/itemSize][1] = 0;
+                        Tool.weaponType = 0;
+                        Main.tool.refreshTexture();
+                        return;
+                    }
+                    if (exists) {
+                        int[] tempItem = new int[] {activeItem[0], activeItem[1]};
 
-                    inventory[(int) dy / itemSize][(int)dx / itemSize][0] = tempItem[0];
-                    inventory[(int) dy / itemSize][(int)dx / itemSize][1] = tempItem[1];
+                        activeItem[0] = inventory[(int) dy / itemSize][(int)dx / itemSize][0];
+                        activeItem[1] = inventory[(int) dy / itemSize][(int)dx / itemSize][1];
 
-                    Tool.weaponType = 0;
-                    Main.tool.refreshTexture();
-                    return;
+                        inventory[(int) dy / itemSize][(int)dx / itemSize][0] = tempItem[0];
+                        inventory[(int) dy / itemSize][(int)dx / itemSize][1] = tempItem[1];
+
+                        Tool.weaponType = 0;
+                        Main.tool.refreshTexture();
+                        return;
+                    }
                 }
             }
 
