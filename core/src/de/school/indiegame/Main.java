@@ -17,7 +17,7 @@ public class Main extends Game {
 	public static int TILE_SIZE = 16;
 	public static Map MAP;
 	public static Inventory inventory;
-	public static MoneySystem moneyValue;
+	public static MoneySystem moneySystem;
 
 	static SpriteBatch batch;
 	static ShapeRenderer shape;
@@ -57,6 +57,7 @@ public class Main extends Game {
 		toolbar = new Toolbar();
 		MAP = new Map();
 		inventory = new Inventory(SCREEN_SIZE[0] - SCREEN_SIZE[0] / 2.4f, SCREEN_SIZE[1] / 2.5f);
+		moneySystem = new MoneySystem();
 	}
 	
 	@Override
