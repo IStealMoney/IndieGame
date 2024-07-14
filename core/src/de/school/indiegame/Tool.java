@@ -81,12 +81,12 @@ public class Tool {
             if (sprite.isFlipX()) {
                 this.hitbox.width = this.hitbox.width / 3;
                 this.hitbox.x += this.hitbox.width * 1.5f;
-                hitbox.y += hitbox.height / 3;
+                hitbox.y += hitbox.height / 2;
                 hitbox.height = hitbox.height / 3;
             } else {
                 this.hitbox.width = this.hitbox.width / 3;
                 this.hitbox.x += this.hitbox.width * 0.5f;
-                hitbox.y += hitbox.height / 3;
+                hitbox.y += hitbox.height / 2;
                 hitbox.height = hitbox.height / 3;
             }
         }
