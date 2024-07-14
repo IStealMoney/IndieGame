@@ -2,18 +2,24 @@ package de.school.indiegame;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import static de.school.indiegame.Main.SCREEN_SIZE;
 
 public class MoneySystem {
-    public static Sprite spriteCus;
-    public static Texture customerTexture;
-    static int currentMoney = 0;
-    static String currency = "Bob-Coins";
+    public static Sprite sprite;
+    public static Texture coinTexture;
+    public static int currentMoney = 1;
+    public static String currency = "Bob-Coins";
 
-    //interactive old-Bob-Skin to sell items?
+    //interactive customer to sell items
     //needs to be a Tile
 
     MoneySystem() {
-
+        coinTexture = new Texture("money/bobcoin.png");
+        sprite = new Sprite(coinTexture);
+        sprite.setBounds(Main.SCREEN_SIZE[0]-SCREEN_SIZE[0]/9, Main.SCREEN_SIZE[1]- SCREEN_SIZE[1]/15,
+                coinTexture.getWidth()*Main.MULTIPLIER, coinTexture.getHeight()*Main.MULTIPLIER);
         //spriteCus.setBounds();
         //Playeer.width
         //tiles/water.png
@@ -25,5 +31,9 @@ public class MoneySystem {
 
     public void updateCurrentMoney() {
 
+    }
+
+    public void draw(SpriteBatch batch) {
+        sprite.draw(batch);
     }
 }

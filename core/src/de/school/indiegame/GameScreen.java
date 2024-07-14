@@ -77,7 +77,8 @@ public class GameScreen implements Screen {
         Main.toolbar.draw(batch);
         Main.inventory.draw(batch);
         font.getData().setScale(2);
-        font.draw(batch, currentMoney + " " + MoneySystem.currency, Main.SCREEN_SIZE[0]-SCREEN_SIZE[0]/8, Main.SCREEN_SIZE[1]- SCREEN_SIZE[1]/15);
+        font.draw(batch, currentMoney + " ", Main.SCREEN_SIZE[0]-SCREEN_SIZE[0]/14, Main.SCREEN_SIZE[1]- SCREEN_SIZE[1]/31);
+        Main.moneySystem.draw(batch);
     }
 
     public void updateSprites() {
