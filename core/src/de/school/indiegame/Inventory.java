@@ -206,6 +206,13 @@ public class Inventory {
             clearSlots();
         }
 
+        // Clicking actions
+        boolean isDragged = false;
+
+        if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
+            isDragged = true;
+        }
+
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             boolean exists = true;
@@ -219,23 +226,13 @@ public class Inventory {
             }
 
             if (clickableRect.contains(mouseRect)) {
-                boolean isDragged = false;
-                // check if selected item is put into active item slot
-                if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
-                    isDragged = true;
-                }
-
                 if (!isDragged) {
                     if (!exists) {
                         activeItem[0] = inventory[(int) dy / itemSize][(int) dx/itemSize][0];
                         activeItem[1] = inventory[(int) dy / itemSize][(int) dx/itemSize][1];
                         inventory[(int) dy / itemSize][(int) dx/itemSize][0] = -1;
                         inventory[(int) dy / itemSize][(int) dx/itemSize][1] = 0;
-                        Tool.weaponType = 0;
-                        Main.tool.refreshTexture();
-                        return;
-                    }
-                    if (exists) {
+                    } else {
                         int[] tempItem = new int[] {activeItem[0], activeItem[1]};
 
                         activeItem[0] = inventory[(int) dy / itemSize][(int)dx / itemSize][0];
@@ -243,11 +240,11 @@ public class Inventory {
 
                         inventory[(int) dy / itemSize][(int)dx / itemSize][0] = tempItem[0];
                         inventory[(int) dy / itemSize][(int)dx / itemSize][1] = tempItem[1];
-
-                        Tool.weaponType = 0;
-                        Main.tool.refreshTexture();
-                        return;
                     }
+
+                    Tool.weaponType = 0;
+                    Main.tool.refreshTexture();
+                    return;
                 }
             }
 
@@ -255,12 +252,6 @@ public class Inventory {
 
         // Handle click
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            boolean isDragged = false;
-
-            if (draggedSlot[0] >= 0 && draggedSlot[1] >= 0) {
-                isDragged = true;
-            }
-
             if (activeItemRect.contains(mouseRect) && (activeItem[0] != -1 && activeItem[1] != 0)) {
                 // check if active item is put back into inventory
                 pickup(activeItem[0], activeItem[1]);

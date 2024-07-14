@@ -35,7 +35,7 @@ public class StartScreen implements Screen {
     public StartScreen(final Main game) {
         batch = new SpriteBatch();
         this.game = game;
-        font = new BitmapFont();
+        font = Main.menuFont;
 
         // stage
         startStage = new Stage(new StretchViewport(1920, 1080));
@@ -55,7 +55,6 @@ public class StartScreen implements Screen {
         // Welcome text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
-        labelStyle.font.getData().setScale(10);
         startLabel = new Label("Welcome!", labelStyle);
 
         // start game btn

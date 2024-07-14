@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class PauseScreen implements Screen {
@@ -27,6 +28,8 @@ public class PauseScreen implements Screen {
     private Texture continueTexture;
     private ImageButton homeBtn;
     private Texture homeTexture;
+    private ImageButton saveBtn;
+    private Texture saveTexture;
 
 
     private Table pauseTable;
@@ -35,7 +38,7 @@ public class PauseScreen implements Screen {
 
     public PauseScreen(final Main game) {
         this.game = game;
-        font = new BitmapFont();
+        font = Main.menuFont;
         batch = new SpriteBatch();
 
         // stage
@@ -55,7 +58,6 @@ public class PauseScreen implements Screen {
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
-        labelStyle.font.getData().setScale(10);
         pauseLabel = new Label("Pause", labelStyle);
 
         // continue btn
@@ -72,6 +74,13 @@ public class PauseScreen implements Screen {
         homeBtn = new ImageButton(textureRegionDrawable);
         homeBtn.setTransform(true);
         homeBtn.getImageCell().expand().fill();
+        // save btn
+        saveTexture = new Texture(Gdx.files.internal("menu/saveBtn.png"));
+        textureRegion = new TextureRegion(saveTexture);
+        textureRegionDrawable = new TextureRegionDrawable(textureRegion);
+        saveBtn = new ImageButton(textureRegionDrawable);
+        saveBtn.setTransform(true);
+        saveBtn.getImageCell().expand().fill();
         // quit btn
         quitTexture = new Texture(Gdx.files.internal("menu/quitBtn.png"));
         textureRegion = new TextureRegion(quitTexture);
@@ -100,12 +109,23 @@ public class PauseScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+        homeBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.saveGame();
+            }
+        });
+
 
         // add elements to table
-        pauseTable.add(pauseLabel).padBottom(100).row();
+        pauseTable.add(pauseLabel);
+        pauseTable.row();
         pauseTable.add(continueBtn).size(200, 200).padRight(100);
+        pauseTable.add(saveBtn).size(200, 200).padRight(100);
         pauseTable.add(homeBtn).size(200,200).padRight(100);
         pauseTable.add(quitBtn).size(200,200);
+
+        pauseTable.debugAll();
 
         pauseStage.addActor(pauseTable);
     }

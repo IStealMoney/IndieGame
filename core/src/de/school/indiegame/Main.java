@@ -3,6 +3,8 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -29,6 +31,9 @@ public class Main extends Game {
 	public static GameScreen gameScreen;
 	public static boolean mouseAboveHud = false;
 	public static BitmapFont font;
+	public static BitmapFont menuFont;
+	public static FreeTypeFontGenerator fontGenerator;
+	public static FreeTypeFontParameter fontParameter;
 	public static Skin skin;
 
 	@Override
@@ -37,6 +42,16 @@ public class Main extends Game {
 	}
 
 	public void initializeGame() {
+		// Setup Font
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/vcr_osd_mono.ttf"));
+		fontParameter = new FreeTypeFontParameter();
+		fontParameter.borderWidth = 1;
+		font = fontGenerator.generateFont(fontParameter);
+		fontParameter.size = 120;
+		fontParameter.borderWidth = 3;
+		menuFont = fontGenerator.generateFont(fontParameter);
+
+
 		gameScreen = new GameScreen(this);
 		pauseScreen = new PauseScreen(this);
 		startScreen = new StartScreen(this);
@@ -50,8 +65,6 @@ public class Main extends Game {
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
 		shape.setAutoShapeType(true);
-		font = new BitmapFont();
-		font.getData().setScale(3.0f);
 		player = new Player(SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2);
 		tool = new Tool(player.rect.x, player.rect.y, 2);
 		toolbar = new Toolbar();
@@ -103,5 +116,9 @@ public class Main extends Game {
 		}
 		// new Instance
 		initializeGame();
+	}
+
+	public void saveGame() {
+		Map.saveMap();
 	}
 }

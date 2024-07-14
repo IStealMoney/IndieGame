@@ -68,10 +68,6 @@ public class Player {
 
     public void handleMovement() {
         Input input = Gdx.input;
-        // test map saving
-        if (input.isKeyJustPressed(Keys.O)) {
-            Map.saveMap();
-        }
 
         // sprinting
         if (input.isKeyPressed(Keys.SHIFT_LEFT)) {
