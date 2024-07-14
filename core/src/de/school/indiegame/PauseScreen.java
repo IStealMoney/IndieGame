@@ -125,8 +125,6 @@ public class PauseScreen implements Screen {
         pauseTable.add(homeBtn).size(200,200).padRight(100);
         pauseTable.add(quitBtn).size(200,200);
 
-        pauseTable.debugAll();
-
         pauseStage.addActor(pauseTable);
     }
 
