@@ -330,7 +330,7 @@ public class Inventory {
     public void update() {
         handleInput();
     }
-
+    
     public void draw(SpriteBatch batch) {
         Main.font.getData().setScale(1);
 
