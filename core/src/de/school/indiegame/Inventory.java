@@ -190,11 +190,21 @@ public class Inventory {
             Main.mouseAboveHud = false;
         }
 
-        // Handle visibility
-        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            isVisible = !isVisible;
+        // handle visibility
+        if (Gdx.input.isKeyJustPressed(Input.Keys.I) && Tool.weaponType != 1) { // change to basket
+            Tool.weaponType = 1;
+            Toolbar.changeSelectToolbar();
+            Main.tool.refreshTexture();
+            isVisible = true;
+            clearSlots();
+        } else if (Tool.weaponType == 1 && isVisible && Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            isVisible = false;
+            clearSlots();
+        } else if (Tool.weaponType == 1 && !isVisible && Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            isVisible = true;
             clearSlots();
         }
+
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             boolean exists = true;

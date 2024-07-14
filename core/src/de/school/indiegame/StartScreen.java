@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 public class StartScreen implements Screen {
     private final Main game;
     private SpriteBatch batch;
-    Sprite sprite;
     Texture backgroundTexture;
 
     private Stage startStage;
@@ -76,6 +75,7 @@ public class StartScreen implements Screen {
 
 
         // Listener
+        Gdx.input.setInputProcessor(startStage);
         startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -100,7 +100,9 @@ public class StartScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(startStage);
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(startStage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -111,6 +113,10 @@ public class StartScreen implements Screen {
         batch.end();
         startStage.act(delta);
         startStage.draw();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.showPauseScreen();
+        }
     }
 
     @Override

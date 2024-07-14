@@ -20,30 +20,20 @@ public class GameScreen implements Screen {
     private final Main game;
     public static Stage gameStage;
     public static boolean paused;
-    int number;
 
 
     public GameScreen(Main game) {
         this.game = game;
         GameScreen.paused = false;
         gameStage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(gameStage);
     }
 
     @Override
     public void show() {
-        //Gdx.input.setInputProcessor(gameStage);
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keyCode) {
-                // from GameScreen to PauseScreen
-                if (keyCode == Input.Keys.ESCAPE) {
-                    paused = true;
-                    game.showPauseScreen();
-                    return true;
-                }
-                return false;
-            }
-        });
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(gameStage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -62,6 +52,9 @@ public class GameScreen implements Screen {
 
             batch.end();
             shape.end();
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.showPauseScreen();
         }
     }
 

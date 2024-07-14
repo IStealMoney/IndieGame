@@ -4,11 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.awt.*;
 
@@ -17,15 +12,11 @@ public class Toolbar {
     public static Sprite spriteStb;
     public static Texture toolbarTexture;
     public static Texture selectSlotTexture;
-    public static Texture basketTexture;
-    public static TextureRegionDrawable textureRegionDrawable;
-    public static TextureRegion basketRegion;
-    public static ImageButton basketBtn;
     float widthTb, heightTb;
     public static float widthSs, heightSs;
     public static int xPosition;
     public static int yPosition;
-    public static Rectangle targetBasket;
+    public static Rectangle targetBasket, targetAxe, targetPickaxe, targetHoe;
 
     Toolbar() {
         toolbarTexture = new Texture(Gdx.files.internal("toolbar/background.png"));
@@ -47,19 +38,26 @@ public class Toolbar {
         heightSs = selectSlotTexture.getHeight() * Main.MULTIPLIER;
         spriteStb = new Sprite(selectSlotTexture);
         targetBasket = new Rectangle((int) (xPosition+4*Main.MULTIPLIER), (int) ((yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*3+6*Main.MULTIPLIER), (int) widthSs, (int) heightSs);
+        targetAxe = new Rectangle((int) (xPosition+4*Main.MULTIPLIER), (int) ((yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*2+4*Main.MULTIPLIER), (int) widthSs, (int) heightSs);
+        targetPickaxe = new Rectangle((int) (xPosition+4*Main.MULTIPLIER), (int) ((yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER+2*Main.MULTIPLIER), (int) widthSs, (int) heightSs);
+        targetHoe = new Rectangle((int) (xPosition+4*Main.MULTIPLIER), (int) (yPosition+4*Main.MULTIPLIER), (int) widthSs, (int) heightSs);
     }
 
     public static void changeSelectToolbar() {
         if (Tool.weaponType == 0) { // selected item
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*4+8*Main.MULTIPLIER, widthSs, heightSs);
+            Inventory.isVisible = false;
         } else if (Tool.weaponType == 1) {  // basket
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*3+6*Main.MULTIPLIER, widthSs, heightSs);
-        } else if (Tool.weaponType == 2) {
+        } else if (Tool.weaponType == 2) {  // axe
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER*2+4*Main.MULTIPLIER, widthSs, heightSs);
-        } else if (Tool.weaponType == 3) {
+            Inventory.isVisible = false;
+        } else if (Tool.weaponType == 3) {  //pickaxe
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, (yPosition+4*Main.MULTIPLIER)+selectSlotTexture.getWidth()*Main.MULTIPLIER+2*Main.MULTIPLIER, widthSs, heightSs);
-        } else if (Tool.weaponType == 4) {
+            Inventory.isVisible = false;
+        } else if (Tool.weaponType == 4) {  //hoe
             spriteStb.setBounds(xPosition+4*Main.MULTIPLIER, yPosition+4*Main.MULTIPLIER, widthSs, heightSs);
+            Inventory.isVisible = false;
         }
     }
 
@@ -67,19 +65,36 @@ public class Toolbar {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                // Bildschirm-Y-Koordinate invertieren (da LibGDX Y-Koordinate von unten nach oben zählt)
                 screenY = Gdx.graphics.getHeight() - screenY;
-
-                // Prüfen, ob der Klick innerhalb der Zielfläche ist
-                if (targetBasket.contains(screenX, screenY) && Inventory.isVisible == false) {
+                if (targetBasket.contains(screenX, screenY) && !Inventory.isVisible) {
                     Tool.weaponType = 1;
                     changeSelectToolbar();
                     Main.tool.refreshTexture();
                     Inventory.isVisible = true;
                     return true;
                 }
-                if (targetBasket.contains(screenX, screenY) && Inventory.isVisible == true) {
-                    Tool.weaponType = 1;
+                if (targetBasket.contains(screenX, screenY) && Inventory.isVisible) {
+                    Inventory.isVisible = false;
+                    return true;
+                }
+                if (targetAxe.contains(screenX, screenY)) {
+                    Tool.weaponType = 2;
+                    changeSelectToolbar();
+                    Main.tool.refreshTexture();
+                    Inventory.isVisible = false;
+                    return true;
+                }
+                if (targetPickaxe.contains(screenX, screenY)) {
+                    Tool.weaponType = 3;
+                    changeSelectToolbar();
+                    Main.tool.refreshTexture();
+                    Inventory.isVisible = false;
+                    return true;
+                }
+                if (targetHoe.contains(screenX, screenY)) {
+                    Tool.weaponType = 4;
+                    changeSelectToolbar();
+                    Main.tool.refreshTexture();
                     Inventory.isVisible = false;
                     return true;
                 }

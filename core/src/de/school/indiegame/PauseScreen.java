@@ -13,13 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import static de.school.indiegame.StartScreen.bgHeight;
-import static de.school.indiegame.StartScreen.bgWidth;
-
 public class PauseScreen implements Screen {
     private final Main game;
     private SpriteBatch batch;
-    Sprite sprite;
     Texture backgroundTexture;
     private Stage pauseStage;
     private TextureRegion textureRegion;
@@ -44,6 +40,7 @@ public class PauseScreen implements Screen {
 
         // stage
         pauseStage = new Stage(new StretchViewport(1920, 1080));
+        Gdx.input.setInputProcessor(pauseStage);
 
         //background
         backgroundTexture = new Texture("menu/sky.png");
@@ -117,18 +114,9 @@ public class PauseScreen implements Screen {
 
     @Override
     public void show() {
-        pauseStage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.ESCAPE) {
-                    GameScreen.paused = false;
-                    game.showGameScreen();
-                    return true;
-                }
-                return false;
-            }
-        });
-        Gdx.input.setInputProcessor(pauseStage);
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(pauseStage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -139,6 +127,10 @@ public class PauseScreen implements Screen {
         batch.end();
         pauseStage.act(delta);
         pauseStage.draw();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.showGameScreen();
+        }
     }
 
     @Override
