@@ -20,7 +20,8 @@ public class Player {
 
     // Moving
     Vector2 movement = new Vector2(0,0);
-    float speed = 5f * Main.MULTIPLIER * 0.25f;
+    float speedModifier = 5f;
+    float speed = speedModifier * Main.MULTIPLIER * 0.25f;
 
     // Effects
     Circle translucentCircle;
@@ -70,6 +71,12 @@ public class Player {
         // test map saving
         if (input.isKeyJustPressed(Keys.O)) {
             Map.saveMap();
+        }
+
+        // sprinting
+        if (input.isKeyPressed(Keys.SHIFT_LEFT)) {
+            speedModifier = 8f;
+            speed = speedModifier * Main.MULTIPLIER * 0.25f;
         }
 
         // set the x-movement vector according to the input

@@ -77,18 +77,18 @@ public class Tool {
             hitbox.width = Main.player.width / 2;
             hitbox.height = Main.player.height / 4;
         } else {
-            this.hitbox = this.sprite.getBoundingRectangle();
+            hitbox = this.sprite.getBoundingRectangle();
+
+            hitbox.width = hitbox.width / 2f;
+            hitbox.height = hitbox.height / 1.1f;
+
+
             if (sprite.isFlipX()) {
-                this.hitbox.width = this.hitbox.width / 3;
-                this.hitbox.x += this.hitbox.width * 1.5f;
-                hitbox.y += hitbox.height / 2;
-                hitbox.height = hitbox.height / 3;
+                hitbox.x += hitbox.width / 2f + (hitbox.width / 8f * 2);
             } else {
-                this.hitbox.width = this.hitbox.width / 3;
-                this.hitbox.x += this.hitbox.width * 0.5f;
-                hitbox.y += hitbox.height / 2;
-                hitbox.height = hitbox.height / 3;
+                hitbox.x = hitbox.x + hitbox.width / 8f;
             }
+
         }
     }
 
