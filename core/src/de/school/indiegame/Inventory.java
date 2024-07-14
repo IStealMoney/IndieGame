@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -206,7 +207,7 @@ public class Inventory {
         }
 
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             boolean exists = true;
 
             // coordinate system begins in lower left corner
@@ -278,6 +279,10 @@ public class Inventory {
                 if (isDragged) {
                     // check if item is dragged but released onto other item and slot is not empty
                     if (inventory[(int) dy / itemSize][(int) dx / itemSize][0] != inventory[draggedSlot[1]][draggedSlot[0]][0] && inventory[(int) dy / itemSize][(int) dx / itemSize][0] != -1) {
+                        // swap items
+                        int[] tempDragged = inventory[draggedSlot[1]][draggedSlot[0]];
+                        inventory[selectedSlot[1]][selectedSlot[0]] = inventory[(int) dy / itemSize][(int) dx / itemSize];
+                        inventory[(int) dy / itemSize][(int) dx / itemSize] = tempDragged;
                         clearSlots();
                         return;
                     }
@@ -395,7 +400,9 @@ public class Inventory {
                     }
 
                     if (!isDragged) {
-                        Main.font.draw(batch, amount, amountX, amountY);
+                        if (inventory[i][j][1] > 0) {
+                            Main.font.draw(batch, amount, amountX, amountY);
+                        }
                     } else {
                         draggedAmountX = amountX;
                         draggedAmountY = amountY;

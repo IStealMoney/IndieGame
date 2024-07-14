@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import static de.school.indiegame.Main.shape;
+
 public class Tool {
     String[] weapons = new String[] {"", "basket", "axe", "pickaxe", "hoe"};
     Texture texture;
@@ -22,7 +24,7 @@ public class Tool {
     double currentPressedTime;
     int defaultRotation = 10;
     int rotationAmount = 10;
-    public static boolean isHidden = true;
+    public static boolean isHidden = false;
     float width;
     float height;
 
@@ -70,26 +72,30 @@ public class Tool {
 
     public void calculateHitbox() {
         if (isHidden) {
-            hitbox.x = Main.player.rect.x;
+            hitbox.x = Main.player.rect.x + Main.player.width / 4;
             hitbox.y = Main.player.rect.y + Main.player.height / 2;
-            hitbox.width = Main.player.width;
-            hitbox.height = Main.player.height;
+            hitbox.width = Main.player.width / 2;
+            hitbox.height = Main.player.height / 4;
         } else {
             this.hitbox = this.sprite.getBoundingRectangle();
             if (sprite.isFlipX()) {
-                this.hitbox.width = this.hitbox.width / 2;
-                this.hitbox.x += this.hitbox.width;
+                this.hitbox.width = this.hitbox.width / 3;
+                this.hitbox.x += this.hitbox.width * 1.5f;
+                hitbox.y += hitbox.height / 3;
+                hitbox.height = hitbox.height / 3;
             } else {
-                this.hitbox.width = this.hitbox.width / 2;
+                this.hitbox.width = this.hitbox.width / 3;
+                this.hitbox.x += this.hitbox.width * 0.5f;
+                hitbox.y += hitbox.height / 3;
+                hitbox.height = hitbox.height / 3;
             }
         }
-
     }
 
     public void handleInput() {
         // Check if mouse is not above hud
         if (!Main.mouseAboveHud) {
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 if (!isPressed) {
                     isPressed = true;
                     pressedStartTime = System.currentTimeMillis();
@@ -170,12 +176,16 @@ public class Tool {
     public void update() {
         calculateHitbox();
         handleInput();
-        animate();
+        if (!isHidden) {
+            animate();
+        }
+
     }
 
     public void draw(SpriteBatch batch) {
         if (!isHidden) {
             sprite.draw(batch);
         }
+        shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 }
