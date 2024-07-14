@@ -109,7 +109,7 @@ public class PauseScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-        homeBtn.addListener(new ChangeListener() {
+        saveBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.saveGame();
@@ -118,17 +118,13 @@ public class PauseScreen implements Screen {
 
 
         // add elements to table
-        pauseTable.add(pauseLabel);
-        pauseTable.row();
+        pauseTable.add(pauseLabel).row();
         pauseTable.add(continueBtn).size(200, 200).padRight(100);
         pauseTable.add(saveBtn).size(200, 200).padRight(100);
         pauseTable.add(homeBtn).size(200,200).padRight(100);
         pauseTable.add(quitBtn).size(200,200);
-
         pauseStage.addActor(pauseTable);
     }
-
-
 
     @Override
     public void show() {
