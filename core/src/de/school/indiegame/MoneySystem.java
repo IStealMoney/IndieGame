@@ -18,18 +18,12 @@ public class MoneySystem {
     public static Texture coinTexture;
     public static int currentMoney = 0;
     public static String currency = "Bob-Coins";
-    private Vector2 customerPosition;
-    private float interactionRange = 32;
-
-    //interactive customer to sell items
-    //needs to be a Tile
 
     MoneySystem() {
         coinTexture = new Texture("money/bobcoin.png");
         sprite = new Sprite(coinTexture);
-        sprite.setBounds(Main.SCREEN_SIZE[0]-20 * Main.MULTIPLIER, Main.SCREEN_SIZE[1]- 20 * Main.MULTIPLIER,
-                coinTexture.getWidth()*Main.MULTIPLIER, coinTexture.getHeight()*Main.MULTIPLIER);
-        customerPosition = new Vector2(12, 12);
+        sprite.setBounds(Main.SCREEN_SIZE[0] - 20 * Main.MULTIPLIER, Main.SCREEN_SIZE[1] - 20 * Main.MULTIPLIER,
+                coinTexture.getWidth() * Main.MULTIPLIER, coinTexture.getHeight() * Main.MULTIPLIER);
         loadMoney();
     }
 
@@ -58,14 +52,6 @@ public class MoneySystem {
 
     public void add(int amount) {
         currentMoney += amount;
-    }
-
-    public void isInRange() {
-        //wenn Player.movement (vector2 x,y) innerhalb interactionRange
-    }
-
-    public void updateCurrentMoney() {
-
     }
 
     public void draw(SpriteBatch batch) {

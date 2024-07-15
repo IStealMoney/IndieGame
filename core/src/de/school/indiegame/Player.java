@@ -14,12 +14,12 @@ public class Player {
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/Bob_vorne.png"));
     Sprite sprite;
-    Rectangle rect;
+    static Rectangle rect;
     float width = texture.getWidth() * Main.MULTIPLIER;
     float height = texture.getHeight() * Main.MULTIPLIER;
 
     // Moving
-    Vector2 movement = new Vector2(0,0);
+    static Vector2 movement = new Vector2(0,0);
     float speedModifier = 5f;
     float speed = speedModifier * Main.MULTIPLIER * 0.25f;
 
