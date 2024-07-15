@@ -176,19 +176,18 @@ public class Tool {
     }
 
     public void update() {
-        calculateHitbox();
         handleInput();
         if (!isHidden) {
             animate();
         }
-
+        calculateHitbox();
     }
 
     public void draw(SpriteBatch batch) {
         if (!isHidden) {
             sprite.draw(batch);
         }
-        shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
-        shape.rect(Main.player.rect.x, Main.player.rect.y, Main.player.rect.width, Main.player.rect.height);
+        //shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        //shape.rect(Main.player.rect.x, Main.player.rect.y, Main.player.rect.width, Main.player.rect.height);
     }
 }

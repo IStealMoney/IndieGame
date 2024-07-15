@@ -68,7 +68,6 @@ public class Inventory {
         clickableRect = new Rectangle(x +  inventoryBorder, y + inventoryBorder, width - (inventoryBorder * 2), height - (inventoryBorder * 2)); // Rectangle without texture borders
         loadItemTextures();
         loadInventory();
-        pickup(0, 80);
     }
 
     public void loadItemTextures() {
@@ -109,13 +108,16 @@ public class Inventory {
         for (int i = startSlot[1]; i < size[1]; i++) {
             for (int j = startSlot[0]; j < size[0]; j++) {
                 int invAmount = inventory[i][j][1];
-                int difAmount = maxAmount - invAmount;
+                int difAmount = 0;
 
-                if (amount < maxAmount) {
+                if (amount < maxAmount && Math.abs(invAmount - maxAmount) >= amount) {
                     difAmount = amount;
                 }
+                if (amount > (maxAmount - invAmount)) {
+                    difAmount = maxAmount - invAmount;
+                }
 
-                if (invAmount >= 0 && invAmount < maxAmount && amount > 0 && inventory[i][j][0] == -1) {
+                if (invAmount >= 0 && amount > 0 && inventory[i][j][0] == -1) {
                     inventory[i][j][1] += difAmount;
                     inventory[i][j][0] = id;
                     amount -= difAmount;
@@ -129,23 +131,27 @@ public class Inventory {
             for (int j = 0; j < size[0]; j++) {
                 int invId = inventory[i][j][0];
                 int invAmount = inventory[i][j][1];
-                int difAmount = maxAmount - Math.abs(invAmount - amount);
+                int difAmount = 0;
+                if (invId == id) {
 
-                if (amount <= maxAmount && Math.abs(maxAmount - invAmount) < amount) {
-                    difAmount = Math.abs(maxAmount - invAmount);
-                } else if(amount < maxAmount) {
-                    difAmount = amount;
-                }
+                    if (amount < maxAmount && Math.abs(invAmount - maxAmount) >= amount) {
+                        difAmount = amount;
+                    }
+                    if (amount > (maxAmount - invAmount)) {
+                        difAmount = maxAmount - invAmount;
+                    }
 
-
-                if (invId == id && invAmount < maxAmount && amount > 0) {
-                    inventory[i][j][1] += difAmount;
-                    amount -= difAmount;
+                    if (invAmount < maxAmount && amount > 0) {
+                        inventory[i][j][1] += difAmount;
+                        amount -= difAmount;
+                        System.out.println("PICKUP REMOVED" + difAmount);
+                    }
                 }
             }
         }
-
-        distributeAmount(id, new int[] {0, 0}, amount);
+        if (amount > 0) {
+            distributeAmount(id, new int[] {0, 0}, amount);
+        }
     }
 
     public void add(int[] slot, int id, int amount) {
@@ -302,7 +308,7 @@ public class Inventory {
 
                             if (inventory[draggedSlot[1]][draggedSlot[0]][1] <= 0) { // if all items have been transferred to item that has been clicked on
                                 inventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
-                                inventory[draggedSlot[1]][draggedSlot[0]][1] = -1;
+                                inventory[draggedSlot[1]][draggedSlot[0]][1] = 0;
                             }
                         }
 

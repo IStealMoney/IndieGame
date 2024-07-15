@@ -1,5 +1,5 @@
 [
-    {"id": 0, "name": "wheat", "duration": 12, "value": "20"},
+    {"id": 0, "name": "wheat", "duration": 120, "value": "20"},
     {"id": 1, "name": "strawberry", "duration": 300, "value": "20"},
     {"id": 2, "name": "potato", "duration": 180, "value": "70"},
     {"id": 3, "name": "apple", "duration": 900, "value": "80"},

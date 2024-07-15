@@ -26,7 +26,7 @@ public class Player {
     // Effects
     Circle translucentCircle;
     float translucentRadius = 200f;
-    float minDistance = 120f; // Controls opacity of tree
+    float minDistance = 140f; // Controls opacity of tree
 
     Player(float x, float y) {
         this.rect = new Rectangle(x - width / 2, y - height / 2, width, height - height / 2);
