@@ -30,13 +30,13 @@ public class Inventory {
     public static int[] selectedSlot = {-1, -1};
     public static int[] draggedSlot = {-1, -1};
 
-    Texture backgroundTexture = new Texture(Gdx.files.internal("inventory/background.png"));
+    static Texture backgroundTexture = new Texture(Gdx.files.internal("inventory/background.png"));
     Texture selectedSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
 
-    float scaler = 0.75f;
-    float width = backgroundTexture.getWidth() * Main.MULTIPLIER * scaler;
-    float height = backgroundTexture.getHeight() * Main.MULTIPLIER * scaler;
-    Rectangle rect;
+    public static float scaler = 0.75f;
+    static float width = backgroundTexture.getWidth() * Main.MULTIPLIER * scaler;
+    static float height = backgroundTexture.getHeight() * Main.MULTIPLIER * scaler;
+    static Rectangle rect;
     Rectangle clickableRect;
     Rectangle mouseRect = new Rectangle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 1, 1);
     float inventoryBorder = 4 * Main.MULTIPLIER * scaler;

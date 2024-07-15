@@ -2,29 +2,33 @@ package de.school.indiegame;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
-
-import static de.school.indiegame.Main.batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Customer {
-    private static final int TILE_SIZE = 16;
-    private static final int MAP_SIZE = 512;
-    private Vector2 customerPosition;
-    private Vector2 playerPosition;
-    private float interactionRange = 128;
-    public static Sprite cusInvSprite;
+    private static Sprite sprite;
     public static Texture cusInvTexture;
+    public static boolean cusInvVisible;
+    private float xPos;
 
     Customer() {
-
+        cusInvTexture = new Texture("customer/inventory.png");
+        sprite = new Sprite(cusInvTexture);
+        xPos = Inventory.rect.x-Inventory.backgroundTexture.getWidth()*Main.MULTIPLIER-20;
+        sprite.setBounds(xPos, Inventory.rect.y, Inventory.width, Inventory.height);
         }
 
-    public static void showSellTextures() {
-        cusInvTexture = new Texture("customer/inventory.png");
-        cusInvSprite = new Sprite(cusInvTexture);
-        cusInvSprite.setBounds(Main.SCREEN_SIZE[0]-20 * Main.MULTIPLIER, Main.SCREEN_SIZE[1]- 20 * Main.MULTIPLIER,
-                cusInvTexture.getWidth()*Main.MULTIPLIER, cusInvTexture.getHeight()*Main.MULTIPLIER);
-        cusInvSprite.draw(batch);
-        System.out.println("customer is clickable");
+    public static void handleInput() {
+        cusInvVisible = true;
+        Inventory.isVisible = true;
+    }
+
+    public void update() {
+        handleInput();
+    }
+
+    public static void draw(SpriteBatch batch) {
+        if (cusInvVisible) {
+            sprite.draw(batch);
+        }
     }
 }

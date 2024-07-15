@@ -155,8 +155,11 @@ public class Tile {
             if (canPress && !Main.mouseAboveHud) {
                 if (this.rect.overlaps(Tool.hitbox)) {
                     if (Tool.weaponType == 1) { //basket
-                        if (isCustomer) {
-                            Customer.showSellTextures();
+                        if (isCustomer && !Customer.cusInvVisible) {
+                            Customer.handleInput();
+                        } else if (isCustomer && Customer.cusInvVisible) {
+                            Inventory.isVisible = false;
+                            Customer.cusInvVisible = false;
                         }
                     }
                     if (Tool.weaponType == 2) { // axe

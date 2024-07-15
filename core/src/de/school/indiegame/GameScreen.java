@@ -81,6 +81,7 @@ public class GameScreen implements Screen {
         layout.setText(moneyFont, String.valueOf(currentMoney));
         moneyFont.draw(batch, currentMoney + " ", Main.SCREEN_SIZE[0]-20 * MULTIPLIER - layout.width * 1.25f, (Main.SCREEN_SIZE[1] - 19 * MULTIPLIER) + layout.height);
         Main.moneySystem.draw(batch);
+        Main.customer.draw(batch);
     }
 
     public void updateSprites() {
@@ -89,6 +90,7 @@ public class GameScreen implements Screen {
         Main.tool.update();
         Main.toolbar.update();
         Main.inventory.update();
+        //Main.customer.update();
     }
 
     @Override
