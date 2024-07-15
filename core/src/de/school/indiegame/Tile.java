@@ -27,6 +27,7 @@ public class Tile {
     boolean isHarvestable;
     boolean isDestructible;
     boolean isIndestructible;
+    boolean isCustomer;
     boolean isAxeable;
     String group;
 
@@ -57,6 +58,9 @@ public class Tile {
     }
 
     public void setProperties() {
+        if(tileset.equals("customer")) {
+            isCustomer = true;
+        }
         if (tileset.equals("indestructible")) {
             isBlockable = true;
             isIndestructible = true;
@@ -151,7 +155,7 @@ public class Tile {
             if (canPress && !Main.mouseAboveHud) {
                 if (this.rect.overlaps(Tool.hitbox)) {
                     if (Tool.weaponType == 1) { //basket
-                        if (isIndestructible) {
+                        if (isCustomer) {
                             Customer.showSellTextures();
                         }
                     }

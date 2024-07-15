@@ -93,7 +93,7 @@ public class Main extends Game {
 		inventory.backgroundTexture.dispose();
 		inventory.selectedSlotTexture.dispose();
 		MoneySystem.coinTexture.dispose();
-		Customer.interactivebtnTexture.dispose();
+		Customer.cusInvTexture.dispose();
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();
