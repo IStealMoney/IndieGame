@@ -37,7 +37,7 @@ public class Plant {
     double pressedStartTime = System.currentTimeMillis();
     double currentPressedTime;
 
-    Plant(int mapX, int mapY, float x, float y, int id, String name, double duration, double startDuration, double value, int maxGrowthState) {
+    Plant(int mapX, int mapY, float x, float y, int id, String name, double duration, double startDuration, double value, int maxGrowthState, int growthState) {
         this.mapX = mapX;
         this.mapY = mapY;
         this.x = x;
@@ -48,7 +48,7 @@ public class Plant {
         this.duration = (int) duration;
         this.startDuration = startDuration;
         this.value = value;
-        this.growthState = maxGrowthState;
+        this.growthState = growthState;
         this.maxGrowthState = maxGrowthState;
         layout = new GlyphLayout();
         refreshTexture();

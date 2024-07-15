@@ -74,6 +74,7 @@ public class Main extends Game {
 		tool = new Tool(player.rect.x, player.rect.y, 2);
 		toolbar = new Toolbar();
 		MAP = new Map();
+
 		inventory = new Inventory(SCREEN_SIZE[0] - SCREEN_SIZE[0] / 2.4f, SCREEN_SIZE[1] / 2.5f);
 		moneySystem = new MoneySystem();
 	}

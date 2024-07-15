@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.internal.LinkedTreeMap;
 import jdk.internal.jimage.ImageStrings;
 
@@ -44,30 +45,78 @@ public class Map {
     }
 
     public static void loadPlants() {
-        ArrayList plantsArray = new ArrayList<LinkedTreeMap>();
-        plantsArray = gson.fromJson(Gdx.files.internal("plants/plants_data.json").reader(), plantsArray.getClass());
-        System.out.println(plantsArray);
-        for (int i = 0; i < plantsArray.size(); i++) {
-            ArrayList<HashMap<String, Object>> plantData = new ArrayList<HashMap<String, Object>>();
-            //plantData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), HashMap.class));
+        plants.clear();
 
-            //System.out.println(plantData.get(i).get("x"));
+        // Load plants
+        ArrayList<LinkedTreeMap> plantsArray = new ArrayList<>();
+        plantsArray = gson.fromJson(Gdx.files.internal("plants/plants_data.json").reader(), plantsArray.getClass());
+
+        if (plantsArray == null) {
+            return;
+        }
+
+        for (int i = 0; i < plantsArray.size(); i++) {
+            LinkedTreeMap plant = plantsArray.get(i);
+            String name = (String) plant.get("name");
+            int id = (int) (double) plant.get("id");
+            float x = (float) (double) plant.get("x");
+            float y = (float) (double) plant.get("y");
+            int mapX = (int) (double) plant.get("mapX");
+            int mapY = (int) (double) plant.get("mapY");
+            double duration = (double) plant.get("duration");
+            double startDuration = (double) plant.get("startDuration");
+            double value = (double) plant.get("duration");
+            int maxGrowthState = (int) (double) plant.get("maxGrowthState");
+            int growthState = (int) (double) plant.get("growthState");
+
+            float mapXOffset = ((float) maps.get("ground")[0].length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[0] / 2; // Half of the map
+            float mapYOffset = ((float) maps.get("ground").length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[1] / 2; // Half of the map
+
+            Plant loadedPlant = new Plant(mapX, mapY, mapX * Main.TILE_SIZE * Main.MULTIPLIER - mapXOffset, ((maps.get("ground").length - 1) - mapY) * Main.TILE_SIZE * Main.MULTIPLIER - mapYOffset, id, name, duration, startDuration, value, maxGrowthState, growthState);
+            plants.add(loadedPlant);
+            plantMapCoords.add(new Integer[] {mapX, mapY});
         }
     }
 
     public static void savePlants() {
-        String plantsData = json.toJson(plants);
+        ArrayList<HashMap<String, Object>> plantsArray = new ArrayList<>();
+
+        for (int i = 0; i < plants.size(); i++) {
+            Plant plant = plants.get(i);
+            plantsArray.add(new HashMap<>());
+            plantsArray.get(i).put("name", plant.name);
+            plantsArray.get(i).put("id", plant.id);
+            plantsArray.get(i).put("mapX", plant.mapX);
+            plantsArray.get(i).put("mapY", plant.mapY);
+            plantsArray.get(i).put("x", plant.x);
+            plantsArray.get(i).put("y", plant.y);
+            plantsArray.get(i).put("duration", plant.duration);
+            plantsArray.get(i).put("startDuration", plant.startDuration);
+            plantsArray.get(i).put("value", plant.value);
+            plantsArray.get(i).put("maxGrowthState", plant.maxGrowthState);
+            plantsArray.get(i).put("growthState", plant.growthState);
+        }
+
+        String plantsString = gson.toJson(plantsArray);
+
+        // save plant coords
+        String plantMapCoordsString = gson.toJson(plantMapCoords);
 
         try {
             FileWriter fileWriter = new FileWriter(Gdx.files.internal("plants/plants_data.json").toString());
-            fileWriter.write(plantsData);
+            fileWriter.write(plantsString);
             fileWriter.close();
+
+            FileWriter fW = new FileWriter(Gdx.files.internal("plants/placed_plants_data.json").toString());
+            fW.write(plantMapCoordsString);
+            fW.close();
         } catch (IOException e) {
             e.fillInStackTrace();
         }
     }
 
     public static void loadPlantTextures() {
+        plantTextures.clear();
         ArrayList plantsArray = new ArrayList<LinkedTreeMap>();
         plantsArray = gson.fromJson(Gdx.files.internal("plants/plants.json").reader(), plantsArray.getClass());
         ArrayList<HashMap<String, Object>> plantData = new ArrayList<HashMap<String, Object>>();
@@ -99,6 +148,7 @@ public class Map {
     }
 
     public static void loadEditableMap() throws IOException {
+        maps.clear();
         for (String tileset : tilesets) {
             // load tileset textures
             Texture tilesetTexture = new Texture(Gdx.files.internal("tiles/" + tileset + "_tileset.png"));

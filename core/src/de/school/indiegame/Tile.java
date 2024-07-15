@@ -125,7 +125,7 @@ public class Tile {
 
 
                                 if (type == 2) { // is farm land
-                                    Map.plants.add(new Plant(mapX, mapY, this.rect.x, this.rect.y, selectedItem, itemName, itemDuration, itemDuration, itemValue, Map.plantTextures.get(selectedItem).size() - 1));
+                                    Map.plants.add(new Plant(mapX, mapY, this.rect.x, this.rect.y, selectedItem, itemName, itemDuration, itemDuration, itemValue, Map.plantTextures.get(selectedItem).size() - 1, Map.plantTextures.get(selectedItem).size() - 1));
                                     Inventory.activeItem[1] -= 1;
                                     if (Inventory.activeItem[1] <= 0) { // if amount of active item is 0
                                         Main.inventory.resetActiveItem();
