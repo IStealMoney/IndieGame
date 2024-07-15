@@ -34,6 +34,7 @@ public class Main extends Game {
 	public static BitmapFont font;
 	public static BitmapFont menuFont;
 	public static BitmapFont moneyFont;
+	public static BitmapFont plantFont;
 	public static FreeTypeFontGenerator fontGenerator;
 	public static FreeTypeFontParameter fontParameter;
 	public static Skin skin;
@@ -47,7 +48,8 @@ public class Main extends Game {
 		// Setup Font
 		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/vcr_osd_mono.ttf"));
 		fontParameter = new FreeTypeFontParameter();
-		fontParameter.borderWidth = 1;
+		fontParameter.borderWidth = 2;
+		fontParameter.size = 16;
 		font = fontGenerator.generateFont(fontParameter);
 		fontParameter.size = 120;
 		fontParameter.borderWidth = 3;
@@ -57,6 +59,9 @@ public class Main extends Game {
 		fontParameter.borderWidth = 2;
 		moneyFont = fontGenerator.generateFont(fontParameter);
 
+		fontParameter.borderWidth = 1;
+		fontParameter.size = 15;
+		plantFont = fontGenerator.generateFont(fontParameter);
 
 		gameScreen = new GameScreen(this);
 		pauseScreen = new PauseScreen(this);

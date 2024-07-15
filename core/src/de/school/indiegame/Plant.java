@@ -87,9 +87,9 @@ public class Plant {
         if (S > 0) {
             durationString += S + "s";
         }
-        layout.setText(Main.font, durationString);
+        layout.setText(Main.plantFont, durationString);
 
-        Main.font.draw(batch, durationString, x + (texture.getWidth() * Main.MULTIPLIER / 2) - layout.width / 2, y + texture.getHeight() * Main.MULTIPLIER - layout.height / 2);
+        Main.plantFont.draw(batch, durationString, x + (texture.getWidth() * Main.MULTIPLIER / 2) - layout.width / 2, y + texture.getHeight() * Main.MULTIPLIER - layout.height / 2);
     }
 
     public void harvest() {
