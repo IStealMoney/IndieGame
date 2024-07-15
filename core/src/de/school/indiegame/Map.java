@@ -79,7 +79,7 @@ public class Map {
     }
 
     public static void savePlants() {
-        ArrayList<HashMap<String, Object>> plantsArray = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> plantsArray = new ArrayList<HashMap<String, Object>>();
 
         for (int i = 0; i < plants.size(); i++) {
             Plant plant = plants.get(i);

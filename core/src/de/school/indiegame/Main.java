@@ -20,6 +20,7 @@ public class Main extends Game {
 	public static Map MAP;
 	public static Inventory inventory;
 	public static MoneySystem moneySystem;
+	public static Customer customer;
 
 	static SpriteBatch batch;
 	static ShapeRenderer shape;
@@ -82,6 +83,7 @@ public class Main extends Game {
 
 		inventory = new Inventory(SCREEN_SIZE[0] - SCREEN_SIZE[0] / 2.4f, SCREEN_SIZE[1] / 2.5f);
 		moneySystem = new MoneySystem();
+		customer = new Customer();
 	}
 	
 	@Override
@@ -95,6 +97,8 @@ public class Main extends Game {
 		Toolbar.selectSlotTexture.dispose();
 		inventory.backgroundTexture.dispose();
 		inventory.selectedSlotTexture.dispose();
+		MoneySystem.coinTexture.dispose();
+		Customer.interactivebtnTexture.dispose();
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();

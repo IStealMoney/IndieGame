@@ -2,17 +2,11 @@ package de.school.indiegame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Tile {
@@ -32,6 +26,7 @@ public class Tile {
     boolean isTranslucent;
     boolean isHarvestable;
     boolean isDestructible;
+    boolean isIndestructible;
     boolean isAxeable;
     String group;
 
@@ -64,6 +59,7 @@ public class Tile {
     public void setProperties() {
         if (tileset.equals("indestructible")) {
             isBlockable = true;
+            isIndestructible = true;
         }
         if (tileset.equals("destructible")) {
             isBlockable = true;
@@ -154,6 +150,11 @@ public class Tile {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (canPress && !Main.mouseAboveHud) {
                 if (this.rect.overlaps(Tool.hitbox)) {
+                    if (Tool.weaponType == 1) { //basket
+                        if (isIndestructible) {
+                            Customer.showSellTextures();
+                        }
+                    }
                     if (Tool.weaponType == 2) { // axe
                         if (isAxeable) {
                             this.health -= 1;
