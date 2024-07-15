@@ -178,6 +178,10 @@ public class Tile {
                                 this.type = 1;
                                 updateTileOnMap();
                             }
+                            if (this.type == 1) {
+                                this.type = 2;
+                                updateTileOnMap();
+                            }
                         }
                     }
                 }

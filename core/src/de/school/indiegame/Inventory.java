@@ -144,7 +144,6 @@ public class Inventory {
                     if (invAmount < maxAmount && amount > 0) {
                         inventory[i][j][1] += difAmount;
                         amount -= difAmount;
-                        System.out.println("PICKUP REMOVED" + difAmount);
                     }
                 }
             }
@@ -199,17 +198,11 @@ public class Inventory {
         }
 
         // handle visibility
-        if (Gdx.input.isKeyJustPressed(Input.Keys.I) && Tool.weaponType != 1) { // change to basket
+        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) { // change to basket
             Tool.weaponType = 1;
             Toolbar.changeSelectToolbar();
             Main.tool.refreshTexture();
-            isVisible = true;
-            clearSlots();
-        } else if (Tool.weaponType == 1 && isVisible && Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            isVisible = false;
-            clearSlots();
-        } else if (Tool.weaponType == 1 && !isVisible && Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            isVisible = true;
+            isVisible = !isVisible;
             clearSlots();
         }
 

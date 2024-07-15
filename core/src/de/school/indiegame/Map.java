@@ -69,7 +69,7 @@ public class Map {
             int maxGrowthState = (int) (double) plant.get("maxGrowthState");
             int growthState = (int) (double) plant.get("growthState");
 
-            float mapXOffset = ((float) maps.get("ground")[0].length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[0] / 2; // Half of the map
+            float mapXOffset = ((float) maps.get("ground")[mapY].length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[0] / 2; // Half of the map
             float mapYOffset = ((float) maps.get("ground").length / 2) * Main.TILE_SIZE * Main.MULTIPLIER - Main.SCREEN_SIZE[1] / 2; // Half of the map
 
             Plant loadedPlant = new Plant(mapX, mapY, mapX * Main.TILE_SIZE * Main.MULTIPLIER - mapXOffset, ((maps.get("ground").length - 1) - mapY) * Main.TILE_SIZE * Main.MULTIPLIER - mapYOffset, id, name, duration, startDuration, value, maxGrowthState, growthState);
