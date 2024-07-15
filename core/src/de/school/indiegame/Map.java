@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import jdk.internal.jimage.ImageStrings;
 
@@ -14,7 +17,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Map {
-    static Gson gson = new Gson();
+    public static Gson gson = new GsonBuilder().setPrettyPrinting()
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
+    static Json json = new Json();
     public static ArrayList<Plant> plants = new ArrayList<>();
     public static ArrayList<Integer[]> plantMapCoords = new ArrayList<>();
     public static HashMap<Integer, ArrayList<Texture>> plantTextures = new HashMap<Integer, ArrayList<Texture>>();
@@ -31,8 +37,33 @@ public class Map {
         try {
             loadEditableMap();
             loadPlantTextures();
+            loadPlants();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadPlants() {
+        ArrayList plantsArray = new ArrayList<LinkedTreeMap>();
+        plantsArray = gson.fromJson(Gdx.files.internal("plants/plants_data.json").reader(), plantsArray.getClass());
+        System.out.println(plantsArray);
+        for (int i = 0; i < plantsArray.size(); i++) {
+            ArrayList<HashMap<String, Object>> plantData = new ArrayList<>();
+            //plantData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), HashMap.class));
+
+            //System.out.println(plantData.get(i).get("x"));
+        }
+    }
+
+    public static void savePlants() {
+        String plantsData = json.toJson(plants);
+
+        try {
+            FileWriter fileWriter = new FileWriter(Gdx.files.internal("plants/plants_data.json").toString());
+            fileWriter.write(plantsData);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.fillInStackTrace();
         }
     }
 
