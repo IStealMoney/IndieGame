@@ -89,7 +89,7 @@ public class Plant {
         }
         layout.setText(Main.font, durationString);
 
-        Main.font.draw(batch, durationString, x + (texture.getWidth() * Main.MULTIPLIER / 2) - layout.width / 2, y + texture.getHeight() * Main.MULTIPLIER - layout.height);
+        Main.font.draw(batch, durationString, x + (texture.getWidth() * Main.MULTIPLIER / 2) - layout.width / 2, y + texture.getHeight() * Main.MULTIPLIER - layout.height / 2);
     }
 
     public void harvest() {
