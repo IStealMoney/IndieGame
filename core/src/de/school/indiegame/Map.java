@@ -21,8 +21,8 @@ public class Map {
             .excludeFieldsWithoutExposeAnnotation()
             .create();
     static Json json = new Json();
-    public static ArrayList<Plant> plants = new ArrayList<>();
-    public static ArrayList<Integer[]> plantMapCoords = new ArrayList<>();
+    public static ArrayList<Plant> plants = new ArrayList<Plant>();
+    public static ArrayList<Integer[]> plantMapCoords = new ArrayList<Integer[]>();
     public static HashMap<Integer, ArrayList<Texture>> plantTextures = new HashMap<Integer, ArrayList<Texture>>();
     static ArrayList<Plant> plantsToRemove = new ArrayList<Plant>();
 
@@ -48,7 +48,7 @@ public class Map {
         plantsArray = gson.fromJson(Gdx.files.internal("plants/plants_data.json").reader(), plantsArray.getClass());
         System.out.println(plantsArray);
         for (int i = 0; i < plantsArray.size(); i++) {
-            ArrayList<HashMap<String, Object>> plantData = new ArrayList<>();
+            ArrayList<HashMap<String, Object>> plantData = new ArrayList<HashMap<String, Object>>();
             //plantData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), HashMap.class));
 
             //System.out.println(plantData.get(i).get("x"));
@@ -70,12 +70,12 @@ public class Map {
     public static void loadPlantTextures() {
         ArrayList plantsArray = new ArrayList<LinkedTreeMap>();
         plantsArray = gson.fromJson(Gdx.files.internal("plants/plants.json").reader(), plantsArray.getClass());
-        ArrayList<HashMap<String, Object>> plantData = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> plantData = new ArrayList<HashMap<String, Object>>();
 
         for (int i = 0; i < plantsArray.size(); i++) {
             plantData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), new HashMap<String, Object>().getClass()));
 
-            ArrayList<Texture> textures = new ArrayList<>();
+            ArrayList<Texture> textures = new ArrayList<Texture>();
 
             // calculate textures from plant sprite sheet
             Texture plantSpritesheet = new Texture(Gdx.files.internal("plants/textures/" + plantData.get(i).get("name").toString() + "_spritesheet.png"));
