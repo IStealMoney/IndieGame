@@ -260,17 +260,19 @@ public class Map {
     }
 
     public static void draw(SpriteBatch batch) {
+        //draw and update tiles except for environment
         for (Tile tile : mapTiles) {
-            if (tile.type != -1) {
+            if (tile.type != -1 && !tile.tileset.equals("environment")) {
                 tile.update();
                 tile.draw(batch);
-            } else {
+            } else if (tile.type == -1) {
                 Map.tilesToRemove.add(tile);
             }
         }
         Map.mapTiles.removeAll(Map.tilesToRemove);
         Map.tilesToRemove.clear();
 
+        // draw & update plants
         for (Plant plant : plants) {
             if (plant.id != -1) {
                 Main.font.getData().setScale(1);
@@ -280,7 +282,24 @@ public class Map {
                 Map.plantsToRemove.add(plant);
             }
         }
+
         Map.plants.removeAll(plantsToRemove);
         plantsToRemove.clear();
+
+        // draw & update environment tiles
+        for (Tile tile : mapTiles) {
+            System.out.println(tile.tileset);
+
+            if (tile.type != -1 && tile.tileset.equals("environment")) {
+                tile.update();
+                tile.draw(batch);
+                System.out.println("DRAWING ENVIRONMENT");
+            } else if (tile.type == -1){
+                Map.tilesToRemove.add(tile);
+            }
+        }
+
+        Map.mapTiles.removeAll(Map.tilesToRemove);
+        Map.tilesToRemove.clear();
     }
 }
