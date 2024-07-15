@@ -127,6 +127,7 @@ public class Main extends Game {
 	public void saveGame() {
 		Map.savePlants();
 		Map.saveMap();
+		MoneySystem.saveMoney();
 		inventory.saveInventory();
 	}
 }

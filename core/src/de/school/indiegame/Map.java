@@ -288,12 +288,9 @@ public class Map {
 
         // draw & update environment tiles
         for (Tile tile : mapTiles) {
-            System.out.println(tile.tileset);
-
             if (tile.type != -1 && tile.tileset.equals("environment")) {
                 tile.update();
                 tile.draw(batch);
-                System.out.println("DRAWING ENVIRONMENT");
             } else if (tile.type == -1){
                 Map.tilesToRemove.add(tile);
             }
