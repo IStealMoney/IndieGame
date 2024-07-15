@@ -61,6 +61,8 @@ public class Tool {
                 this.texture = Inventory.itemTextures.get(Inventory.activeItem[0]);
                 sprite.setTexture(this.texture);
                 sprite.setSize(width * 0.75f, height * 0.75f);
+            } else {
+                weaponType = 1;
             }
         }
         if (weaponType == 1) {
@@ -186,6 +188,7 @@ public class Tool {
         if (!isHidden) {
             sprite.draw(batch);
         }
-        //shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        shape.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        shape.rect(Main.player.rect.x, Main.player.rect.y, Main.player.rect.width, Main.player.rect.height);
     }
 }

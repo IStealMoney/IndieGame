@@ -82,11 +82,11 @@ public class Tile {
 
         // Set ground tiles, that are beneath destructible tiles to not harvestable
         if (tileset.equals("destructible")) {
-            for (Tile tile : Map.mapTiles) {
+           /* for (Tile tile : Map.mapTiles) {
                 if (tile.tileset.equals("ground") && tile.mapX == this.mapX && tile.mapY == this.mapY) {
                     tile.isHarvestable = false;
                 }
-            }
+            }*/
         }
     }
 
@@ -105,16 +105,43 @@ public class Tile {
         refreshTexture();
     }
 
-    public void harvest() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            if (this.rect.overlaps(Main.player.rect)) {
-                if (this.type == 0) {
-                    this.type = 1;
-                    updateTileOnMap();
+    public void plant() {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (canPress && !Main.mouseAboveHud) {
+                if (this.rect.overlaps(Tool.hitbox)) {
+                    if (Tool.weaponType == 0) {
+                        if (isHarvestable) {
+                            if (Inventory.activeItem[0] != -1) {
+                                int selectedItem = Inventory.activeItem[0];
+                                String itemName = Main.inventory.itemData.get(selectedItem).get("name").toString();
+                                double itemDuration = Double.parseDouble(Main.inventory.itemData.get(selectedItem).get("duration").toString());
+                                double itemValue = Double.parseDouble(Main.inventory.itemData.get(selectedItem).get("value").toString());
+
+                                for (Integer[] coords : Map.plantMapCoords) {
+                                    if (coords[0] == mapX && coords[1] == mapY) {
+                                        return;
+                                    }
+                                }
+
+
+                                if (type == 2) { // is farm land
+                                    Map.plants.add(new Plant(mapX, mapY, this.rect.x, this.rect.y, selectedItem, itemName, itemDuration, itemDuration, itemValue, Map.plantTextures.get(selectedItem).size() - 1));
+                                    Inventory.activeItem[1] -= 1;
+                                    if (Inventory.activeItem[1] <= 0) { // if amount of active item is 0
+                                        Main.inventory.resetActiveItem();
+                                    }
+                                    Map.plantMapCoords.add(new Integer[]{mapX, mapY});
+                                }
+                            }
+                        }
+                    }
                 }
+                canPress = false;
             }
         }
+    }
 
+    public void harvest() {
         // Calculate if player can press again
         currentPressedTime = System.currentTimeMillis();
         if (currentPressedTime - pressedStartTime >= pressedTime) {
@@ -122,10 +149,11 @@ public class Tile {
             pressedStartTime = System.currentTimeMillis();
         }
 
+
         // Tool harvest
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (canPress) {
-                if (this.rect.overlaps(Main.tool.hitbox)) {
+            if (canPress && !Main.mouseAboveHud) {
+                if (this.rect.overlaps(Tool.hitbox)) {
                     if (Tool.weaponType == 2) { // axe
                         if (isAxeable) {
                             this.health -= 1;
@@ -153,13 +181,14 @@ public class Tile {
                         }
                     }
                 }
-                canPress = false;
+                //canPress = false;
             }
         }
     }
 
     public void update() {
         harvest();
+        plant();
     }
 
     public void draw(SpriteBatch batch) {

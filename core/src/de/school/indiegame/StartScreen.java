@@ -112,10 +112,6 @@ public class StartScreen implements Screen {
         batch.end();
         startStage.act(delta);
         startStage.draw();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.showPauseScreen();
-        }
     }
 
     @Override

@@ -56,7 +56,7 @@ public class Inventory {
     String draggedAmount;
 
     // active item
-    public static int[] activeItem = new int[2];
+    public static int[] activeItem = {-1, -1};
     float activeItemX = Toolbar.xPosition + inventoryBorder + 4.5f * Main.MULTIPLIER;
     float activeItemY = Toolbar.yPosition + inventoryBorder + 4.5f * Main.MULTIPLIER + itemSize * 5.35f;
     Rectangle activeItemRect = new Rectangle(activeItemX, activeItemY, 16 * Main.MULTIPLIER, 16 * Main.MULTIPLIER);
@@ -68,14 +68,7 @@ public class Inventory {
         clickableRect = new Rectangle(x +  inventoryBorder, y + inventoryBorder, width - (inventoryBorder * 2), height - (inventoryBorder * 2)); // Rectangle without texture borders
         loadItemTextures();
         loadInventory();
-        pickup(0, 20);
-        pickup(2, 30);
-        pickup(3, 40);
-        pickup(1, 129);
-        pickup(4, 90);
-        pickup(5, 70);
-
-        add(new int[] {2, 2}, 2, 20);
+        pickup(0, 80);
     }
 
     public void loadItemTextures() {
@@ -85,7 +78,7 @@ public class Inventory {
         for (int i = 0; i < plantsArray.size(); i++) {
             itemData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), new HashMap<String, Object>().getClass()));
 
-            itemTextures.put(i, new Texture(Gdx.files.internal("items/" + itemData.get(i).get("item_texture").toString() + ".png")));
+            itemTextures.put(i, new Texture(Gdx.files.internal("items/" + itemData.get(i).get("name").toString() + ".png")));
         }
     }
 
@@ -116,7 +109,7 @@ public class Inventory {
         for (int i = startSlot[1]; i < size[1]; i++) {
             for (int j = startSlot[0]; j < size[0]; j++) {
                 int invAmount = inventory[i][j][1];
-                int difAmount = maxAmount;
+                int difAmount = maxAmount - invAmount;
 
                 if (amount < maxAmount) {
                     difAmount = amount;
@@ -136,9 +129,11 @@ public class Inventory {
             for (int j = 0; j < size[0]; j++) {
                 int invId = inventory[i][j][0];
                 int invAmount = inventory[i][j][1];
-                int difAmount = maxAmount - invAmount;
+                int difAmount = maxAmount - Math.abs(invAmount - amount);
 
-                if (amount < maxAmount) {
+                if (amount <= maxAmount && Math.abs(maxAmount - invAmount) < amount) {
+                    difAmount = Math.abs(maxAmount - invAmount);
+                } else if(amount < maxAmount) {
                     difAmount = amount;
                 }
 
@@ -167,6 +162,12 @@ public class Inventory {
             inventory[slot[1]][slot[0]][0] = -1; // set item id to 0
             inventory[slot[1]][slot[0]][1] = 0; // set amount to 0
         }
+    }
+
+    public void resetActiveItem() {
+        activeItem[0] = -1;
+        activeItem[1] = -1;
+        Main.tool.refreshTexture();
     }
 
     public void clearSlots() {
@@ -214,7 +215,7 @@ public class Inventory {
         }
 
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && isVisible) {
             boolean exists = true;
 
             // coordinate system begins in lower left corner
@@ -230,8 +231,8 @@ public class Inventory {
                     if (!exists) {
                         activeItem[0] = inventory[(int) dy / itemSize][(int) dx/itemSize][0];
                         activeItem[1] = inventory[(int) dy / itemSize][(int) dx/itemSize][1];
-                        inventory[(int) dy / itemSize][(int) dx/itemSize][0] = -1;
-                        inventory[(int) dy / itemSize][(int) dx/itemSize][1] = 0;
+                        inventory[(int) dy / itemSize][(int) dx / itemSize][0] = -1;
+                        inventory[(int) dy / itemSize][(int) dx / itemSize][1] = 0;
                     } else {
                         int[] tempItem = new int[] {activeItem[0], activeItem[1]};
 
@@ -259,11 +260,11 @@ public class Inventory {
                 activeItem[0] = -1;
                 activeItem[1] = 0;
 
-                Tool.weaponType = 2;
+                Tool.weaponType = 1;
                 Main.tool.refreshTexture();
             }
 
-            if (clickableRect.contains(mouseRect)) {
+            if (clickableRect.contains(mouseRect) && isVisible) {
                 // coordinate system begins in lower left corner
                 float dx = mouseX - clickableRect.x;
                 float dy = mouseY - clickableRect.y;
@@ -295,10 +296,14 @@ public class Inventory {
                                 difAmount = itemAmount;
                                 inventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
                             }
-                            System.out.println(difAmount);
 
                             inventory[(int) dy / itemSize][(int) dx / itemSize][1] += difAmount;
                             inventory[draggedSlot[1]][draggedSlot[0]][1] -= difAmount;
+
+                            if (inventory[draggedSlot[1]][draggedSlot[0]][1] <= 0) { // if all items have been transferred to item that has been clicked on
+                                inventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
+                                inventory[draggedSlot[1]][draggedSlot[0]][1] = -1;
+                            }
                         }
 
                         clearSlots();

@@ -2,6 +2,7 @@ package de.school.indiegame;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -20,6 +21,7 @@ public class GameScreen implements Screen {
     private final Main game;
     public static Stage gameStage;
     public static boolean paused;
+    GlyphLayout layout = new GlyphLayout();
 
 
     public GameScreen(Main game) {
@@ -76,8 +78,8 @@ public class GameScreen implements Screen {
 
         Main.toolbar.draw(batch);
         Main.inventory.draw(batch);
-        font.getData().setScale(2);
-        font.draw(batch, currentMoney + " ", Main.SCREEN_SIZE[0]-SCREEN_SIZE[0]/14, Main.SCREEN_SIZE[1]- SCREEN_SIZE[1]/31);
+        layout.setText(moneyFont, String.valueOf(currentMoney));
+        moneyFont.draw(batch, currentMoney + " ", Main.SCREEN_SIZE[0]-20 * MULTIPLIER - layout.width * 1.25f, (Main.SCREEN_SIZE[1] - 19 * MULTIPLIER) + layout.height);
         Main.moneySystem.draw(batch);
     }
 

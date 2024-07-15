@@ -4,12 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import jdk.internal.jimage.ImageStrings;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Map {
+    static Gson gson = new Gson();
+    public static ArrayList<Plant> plants = new ArrayList<>();
+    public static ArrayList<Integer[]> plantMapCoords = new ArrayList<>();
+    public static HashMap<Integer, ArrayList<Texture>> plantTextures = new HashMap<Integer, ArrayList<Texture>>();
+    static ArrayList<Plant> plantsToRemove = new ArrayList<Plant>();
 
     public static ArrayList<Tile> mapTiles = new ArrayList<Tile>();
     public static HashMap<String, int[][]> maps = new HashMap<String, int[][]>();
@@ -21,8 +30,40 @@ public class Map {
     public Map() {
         try {
             loadEditableMap();
+            loadPlantTextures();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadPlantTextures() {
+        ArrayList plantsArray = new ArrayList<LinkedTreeMap>();
+        plantsArray = gson.fromJson(Gdx.files.internal("plants/plants.json").reader(), plantsArray.getClass());
+        ArrayList<HashMap<String, Object>> plantData = new ArrayList<>();
+
+        for (int i = 0; i < plantsArray.size(); i++) {
+            plantData.add(gson.fromJson(String.valueOf(plantsArray.get(i)), new HashMap<String, Object>().getClass()));
+
+            ArrayList<Texture> textures = new ArrayList<>();
+
+            // calculate textures from plant sprite sheet
+            Texture plantSpritesheet = new Texture(Gdx.files.internal("plants/textures/" + plantData.get(i).get("name").toString() + "_spritesheet.png"));
+            plantSpritesheet.getTextureData().prepare();
+            Pixmap pm = plantSpritesheet.getTextureData().consumePixmap();
+
+            // Split pixmap into tile pixmaps
+            for (int j = 0; j < plantSpritesheet.getWidth() / Main.TILE_SIZE; j++) {
+                Pixmap plantPixmap = new Pixmap(Main.TILE_SIZE, Main.TILE_SIZE, Pixmap.Format.RGBA8888);
+                for (int y = 0; y < Main.TILE_SIZE; y++) {
+                    for (int x = 0; x < Main.TILE_SIZE; x++) {
+                        System.out.println(x + j * Main.TILE_SIZE + " " + y + " | " + x * j + " " + y);
+                        plantPixmap.drawPixel(x, y, pm.getPixel(x + (j * Main.TILE_SIZE), y));
+                    }
+                }
+                textures.add(new Texture(plantPixmap));
+            }
+
+            plantTextures.put(i, textures);
         }
     }
 
@@ -127,7 +168,13 @@ public class Map {
             tile.hitbox.x -= dx;
             tile.hitbox.y -= dy;
             tile.sprite.setPosition(tile.rect.x, tile.rect.y);
+        }
 
+        for (Plant plant : plants) {
+            plant.x -= dx;
+            plant.y -= dy;
+            plant.rect.x -= dx;
+            plant.rect.y -= dy;
         }
     }
 
@@ -142,5 +189,17 @@ public class Map {
         }
         Map.mapTiles.removeAll(Map.tilesToRemove);
         Map.tilesToRemove.clear();
+
+        for (Plant plant : plants) {
+            if (plant.id != -1) {
+                Main.font.getData().setScale(1);
+                plant.update();
+                plant.draw(batch);
+            } else {
+                Map.plantsToRemove.add(plant);
+            }
+        }
+        Map.plants.removeAll(plantsToRemove);
+        plantsToRemove.clear();
     }
 }

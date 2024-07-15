@@ -1,8 +1,8 @@
 [
-    {"id": 0, "name": "wheat", "item_texture":  "wheat", "value": "20", "growth_0_texture":"wheat_0", "growth_1_texture": "wheat_1", "growth_2_texture": "wheat_2"},
-    {"id": 1, "name": "strawberry", "item_texture": "strawberry", "value": "20", "growth_0_texture":"strawberry_0", "growth_1_texture": "strawberry_1", "growth_2_texture": "strawberry_2"},
-    {"id": 2, "name": "potato", "item_texture":  "potato", "value": "70", "growth_0_texture":"potato_0", "growth_1_texture": "potato_1", "growth_2_texture": "potato_2"},
-    {"id": 3, "name": "apple", "item_texture":  "apple", "value": "80", "growth_0_texture":"apple_0", "growth_1_texture": "apple_1", "growth_2_texture": "apple_2"},
-    {"id": 4, "name": "lemon", "item_texture":  "lemon", "value": "80", "growth_0_texture":"lemon_0", "growth_1_texture": "lemon_1", "growth_2_texture": "lemon_2"},
-    {"id": 5, "name": "melon", "item_texture":  "melon", "value": "100", "growth_0_texture":"melon_0", "growth_1_texture": "melon_1", "growth_2_texture": "melon_2"}
+    {"id": 0, "name": "wheat", "duration": 12, "value": "20"},
+    {"id": 1, "name": "strawberry", "duration": 300, "value": "20"},
+    {"id": 2, "name": "potato", "duration": 180, "value": "70"},
+    {"id": 3, "name": "apple", "duration": 900, "value": "80"},
+    {"id": 4, "name": "lemon", "duration": 900, "value": "80"},
+    {"id": 5, "name": "melon", "duration": 1200, "value": "100"}
 ]

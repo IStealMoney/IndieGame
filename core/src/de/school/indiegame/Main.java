@@ -32,6 +32,7 @@ public class Main extends Game {
 	public static boolean mouseAboveHud = false;
 	public static BitmapFont font;
 	public static BitmapFont menuFont;
+	public static BitmapFont moneyFont;
 	public static FreeTypeFontGenerator fontGenerator;
 	public static FreeTypeFontParameter fontParameter;
 	public static Skin skin;
@@ -50,6 +51,10 @@ public class Main extends Game {
 		fontParameter.size = 120;
 		fontParameter.borderWidth = 3;
 		menuFont = fontGenerator.generateFont(fontParameter);
+
+		fontParameter.size = 64;
+		fontParameter.borderWidth = 2;
+		moneyFont = fontGenerator.generateFont(fontParameter);
 
 
 		gameScreen = new GameScreen(this);
@@ -120,5 +125,6 @@ public class Main extends Game {
 
 	public void saveGame() {
 		Map.saveMap();
+		inventory.saveInventory();
 	}
 }
