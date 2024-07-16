@@ -149,19 +149,24 @@ public class Tile {
             pressedStartTime = System.currentTimeMillis();
         }
 
+        // Customer inventory
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (!Main.mouseAboveHud) {
+                if (this.rect.overlaps(Tool.hitbox)) {
+                    if (Tool.weaponType == 1) { //basket
+                        if (isCustomer) {
+                            Customer.handleInput();
+                        }
+                    }
+                }
+            }
+        }
+
 
         // Tool harvest
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (canPress && !Main.mouseAboveHud) {
                 if (this.rect.overlaps(Tool.hitbox)) {
-                    if (Tool.weaponType == 1) { //basket
-                        if (isCustomer && !Customer.cusInvVisible) {
-                            Customer.handleInput();
-                        } else if (isCustomer && Customer.cusInvVisible) {
-                            Inventory.isVisible = false;
-                            Customer.cusInvVisible = false;
-                        }
-                    }
                     if (Tool.weaponType == 2) { // axe
                         if (isAxeable) {
                             this.health -= 1;

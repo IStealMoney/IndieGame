@@ -18,8 +18,8 @@ public class Customer {
         }
 
     public static void handleInput() {
-        cusInvVisible = true;
-        Inventory.isVisible = true;
+        Inventory.isVisible = !Inventory.isVisible;
+        Customer.cusInvVisible = !Customer.cusInvVisible;
     }
 
     public void update() {
