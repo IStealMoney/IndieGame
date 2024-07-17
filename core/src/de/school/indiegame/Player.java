@@ -255,9 +255,7 @@ public class Player {
 
     public void moveX() {
         // X movement
-        System.out.println(checkXMapCollision());
         Map.moveMap(movement.x, 0);
-        System.out.println(checkXMapCollision());
 
         // switch movement method, if player would move out of map
         if (checkXMapCollision()) {

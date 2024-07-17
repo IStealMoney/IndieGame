@@ -32,7 +32,6 @@ public class Tile {
     boolean isIndestructible;
     boolean isCustomer;
     boolean isAxeable;
-    String group;
 
     // Appearance
     float opacity = 1f;

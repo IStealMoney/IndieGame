@@ -51,8 +51,6 @@ public class PauseScreen implements Screen {
 
         // birds
         menuBird = new MenuBird();
-        menuBird.procedure();
-
 
         //background
         backgroundTexture = new Texture("menu/sky.png");
@@ -149,7 +147,7 @@ public class PauseScreen implements Screen {
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, bgWidth, bgHeight); //does not need to be updated
-        sprite.draw(batch);
+        Main.menuBird.draw();
         batch.end();
 
         pauseStage.act(delta);

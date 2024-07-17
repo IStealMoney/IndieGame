@@ -45,7 +45,6 @@ public class StartScreen implements Screen {
 
         //birds
         menuBird = new MenuBird();
-        menuBird.procedure();
 
         //background
         backgroundTexture = new Texture("menu/sky.png");
@@ -116,14 +115,12 @@ public class StartScreen implements Screen {
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, bgWidth, bgHeight);
-        sprite.draw(batch);
+        Main.menuBird.draw();
         batch.end();
 
         startStage.act(delta);
         startStage.draw();
     }
-
-
 
     @Override
     public void resize(int width, int height) {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.awt.*;
 import java.util.Random;
 
+import static de.school.indiegame.Main.SCREEN_SIZE;
 import static de.school.indiegame.Main.batch;
 import static de.school.indiegame.PauseScreen.*;
 
@@ -26,11 +27,21 @@ public class MenuBird {
     public static boolean duckReachedEnd;
     public static String[] duckTypes = new String[] {"brown1", "brown2", "brown3", "gold1", "gold2", "gold3"};
 
+    double flyInterval = 5f;
+    double startFlyTime = System.currentTimeMillis();
+    double currentFlyTime = System.currentTimeMillis();
+
+    MenuBird() {
+        procedure();
+    }
+
     public void procedure() {
         chooseDirectionRandomly();
         chooseHeightRandomly();
         chooseTextureRandomly();
-        System.out.println("opens procedure");
+
+        sprite = new Sprite(texture);
+        sprite.setSize(width, height);
     }
 
     public void chooseDirectionRandomly() {
@@ -57,48 +68,45 @@ public class MenuBird {
             currentDuck = "duckGold";
             duckFrame = 3;
         }
+
         texture = new Texture(Gdx.files.internal("menu/animals/duck_" + duckTypes[duckFrame] + ".png"));
         width = texture.getWidth()*Main.MULTIPLIER;
         height = texture.getHeight()*Main.MULTIPLIER;
-        sprite = new Sprite(texture);
     }
 
     public void fly() {
         if (direction.equals("LeftToRight")) {
-            sprite.setFlip(false, false);
+            sprite.setFlip(true, false);
             leftToRight();
         } else if (direction.equals("RightToLeft")) {
-            sprite.setFlip(false, true);
+            sprite.setFlip(false, false);
             rightToLeft();
         }
     }
 
     public void leftToRight() {
-        for (float x = xPosition; x < Main.SCREEN_SIZE[0]; x++) {
-            if (xPosition%10 == 0) {
-                if (currentDuck.equals("duckBrown")) {
-                    changeTextureBrown();
-                } else if (currentDuck.equals("duckGold")) {
-                    changeTextureGold();
-                }
+        if (xPosition%10 == 0) {
+            if (currentDuck.equals("duckBrown")) {
+                changeTextureBrown();
+            } else if (currentDuck.equals("duckGold")) {
+                changeTextureGold();
             }
-            xPosition = xPosition + 1;
-            sprite.setBounds(xPosition, yPosition, width, height);
         }
+        xPosition += 1;
+        sprite.setPosition(xPosition, yPosition);
     }
 
     public void rightToLeft() {
-        for (float x = xPosition; x > Main.SCREEN_SIZE[0]; x++) {
-            if (xPosition%10 == 0) {
-                if (currentDuck.equals("duckBrown")) {
-                    changeTextureBrown();
-                } else if (currentDuck.equals("duckGold")) {
-                    changeTextureGold();
-                }
+        if (xPosition%10 == 0) {
+            if (currentDuck.equals("duckBrown")) {
+                changeTextureBrown();
+            } else if (currentDuck.equals("duckGold")) {
+                changeTextureGold();
             }
-            xPosition = xPosition - 1;
-            sprite.setBounds(xPosition, yPosition, width, height);
         }
+        xPosition -= 1;
+        System.out.println(sprite.getX());
+        sprite.setPosition(xPosition, yPosition);
     }
 
     public void changeTextureBrown() {
@@ -108,6 +116,7 @@ public class MenuBird {
             duckFrame = 0;
         }
         texture = new Texture(Gdx.files.internal("menu/animals/duck_" + duckTypes[duckFrame] + ".png"));
+
         sprite.setTexture(texture);
     }
 
@@ -129,5 +138,12 @@ public class MenuBird {
 
     public void draw() {
         sprite.draw(batch);
+
+        currentFlyTime = System.currentTimeMillis();
+
+        if (currentFlyTime - startFlyTime > flyInterval) {
+            fly();
+            startFlyTime = System.currentTimeMillis();
+        }
     }
 }
