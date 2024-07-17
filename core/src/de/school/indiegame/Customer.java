@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import static de.school.indiegame.Inventory.*;
+import static de.school.indiegame.Main.moneySystem;
 import static de.school.indiegame.Main.shape;
 
 public class Customer {
@@ -16,44 +17,36 @@ public class Customer {
     public static Texture cusInvTexture;
     Texture selectedSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
     public static boolean cusInvVisible;
-    private float xPos;
-
-    GlyphLayout layout = new GlyphLayout();
 
     public static int[] size = new int[] {9, 2};
-    public static int[][][] inventory = {{{-1, 0}, {5, 1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}}, {{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}}}; // in the left column store the item id, in the right column store the item amount
+    public static int[][][] inventory = {{{-1, 0}, {5, 1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}},
+                                        {{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}}}; // in the left column store the item id, in the right column store the item amount
+
+    GlyphLayout layout = new GlyphLayout();
+    int totalValue;
+    String totalValueText;
 
     float inventoryBorder = 4 * Main.MULTIPLIER * scaler;
     static Rectangle rect;
     Rectangle clickableRect;
     Rectangle mouseRect = new Rectangle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 1, 1);
-    public boolean mouseAboveHud = false;
     float slotSize = 20;
     int offset = 2;
-    int maxAmount = 64;
     int itemSize = (int) ((slotSize + offset) * Main.MULTIPLIER * scaler);
 
     float buttonSize = (slotSize * Main.MULTIPLIER * scaler);
-
-    // dragged item
-    float draggedItemX;
-    float draggedItemY;
-
-    // dragged amount
-    float draggedAmountX;
-    float draggedAmountY;
-
     // accept button
     Rectangle acceptRect;
-
     // cancel button
     Rectangle cancelRect;
+
+    public static boolean justCancelled = false;
 
 
     Customer() {
         cusInvTexture = new Texture("customer/inventory.png");
         sprite = new Sprite(cusInvTexture);
-        xPos = Inventory.rect.x-Inventory.backgroundTexture.getWidth()*Main.MULTIPLIER-20;
+        float xPos = Inventory.rect.x - Inventory.backgroundTexture.getWidth() * Main.MULTIPLIER - 20;
         sprite.setBounds(xPos, Inventory.rect.y, Inventory.rect.width, Inventory.rect.height);
 
         // Customer inventory
@@ -71,23 +64,24 @@ public class Customer {
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         mouseRect.setPosition(mouseX, mouseY);
 
-       /* if (rect.overlaps(mouseRect) && cusInvVisible) {
-            Main.mouseAboveHud = true;
-            mouseAboveHud = true;
-        } else {
-            Main.mouseAboveHud = false;
-            mouseAboveHud = false;
-        }*/
-
         if (!Main.mouseAboveHud){
             return;
         }
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             if (acceptRect.overlaps(mouseRect)) {
                 // Accept buy
+                for (int[][] item : inventory) {
+                    for (int j = 0; j < item.length; j++) {
+                        item[j][0] = -1;
+                        item[j][1] = 0;
+                    }
+                }
+                moneySystem.add(totalValue);
+                totalValue = 0;
             }
             if (cancelRect.overlaps(mouseRect)) {
                 changeVisibility();
+                justCancelled = true;
             }
         }
     }
@@ -100,19 +94,45 @@ public class Customer {
             Inventory.isVisible = true;
             Customer.cusInvVisible = true;
         }
+    }
 
+    public void calculateValue() {
+        totalValue = 0;
+
+        for (int i = 0; i < inventory.length; i++) {
+            for (int j = 0; j < inventory[i].length; j++) {
+                if (inventory[i][j][0] != -1) {
+                    totalValue += inventory[i][j][1] * (int) (double) Main.inventory.itemData.get(inventory[i][j][0]).get("value");
+                }
+            }
+        }
+
+        if (Main.inventory.draggedType != -1 && draggedInventory == inventory) { // if dragged item exists and is in customer inventory
+            totalValue -= Main.inventory.draggedAmount * (int) (double) Main.inventory.itemData.get(Main.inventory.draggedType).get("value");
+        }
+
+        totalValueText = String.valueOf(totalValue);
     }
 
     public void update() {
+        justCancelled = false;
         handleInput();
+        calculateValue();
+
     }
 
     public void draw(SpriteBatch batch) {
         if (cusInvVisible) {
             sprite.draw(batch);
-            //shape.rect(cancelRect.x, cancelRect.y, cancelRect.width, cancelRect.height);
-            //shape.rect(acceptRect.x, acceptRect.y, acceptRect.width, acceptRect.height);
-            //shape.rect(clickableRect.x, clickableRect.y, clickableRect.width, clickableRect.height);
+
+            // draw total value
+            layout.setText(Main.costumerFont, totalValueText);
+            float textX = rect.x + rect.width / 2 - layout.width / 2;
+            float textY = rect.y + inventoryBorder + inventoryBorder / 1.85f + layout.height;
+            float coinX = textX + MoneySystem.coinTexture.getWidth() * Main.MULTIPLIER / 5f;
+            float coinY = textY - (float) MoneySystem.coinTexture.getHeight() * Main.MULTIPLIER / 1.6f;
+            batch.draw(MoneySystem.coinTexture, coinX + layout.width, coinY, MoneySystem.coinTexture.getWidth() * Main.MULTIPLIER * 0.75f, MoneySystem.coinTexture.getHeight() * Main.MULTIPLIER * 0.75f);
+            Main.costumerFont.draw(batch, totalValueText, textX, textY);
 
             // draw selected Slot
             if (selectedSlot[0] != -1 && selectedSlot[1] != -1 && draggedInventory == inventory) {
@@ -130,7 +150,7 @@ public class Customer {
                     boolean isDragged = false;
                     //System.out.println(draggedSlot[0] + " "+ draggedSlot[1]);
 
-                    if (draggedSlot[0] == j && draggedSlot[1] == i && Main.inventory.draggedInventory == inventory) {
+                    if (draggedSlot[0] == j && draggedSlot[1] == i && draggedInventory == inventory) {
                         isDragged = true;
                     }
 
@@ -149,8 +169,8 @@ public class Customer {
                             batch.draw(itemTextures.get(itemId), itemX, itemY, 16 * Main.MULTIPLIER * scaler, 16 * Main.MULTIPLIER * scaler);
                         } else {
                             draggedItemTexture = itemTextures.get(itemId);
-                            draggedItemX = itemX;
-                            draggedItemY = itemY;
+                            Main.inventory.draggedItemX = itemX;
+                            Main.inventory.draggedItemY = itemY;
                         }
                     }
 
@@ -172,20 +192,11 @@ public class Customer {
                             Main.font.draw(batch, amount, amountX, amountY);
                         }
                     } else {
-                        draggedAmountX = amountX;
-                        draggedAmountY = amountY;
+                        Main.inventory.draggedAmountX = amountX;
+                        Main.inventory.draggedAmountY = amountY;
                         draggedAmountString = amount;
                     }
                 }
-            }
-            // draw dragged item, so its always on top
-            if (draggedItemTexture != null && draggedInventory == inventory) {
-                batch.draw(draggedItemTexture, draggedItemX, draggedItemY, 16 * Main.MULTIPLIER * scaler, 16 * Main.MULTIPLIER * scaler);
-            }
-
-            // draw dragged amount, so its always on top
-            if (draggedAmountString != null && draggedInventory == inventory) {
-                Main.font.draw(batch, draggedAmountString, draggedAmountX, draggedAmountY);
             }
         }
     }

@@ -154,7 +154,7 @@ public class Tile {
             if (!Main.mouseAboveHud) {
                 if (this.rect.overlaps(Tool.hitbox)) {
                     if (Tool.weaponType == 1) { //basket
-                        if (isCustomer) {
+                        if (isCustomer && !Customer.justCancelled) {
                             Customer.changeVisibility();
                         }
                     }

@@ -35,6 +35,7 @@ public class Main extends Game {
 	public static BitmapFont menuFont;
 	public static BitmapFont moneyFont;
 	public static BitmapFont plantFont;
+	public static BitmapFont costumerFont;
 	public static FreeTypeFontGenerator fontGenerator;
 	public static FreeTypeFontParameter fontParameter;
 	public static Skin skin;
@@ -62,6 +63,10 @@ public class Main extends Game {
 		fontParameter.borderWidth = 1;
 		fontParameter.size = 15;
 		plantFont = fontGenerator.generateFont(fontParameter);
+
+		fontParameter.borderWidth = 2;
+		fontParameter.size = 54;
+		costumerFont = fontGenerator.generateFont(fontParameter);
 
 		gameScreen = new GameScreen(this);
 		pauseScreen = new PauseScreen(this);
@@ -95,7 +100,7 @@ public class Main extends Game {
 		tool.texture.dispose();
 		Toolbar.toolbarTexture.dispose();
 		Toolbar.selectSlotTexture.dispose();
-		inventory.backgroundTexture.dispose();
+		Inventory.backgroundTexture.dispose();
 		inventory.selectedSlotTexture.dispose();
 		MoneySystem.coinTexture.dispose();
 		Customer.cusInvTexture.dispose();
