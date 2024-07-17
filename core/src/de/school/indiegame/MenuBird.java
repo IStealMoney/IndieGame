@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.awt.*;
 import java.util.Random;
 
-import static de.school.indiegame.Main.SCREEN_SIZE;
-import static de.school.indiegame.Main.batch;
+import static de.school.indiegame.Main.*;
 import static de.school.indiegame.PauseScreen.*;
 
 public class MenuBird {
@@ -18,12 +17,12 @@ public class MenuBird {
 
     private int duckFrame = 0;
     public static float width, height;
-    public static float xPosition, yPosition = 0;
+    public static float xPosition, yPosition;
     public static Rectangle birdRec;    // for clickable feature
     private String direction = "LeftToRight";
     private String currentDuck = "brownDuck";
     Random rand = new Random();
-    private int randHeight, randDirection, randDuck;
+    private int randDirection, randDuck;
     public static boolean duckReachedEnd;
     public static String[] duckTypes = new String[] {"brown1", "brown2", "brown3", "gold1", "gold2", "gold3"};
 
@@ -51,12 +50,12 @@ public class MenuBird {
             xPosition = 0;
         } else {
             direction = "RightToLeft";
-            xPosition = 1920;
+            xPosition = SCREEN_SIZE[0];
         }
     }
 
     public void chooseHeightRandomly() {
-        yPosition = rand.nextInt(1080);
+        yPosition = rand.nextInt(1920);
     }
 
     public void chooseTextureRandomly() {
@@ -68,7 +67,6 @@ public class MenuBird {
             currentDuck = "duckGold";
             duckFrame = 3;
         }
-
         texture = new Texture(Gdx.files.internal("menu/animals/duck_" + duckTypes[duckFrame] + ".png"));
         width = texture.getWidth()*Main.MULTIPLIER;
         height = texture.getHeight()*Main.MULTIPLIER;
@@ -94,6 +92,9 @@ public class MenuBird {
         }
         xPosition += 1;
         sprite.setPosition(xPosition, yPosition);
+        if (xPosition == GAME_SIZE[0]) {
+            MenuBird menuBird = new MenuBird();
+        }
     }
 
     public void rightToLeft() {
@@ -105,8 +106,10 @@ public class MenuBird {
             }
         }
         xPosition -= 1;
-        System.out.println(sprite.getX());
         sprite.setPosition(xPosition, yPosition);
+        if (xPosition == 0) {
+            MenuBird menuBird = new MenuBird();
+        }
     }
 
     public void changeTextureBrown() {
@@ -116,7 +119,6 @@ public class MenuBird {
             duckFrame = 0;
         }
         texture = new Texture(Gdx.files.internal("menu/animals/duck_" + duckTypes[duckFrame] + ".png"));
-
         sprite.setTexture(texture);
     }
 
