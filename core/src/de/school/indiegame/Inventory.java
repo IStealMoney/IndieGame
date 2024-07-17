@@ -64,7 +64,7 @@ public class Inventory {
     // dragged item inventory
     public static int[][][] draggedInventory;
     int draggedAmount;
-    
+
     // active item
     public static int[] activeItem = new int[2];
     public static Sprite activeItemSprite;
@@ -375,8 +375,8 @@ public class Inventory {
 
             // draw active item amount
             String activeItemAmount = String.valueOf(activeItem[1]);
-            layout.setText(Main.font, activeItemAmount);
-            Main.font.draw(batch, String.valueOf(activeItem[1]), activeItemX + 16 * Main.MULTIPLIER * 0.8f - layout.width * 0.9f, activeItemY + inventoryBorder / 2);
+            layout.setText(Main.activeItemFont, activeItemAmount);
+            Main.activeItemFont.draw(batch, String.valueOf(activeItem[1]), activeItemX + 16 * Main.MULTIPLIER * 0.8f - layout.width * 0.9f, activeItemY + inventoryBorder / 2);
         }
 
         if (isVisible) {
@@ -454,7 +454,6 @@ public class Inventory {
             if (draggedAmountString != null) {
                 Main.font.draw(batch, draggedAmountString, draggedAmountX, draggedAmountY);
             }
-            shape.rect(clickableRect.x, clickableRect.y, clickableRect.width, clickableRect.height);
         }
     }
 }

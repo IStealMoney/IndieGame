@@ -37,6 +37,7 @@ public class Main extends Game {
 	public static BitmapFont moneyFont;
 	public static BitmapFont plantFont;
 	public static BitmapFont costumerFont;
+	public static BitmapFont activeItemFont;
 	public static FreeTypeFontGenerator fontGenerator;
 	public static FreeTypeFontParameter fontParameter;
 	public static Skin skin;
@@ -68,6 +69,10 @@ public class Main extends Game {
 		fontParameter.borderWidth = 2;
 		fontParameter.size = 54;
 		costumerFont = fontGenerator.generateFont(fontParameter);
+
+		fontParameter.borderWidth = 2;
+		fontParameter.size = 16;
+		activeItemFont = fontGenerator.generateFont(fontParameter);
 
 		gameScreen = new GameScreen(this);
 		pauseScreen = new PauseScreen(this);

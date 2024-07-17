@@ -40,7 +40,6 @@ public class Player {
     Boolean[] mapCollisions = {true, true, true, true};
     float mapRectsSize = speedModifier;
 
-
     Player(float x, float y) {
         this.rect = new Rectangle(x - width / 2, y - height / 2, width, height - height / 2);
 
@@ -311,6 +310,5 @@ public class Player {
     public void draw(SpriteBatch batch) {
         this.sprite.draw(batch);
         calculateTranslucentTiles();
-        shape.rect(rect.x, rect.y, rect.width, rect.height);
     }
 }

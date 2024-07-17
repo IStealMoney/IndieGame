@@ -125,9 +125,13 @@ public class Toolbar {
         if (Player.rect.overlaps(spriteTb.getBoundingRectangle())) {
             spriteTb.setAlpha(0.2f);
             spriteStb.setAlpha(0.2f);
+            Inventory.activeItemSprite.setAlpha(0.2f);
+            Main.activeItemFont.setColor(Main.font.getColor().r, Main.font.getColor().g, Main.font.getColor().b, 0.2f);
         } else {
             spriteTb.setAlpha(1f);
             spriteStb.setAlpha(1f);
+            Inventory.activeItemSprite.setAlpha(1f);
+            Main.activeItemFont.setColor(Main.font.getColor().r, Main.font.getColor().g, Main.font.getColor().b, 1f);
         }
     }
 
