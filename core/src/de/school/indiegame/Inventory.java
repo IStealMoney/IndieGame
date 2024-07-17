@@ -128,6 +128,7 @@ public class Inventory {
                 if (amount > (maxAmount - invAmount)) {
                     difAmount = maxAmount - invAmount;
                 }
+
                 if (amount == maxAmount) {
                     difAmount = maxAmount;
                 }
@@ -136,6 +137,7 @@ public class Inventory {
                     inventory[i][j][1] += difAmount;
                     inventory[i][j][0] = id;
                     amount -= difAmount;
+                    System.out.println(id + " " + invAmount + " test");
                 }
             }
         }
@@ -169,7 +171,7 @@ public class Inventory {
     }
 
     public void add(int[][][] inventory, int[] slot, int id, int amount) {
-        if (inventory[slot[1]][slot[0]][0] == id || inventory[slot[1]][slot[0]][0] == -1) { // if slot has same item id or is empty
+        if (inventory[slot[1]][slot[0]][0] == id || inventory[slot[1]][slot[0]][1] == 0) { // if slot has same item id or is empty
             inventory[slot[1]][slot[0]][0] = id;
             inventory[slot[1]][slot[0]][1] += amount;
         }
