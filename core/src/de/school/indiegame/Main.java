@@ -22,14 +22,15 @@ public class Main extends Game {
 	public static MoneySystem moneySystem;
 	public static Customer customer;
 
-	static SpriteBatch batch;
-	static ShapeRenderer shape;
+	public static SpriteBatch batch;
+	public static ShapeRenderer shape;
 	public static Player player;
 	public static Tool tool;
 	public static Toolbar toolbar;
 	public static StartScreen startScreen;
 	public static PauseScreen pauseScreen;
 	public static GameScreen gameScreen;
+	public static MenuBird menuBird;
 	public static boolean mouseAboveHud = false;
 	public static BitmapFont font;
 	public static BitmapFont menuFont;
@@ -89,6 +90,7 @@ public class Main extends Game {
 		inventory = new Inventory(SCREEN_SIZE[0] - SCREEN_SIZE[0] / 2.4f, SCREEN_SIZE[1] / 2.5f);
 		moneySystem = new MoneySystem();
 		customer = new Customer();
+		menuBird = new MenuBird();
 	}
 	
 	@Override
@@ -104,6 +106,7 @@ public class Main extends Game {
 		inventory.selectedSlotTexture.dispose();
 		MoneySystem.coinTexture.dispose();
 		Customer.cusInvTexture.dispose();
+		MenuBird.texture.dispose();
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();

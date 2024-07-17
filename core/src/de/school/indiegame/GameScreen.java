@@ -91,7 +91,6 @@ public class GameScreen implements Screen {
         Main.toolbar.update();
         customer.update();
         Main.inventory.update();
-
     }
 
     @Override

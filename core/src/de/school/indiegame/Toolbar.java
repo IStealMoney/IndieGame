@@ -14,8 +14,7 @@ public class Toolbar {
     public static Texture selectSlotTexture;
     float widthTb, heightTb;
     public static float widthSs, heightSs;
-    public static int xPosition;
-    public static int yPosition;
+    public static int xPosition, yPosition;
     public static Rectangle targetBasket, targetAxe, targetPickaxe, targetHoe;
     public static Rectangle mouseRect = new Rectangle(Gdx.input.getX(), Gdx.input.getY(), 1, 1);
     public boolean mouseAboveHud = false;

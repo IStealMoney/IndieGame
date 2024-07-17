@@ -60,6 +60,7 @@ public class Tile {
     public void setProperties() {
         if(tileset.equals("customer")) {
             isCustomer = true;
+            isIndestructible = true;
         }
         if (tileset.equals("indestructible")) {
             isBlockable = true;

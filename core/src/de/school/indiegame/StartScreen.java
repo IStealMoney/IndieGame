@@ -13,16 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import static de.school.indiegame.Main.batch;
+import static de.school.indiegame.MenuBird.*;
+
 public class StartScreen implements Screen {
     private final Main game;
-    private SpriteBatch batch;
+    MenuBird menuBird;
     Texture backgroundTexture;
-
-    private Stage startStage;
+    public Stage startStage;
     private TextureRegion textureRegion;
     private TextureRegionDrawable textureRegionDrawable;
     public static float bgWidth;
     public static float bgHeight;
+
     private ImageButton startGameBtn;
     Texture startGameTexture;
     private ImageButton quitBtn;
@@ -33,12 +36,16 @@ public class StartScreen implements Screen {
     BitmapFont font;
 
     public StartScreen(final Main game) {
-        batch = new SpriteBatch();
         this.game = game;
         font = Main.menuFont;
 
         // stage
         startStage = new Stage(new StretchViewport(1920, 1080));
+        Gdx.input.setInputProcessor(startStage);
+
+        //birds
+        menuBird = new MenuBird();
+        menuBird.procedure();
 
         //background
         backgroundTexture = new Texture("menu/sky.png");
@@ -74,7 +81,6 @@ public class StartScreen implements Screen {
 
 
         // Listener
-        Gdx.input.setInputProcessor(startStage);
         startGameBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -107,12 +113,17 @@ public class StartScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, bgWidth, bgHeight);
+        sprite.draw(batch);
         batch.end();
+
         startStage.act(delta);
         startStage.draw();
     }
+
+
 
     @Override
     public void resize(int width, int height) {
@@ -145,8 +156,9 @@ public class StartScreen implements Screen {
         if (quitBtn != null) {
             quitTexture.dispose();
         }
-        batch.dispose();
         backgroundTexture.dispose();
+        MenuBird.texture.dispose();
+        batch.dispose();
     }
 }
 

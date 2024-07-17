@@ -14,9 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import static de.school.indiegame.Main.batch;
+import static de.school.indiegame.MenuBird.*;
+import static de.school.indiegame.StartScreen.bgHeight;
+import static de.school.indiegame.StartScreen.bgWidth;
+
 public class PauseScreen implements Screen {
     private final Main game;
-    private SpriteBatch batch;
+    MenuBird menuBird;
     Texture backgroundTexture;
     private Stage pauseStage;
     private TextureRegion textureRegion;
@@ -39,11 +44,15 @@ public class PauseScreen implements Screen {
     public PauseScreen(final Main game) {
         this.game = game;
         font = Main.menuFont;
-        batch = new SpriteBatch();
 
         // stage
         pauseStage = new Stage(new StretchViewport(1920, 1080));
         Gdx.input.setInputProcessor(pauseStage);
+
+        // birds
+        menuBird = new MenuBird();
+        menuBird.procedure();
+
 
         //background
         backgroundTexture = new Texture("menu/sky.png");
@@ -123,6 +132,7 @@ public class PauseScreen implements Screen {
         pauseTable.add(saveBtn).size(200, 200).padRight(100);
         pauseTable.add(homeBtn).size(200,200).padRight(100);
         pauseTable.add(quitBtn).size(200,200);
+
         pauseStage.addActor(pauseTable);
     }
 
@@ -136,9 +146,12 @@ public class PauseScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, StartScreen.bgWidth, StartScreen.bgHeight);
+        batch.draw(backgroundTexture, 0, 0, bgWidth, bgHeight); //does not need to be updated
+        sprite.draw(batch);
         batch.end();
+
         pauseStage.act(delta);
         pauseStage.draw();
 
@@ -175,13 +188,17 @@ public class PauseScreen implements Screen {
         if (continueBtn != null) {
             continueTexture.dispose();
         }
+        if (saveBtn != null) {
+            saveTexture.dispose();
+        }
         if (homeBtn != null) {
             homeTexture.dispose();
         }
         if (quitBtn != null) {
             quitTexture.dispose();
         }
-        batch.dispose();
         backgroundTexture.dispose();
+        MenuBird.texture.dispose();
+        batch.dispose();
     }
 }
