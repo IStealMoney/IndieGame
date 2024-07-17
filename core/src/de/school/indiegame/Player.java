@@ -12,6 +12,8 @@ import com.badlogic.gdx.Input.Keys;
 
 import java.util.HashMap;
 
+import static de.school.indiegame.Main.shape;
+
 public class Player {
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/Bob_vorne.png"));
@@ -102,10 +104,10 @@ public class Player {
         // ensure player moves back to center
         // if player is left of center
 
-        if (rect.x + width / 2 < Main.SCREEN_SIZE[0] / 2 && mapCollisions[0] && movement.x > 0) {
+        if (rect.x + width / 2 < Main.SCREEN_SIZE[0] / 2 && movement.x > 0) {
             collidesWithXMap = false;
         }
-        if (rect.x + width / 2 > Main.SCREEN_SIZE[0] / 2 && mapCollisions[1] && movement.x < 0) {
+        if (rect.x + width / 2 > Main.SCREEN_SIZE[0] / 2 && movement.x < 0) {
             collidesWithXMap = false;
         }
 
@@ -134,10 +136,10 @@ public class Player {
 
         // ensure player moves back to center
         // if player is above of center
-        if (rect.y > Main.SCREEN_SIZE[1] / 2 - height / 2 && movement.y < 0 && mapCollisions[2]) {
+        if (rect.y - height / 2 > Main.SCREEN_SIZE[1] / 2 && movement.y < 0) {
             collidesWithYMap = false;
         }
-        if (rect.y < Main.SCREEN_SIZE[1] / 2 - height / 2  && movement.y >  0&& mapCollisions[3]) {
+        if (rect.y + rect.height / 2 < Main.SCREEN_SIZE[1] / 2  && movement.y > 0) {
             collidesWithYMap = false;
         }
         return collidesWithYMap;
@@ -154,7 +156,6 @@ public class Player {
         }
         speed = speedModifier * Main.MULTIPLIER * 0.25f;
 
-
         // set the x-movement vector according to the input
         if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
             movement.x = -speed;
@@ -165,7 +166,6 @@ public class Player {
         } else {
             movement.x = 0;
         }
-
 
         // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || x-Axis
         moveX();
@@ -218,15 +218,16 @@ public class Player {
             if (tile.isBlockable) {
                 if (rect.overlaps(tile.hitbox)) {
                     if (movement.y < 0) {
-                        float moveAmount =  rect.y - (tile.hitbox.y + tile.hitbox.height); // Distance between tile and player
+                        float moveAmount = rect.y - (tile.hitbox.y + tile.hitbox.height); // Distance between tile and player
                         if (!checkYMapCollision()) {
-                            rect.y -= moveAmount;
+                            rect.y -=moveAmount;
                         } else {
                             Map.moveMap(0, -moveAmount);
                         }
                     }
                     if (movement.y > 0) {
                         float moveAmount =  (tile.hitbox.y - rect.height) - rect.y; // Distance between tile and player
+                        System.out.println(checkYMapCollision());
                         if (!checkYMapCollision()) {
                             rect.y += moveAmount;
                         } else {
@@ -277,7 +278,6 @@ public class Player {
     }
 
     public void moveY() {
-
         // Y movement
         Map.moveMap(0, movement.y);
         // switch movement method, if player would move out of map
@@ -299,7 +299,6 @@ public class Player {
 
         Map.moveMap(0, -movement.y);
 
-
         this.sprite.setPosition(rect.x, rect.y);
         this.translucentCircle.setPosition(rect.x, rect.y);
 
@@ -312,5 +311,6 @@ public class Player {
     public void draw(SpriteBatch batch) {
         this.sprite.draw(batch);
         calculateTranslucentTiles();
+        shape.rect(rect.x, rect.y, rect.width, rect.height);
     }
 }
