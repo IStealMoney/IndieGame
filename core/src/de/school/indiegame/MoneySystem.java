@@ -39,7 +39,6 @@ public class MoneySystem {
 
         moneyData.put("current_money", currentMoney);
         String moneyString = json.toJson(moneyData);
-        System.out.println(moneyString);
 
         try {
             FileWriter fW = new FileWriter(Gdx.files.internal("money/money_data.json").toString());

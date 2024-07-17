@@ -4,8 +4,8 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.*;
 
 public class Toolbar {
     public static Sprite spriteTb;
@@ -17,6 +17,8 @@ public class Toolbar {
     public static int xPosition;
     public static int yPosition;
     public static Rectangle targetBasket, targetAxe, targetPickaxe, targetHoe;
+    public static Rectangle mouseRect = new Rectangle(Gdx.input.getX(), Gdx.input.getY(), 1, 1);
+    public boolean mouseAboveHud = false;
 
     Toolbar() {
         toolbarTexture = new Texture(Gdx.files.internal("toolbar/background.png"));
@@ -99,6 +101,19 @@ public class Toolbar {
                     return true;
                 }
                 return false;
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                mouseRect.x = screenX;
+                mouseRect.y = screenY;
+
+                if (spriteTb.getBoundingRectangle().overlaps(mouseRect)) {
+                    mouseAboveHud = true;
+                } else {
+                    mouseAboveHud = false;
+                }
+                return true;
             }
         });
     }

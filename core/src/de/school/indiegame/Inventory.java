@@ -50,12 +50,20 @@ public class Inventory {
     // dragged item
     float draggedItemX;
     float draggedItemY;
-    Texture draggedItemTexture;
+    public static Texture draggedItemTexture;
+
+    // dragged type
+    int draggedType;
 
     // dragged amount
     float draggedAmountX;
     float draggedAmountY;
-    String draggedAmount;
+    public static String draggedAmountString;
+
+    // dragged item inventory
+    public static int[][][] draggedInventory;
+    int draggedAmount;
+
 
     // active item
     public static int[] activeItem = {-1, -1};
@@ -106,7 +114,7 @@ public class Inventory {
         }
     }
 
-    public void distributeAmount(int id, int[] startSlot, int amount) {
+    public void distributeAmount(int[][][] inventory, int id, int[] startSlot, int amount) {
         for (int i = startSlot[1]; i < size[1]; i++) {
             for (int j = startSlot[0]; j < size[0]; j++) {
                 int invAmount = inventory[i][j][1];
@@ -115,8 +123,12 @@ public class Inventory {
                 if (amount < maxAmount && Math.abs(invAmount - maxAmount) >= amount) {
                     difAmount = amount;
                 }
+
                 if (amount > (maxAmount - invAmount)) {
                     difAmount = maxAmount - invAmount;
+                }
+                if (amount == maxAmount) {
+                    difAmount = maxAmount;
                 }
 
                 if (invAmount >= 0 && amount > 0 && inventory[i][j][0] == -1) {
@@ -128,17 +140,17 @@ public class Inventory {
         }
     }
 
-    public void pickup(int id, int amount) {
+    public void pickup(int[][][] inventory, int id, int amount) {
         for (int i = 0; i < size[1]; i++) {
             for (int j = 0; j < size[0]; j++) {
                 int invId = inventory[i][j][0];
                 int invAmount = inventory[i][j][1];
                 int difAmount = 0;
                 if (invId == id) {
-
                     if (amount < maxAmount && Math.abs(invAmount - maxAmount) >= amount) {
                         difAmount = amount;
                     }
+
                     if (amount > (maxAmount - invAmount)) {
                         difAmount = maxAmount - invAmount;
                     }
@@ -151,18 +163,18 @@ public class Inventory {
             }
         }
         if (amount > 0) {
-            distributeAmount(id, new int[] {0, 0}, amount);
+            distributeAmount(inventory, id, new int[] {0, 0}, amount);
         }
     }
 
-    public void add(int[] slot, int id, int amount) {
+    public void add(int[][][] inventory, int[] slot, int id, int amount) {
         if (inventory[slot[1]][slot[0]][0] == id || inventory[slot[1]][slot[0]][0] == -1) { // if slot has same item id or is empty
             inventory[slot[1]][slot[0]][0] = id;
             inventory[slot[1]][slot[0]][1] += amount;
         }
     }
 
-    public void remove(int[] slot, int amount) {
+    public void remove(int[][][] inventory, int[] slot, int amount) {
         inventory[slot[1]][slot[0]][1] -= amount;
 
         if (inventory[slot[1]][slot[0]][1] <= 0) { // if amount is 0, delete slot
@@ -184,7 +196,9 @@ public class Inventory {
         draggedSlot[1] = -1;
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         draggedItemTexture = null;
-        draggedAmount = null;
+        draggedAmountString = null;
+        draggedAmount = -1;
+        draggedType = -1;
     }
 
     public void handleInput() {
@@ -192,16 +206,30 @@ public class Inventory {
         float mouseX = Gdx.input.getX();
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         mouseRect.setPosition(mouseX, mouseY);
+        float dx = -1;
+        float dy = -1;
 
-        if (rect.overlaps(mouseRect) && isVisible) {
+        if (rect.overlaps(mouseRect) && isVisible || Customer.rect.overlaps(mouseRect) && Customer.cusInvVisible || Main.toolbar.mouseAboveHud) {
             Main.mouseAboveHud = true;
         } else {
             Main.mouseAboveHud = false;
         }
 
-        if (Main.customer.mouseAboveHud) {
-            Main.mouseAboveHud = true;
+        int[][][] tempInventory = null;
+
+        if (rect.overlaps(mouseRect) && isVisible) {
+            tempInventory = inventory;
+            dx = mouseX - clickableRect.x;
+            dy = mouseY - clickableRect.y;
         }
+
+        if (Customer.rect.overlaps(mouseRect) && Customer.cusInvVisible) {
+            tempInventory = Customer.inventory;
+            // coordinate system begins in lower left corner
+            dx = mouseX - Main.customer.clickableRect.x;
+            dy = mouseY - Main.customer.clickableRect.y;
+        }
+
 
         // handle visibility
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) { // change to basket
@@ -223,15 +251,11 @@ public class Inventory {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && isVisible) {
             boolean exists = true;
 
-            // coordinate system begins in lower left corner
-            float dx = mouseX - clickableRect.x;
-            float dy = mouseY - clickableRect.y;
-
             if (activeItem[0] == -1 && activeItem[1] == 0) {
                 exists = false;
             }
 
-            if (clickableRect.contains(mouseRect)) {
+            if (tempInventory == inventory) {
                 if (!isDragged) {
                     if (!exists) {
                         activeItem[0] = inventory[(int) dy / itemSize][(int) dx/itemSize][0];
@@ -241,8 +265,8 @@ public class Inventory {
                     } else {
                         int[] tempItem = new int[] {activeItem[0], activeItem[1]};
 
-                        activeItem[0] = inventory[(int) dy / itemSize][(int)dx / itemSize][0];
-                        activeItem[1] = inventory[(int) dy / itemSize][(int)dx / itemSize][1];
+                        activeItem[0] = inventory[(int) dy / itemSize][(int) dx / itemSize][0];
+                        activeItem[1] = inventory[(int) dy / itemSize][(int) dx / itemSize][1];
 
                         inventory[(int) dy / itemSize][(int)dx / itemSize][0] = tempItem[0];
                         inventory[(int) dy / itemSize][(int)dx / itemSize][1] = tempItem[1];
@@ -260,54 +284,56 @@ public class Inventory {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             if (activeItemRect.contains(mouseRect) && (activeItem[0] != -1 && activeItem[1] != 0)) {
                 // check if active item is put back into inventory
-                pickup(activeItem[0], activeItem[1]);
+                System.out.println(Arrays.toString(activeItem));
+                pickup(inventory, activeItem[0], activeItem[1]);
+                System.out.println(Arrays.deepToString(inventory));
                 // reset active item
                 activeItem[0] = -1;
                 activeItem[1] = 0;
 
                 Tool.weaponType = 1;
                 Main.tool.refreshTexture();
+                return;
             }
 
-            if (clickableRect.contains(mouseRect) && isVisible) {
-                // coordinate system begins in lower left corner
-                float dx = mouseX - clickableRect.x;
-                float dy = mouseY - clickableRect.y;
-
+            if (tempInventory != null) {
                 // check if item is dragged on same slot
                 if (draggedSlot[0] == (int) dx / itemSize && draggedSlot[1] == (int) dy / itemSize) {
+                    System.out.println("same slot");
                     clearSlots();
                     return;
                 }
 
                 if (isDragged) {
                     // check if item is dragged but released onto other item and slot is not empty
-                    if (inventory[(int) dy / itemSize][(int) dx / itemSize][0] != inventory[draggedSlot[1]][draggedSlot[0]][0] && inventory[(int) dy / itemSize][(int) dx / itemSize][0] != -1) {
+                    if (tempInventory[(int) dy / itemSize][(int) dx / itemSize][0] != draggedType && tempInventory[(int) dy / itemSize][(int) dx / itemSize][0] != -1) {
                         // swap items
-                        int[] tempDragged = inventory[draggedSlot[1]][draggedSlot[0]];
-                        inventory[selectedSlot[1]][selectedSlot[0]] = inventory[(int) dy / itemSize][(int) dx / itemSize];
-                        inventory[(int) dy / itemSize][(int) dx / itemSize] = tempDragged;
+                        int[] tempDragged = {draggedType, draggedAmount};
+                        draggedInventory[selectedSlot[1]][selectedSlot[0]] = tempInventory[(int) dy / itemSize][(int) dx / itemSize];
+                        tempInventory[(int) dy / itemSize][(int) dx / itemSize] = tempDragged;
+                        System.out.println(tempDragged + "SET");
                         clearSlots();
                         return;
                     }
 
                     // check if item is dropped onto same item
-                    if (inventory[(int) dy / itemSize][(int) dx / itemSize][0] == inventory[draggedSlot[1]][draggedSlot[0]][0]) {
-                        int sameItemAmount = inventory[(int) dy / itemSize][(int) dx / itemSize][1];
-                        int itemAmount = inventory[draggedSlot[1]][draggedSlot[0]][1];
+                    if (tempInventory[(int) dy / itemSize][(int) dx / itemSize][0] == draggedType) {
+                        int sameItemAmount = tempInventory[(int) dy / itemSize][(int) dx / itemSize][1];
+                        System.out.println("same item dropped");
+                        int itemAmount = draggedAmount;
                         if (sameItemAmount < maxAmount) {
                             int difAmount = maxAmount - sameItemAmount;
                             if (difAmount > itemAmount) {
                                 difAmount = itemAmount;
-                                inventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
+                                draggedInventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
                             }
 
-                            inventory[(int) dy / itemSize][(int) dx / itemSize][1] += difAmount;
-                            inventory[draggedSlot[1]][draggedSlot[0]][1] -= difAmount;
+                            tempInventory[(int) dy / itemSize][(int) dx / itemSize][1] += difAmount;
+                            draggedInventory[draggedSlot[1]][draggedSlot[0]][1] -= difAmount;
 
-                            if (inventory[draggedSlot[1]][draggedSlot[0]][1] <= 0) { // if all items have been transferred to item that has been clicked on
-                                inventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
-                                inventory[draggedSlot[1]][draggedSlot[0]][1] = 0;
+                            if (tempInventory[draggedSlot[1]][draggedSlot[0]][1] <= 0) { // if all items have been transferred to item that has been clicked on
+                                draggedInventory[draggedSlot[1]][draggedSlot[0]][0] = -1;
+                                draggedInventory[draggedSlot[1]][draggedSlot[0]][1] = 0;
                             }
                         }
 
@@ -316,19 +342,23 @@ public class Inventory {
                     }
                 }
 
-                if (isDragged) {
+                if (isDragged) { // if slot is empty
                     int[] newSlot = new int[] {(int) (dx / itemSize), (int) (dy / itemSize)};
-                    add(newSlot, inventory[selectedSlot[1]][selectedSlot[0]][0], inventory[selectedSlot[1]][selectedSlot[0]][1]);
-                    remove(selectedSlot, inventory[selectedSlot[1]][selectedSlot[0]][1]);
+                    add(tempInventory, newSlot, draggedType, draggedAmount);
+                    remove(draggedInventory, draggedSlot, draggedInventory[draggedSlot[1]][draggedSlot[0]][1]);
                     clearSlots();
                     return;
                 }
-                if (inventory[(int) dy / itemSize][(int) dx / itemSize][1] > 0) { // if slot is not empty
+
+                if (tempInventory[(int) dy / itemSize][(int) dx / itemSize][1] > 0) { // if slot is not empty
                     Gdx.graphics.setSystemCursor(Cursor.SystemCursor.None);
                     selectedSlot[0] = (int) (dx / itemSize);
                     selectedSlot[1] = (int) (dy / itemSize);
                     draggedSlot[0] = (int) (dx / itemSize);
                     draggedSlot[1] = (int) (dy / itemSize);
+                    draggedInventory = tempInventory;
+                    draggedType = tempInventory[(int) dy / itemSize][(int) dx / itemSize][0];
+                    draggedAmount = tempInventory[(int) dy / itemSize][(int) dx / itemSize][1];
                 }
             }
 
@@ -356,12 +386,12 @@ public class Inventory {
             // draw background
             batch.draw(backgroundTexture, rect.x, rect.y, rect.width, rect.height);
 
-            // draw selectedSlot
-            if (selectedSlot[0] != -1 && selectedSlot[1] != -1) {
+            // draw selected Slot
+            if (selectedSlot[0] != -1 && selectedSlot[1] != -1 && draggedInventory == inventory) {
                 float[] selectedSlotOffset = {scaler * selectedSlot[0] * Main.MULTIPLIER + (selectedSlot[0] * Main.MULTIPLIER * scaler), selectedSlot[1] * Main.MULTIPLIER * scaler + (selectedSlot[1] * Main.MULTIPLIER * scaler)};
 
-                batch.draw(selectedSlotTexture, rect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[0],
-                        rect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + inventoryBorder + selectedSlotOffset[1],
+                batch.draw(selectedSlotTexture, clickableRect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + selectedSlotOffset[0],
+                        clickableRect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + selectedSlotOffset[1],
                         slotSize * Main.MULTIPLIER * scaler,
                         slotSize * Main.MULTIPLIER * scaler);
             }
@@ -371,7 +401,7 @@ public class Inventory {
                 for (int j = 0; j < size[0]; j++) {
                     boolean isDragged = false;
 
-                    if (draggedSlot[0] == j && draggedSlot[1] == i) {
+                    if (draggedSlot[0] == j && draggedSlot[1] == i && draggedInventory == inventory) {
                         isDragged = true;
                     }
                         // items
@@ -414,18 +444,18 @@ public class Inventory {
                     } else {
                         draggedAmountX = amountX;
                         draggedAmountY = amountY;
-                        draggedAmount = amount;
+                        draggedAmountString = amount;
                     }
                 }
             }
             // draw dragged item, so its always on top
-            if (draggedItemTexture != null) {
+            if (draggedItemTexture != null && draggedInventory == inventory) {
                 batch.draw(draggedItemTexture, draggedItemX, draggedItemY, 16 * Main.MULTIPLIER * scaler, 16 * Main.MULTIPLIER * scaler);
             }
 
             // draw dragged amount, so its always on top
-            if (draggedAmount != null) {
-                Main.font.draw(batch, draggedAmount, draggedAmountX, draggedAmountY);
+            if (draggedAmountString != null && draggedInventory == inventory) {
+                Main.font.draw(batch, draggedAmountString, draggedAmountX, draggedAmountY);
             }
             shape.rect(rect.x, rect.y, rect.width, rect.height);
         }

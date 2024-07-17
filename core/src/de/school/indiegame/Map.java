@@ -136,7 +136,6 @@ public class Map {
                 Pixmap plantPixmap = new Pixmap(Main.TILE_SIZE, Main.TILE_SIZE, Pixmap.Format.RGBA8888);
                 for (int y = 0; y < Main.TILE_SIZE; y++) {
                     for (int x = 0; x < Main.TILE_SIZE; x++) {
-                        System.out.println(x + j * Main.TILE_SIZE + " " + y + " | " + x * j + " " + y);
                         plantPixmap.drawPixel(x, y, pm.getPixel(x + (j * Main.TILE_SIZE), y));
                     }
                 }
@@ -149,6 +148,7 @@ public class Map {
 
     public static void loadEditableMap() throws IOException {
         maps.clear();
+        mapTiles.clear();
         for (String tileset : tilesets) {
             // load tileset textures
             Texture tilesetTexture = new Texture(Gdx.files.internal("tiles/" + tileset + "_tileset.png"));

@@ -105,7 +105,7 @@ public class Plant {
                     if (Tool.hitbox.overlaps(rect)) {
                         if (duration <= 0) {
                             moneySystem.add((int) value);
-                            Main.inventory.pickup(id, random.nextInt(1, 4));
+                            Main.inventory.pickup(Inventory.inventory, id, random.nextInt(1, 4));
                             id = -1;
                             Map.plantMapCoords.removeIf(coords -> (Arrays.equals(coords, new Integer[]{mapX, mapY})));
                         }

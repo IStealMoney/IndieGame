@@ -8,22 +8,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-import static de.school.indiegame.Inventory.itemTextures;
-import static de.school.indiegame.Inventory.scaler;
+import static de.school.indiegame.Inventory.*;
 import static de.school.indiegame.Main.shape;
 
 public class Customer {
     private static Sprite sprite;
     public static Texture cusInvTexture;
+    Texture selectedSlotTexture = new Texture(Gdx.files.internal("inventory/selected_slot.png"));
     public static boolean cusInvVisible;
     private float xPos;
 
     GlyphLayout layout = new GlyphLayout();
 
     public static int[] size = new int[] {9, 2};
-    public static int[][][] inventory = new int[size[1]][size[0]][2]; // in the left column store the item id, in the right column store the item amount
-    public static int[] selectedSlot = {-1, -1};
-    public static int[] draggedSlot = {-1, -1};
+    public static int[][][] inventory = {{{-1, 0}, {5, 1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}}, {{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}}}; // in the left column store the item id, in the right column store the item amount
 
     float inventoryBorder = 4 * Main.MULTIPLIER * scaler;
     static Rectangle rect;
@@ -40,12 +38,10 @@ public class Customer {
     // dragged item
     float draggedItemX;
     float draggedItemY;
-    Texture draggedItemTexture;
 
     // dragged amount
     float draggedAmountX;
     float draggedAmountY;
-    String draggedAmount;
 
     // accept button
     Rectangle acceptRect;
@@ -75,13 +71,13 @@ public class Customer {
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         mouseRect.setPosition(mouseX, mouseY);
 
-        if (rect.overlaps(mouseRect) && cusInvVisible) {
+       /* if (rect.overlaps(mouseRect) && cusInvVisible) {
             Main.mouseAboveHud = true;
             mouseAboveHud = true;
         } else {
             Main.mouseAboveHud = false;
             mouseAboveHud = false;
-        }
+        }*/
 
         if (!Main.mouseAboveHud){
             return;
@@ -117,14 +113,27 @@ public class Customer {
             //shape.rect(cancelRect.x, cancelRect.y, cancelRect.width, cancelRect.height);
             //shape.rect(acceptRect.x, acceptRect.y, acceptRect.width, acceptRect.height);
             //shape.rect(clickableRect.x, clickableRect.y, clickableRect.width, clickableRect.height);
+
+            // draw selected Slot
+            if (selectedSlot[0] != -1 && selectedSlot[1] != -1 && draggedInventory == inventory) {
+                float[] selectedSlotOffset = {scaler * selectedSlot[0] * Main.MULTIPLIER + (selectedSlot[0] * Main.MULTIPLIER * scaler), selectedSlot[1] * Main.MULTIPLIER * scaler + (selectedSlot[1] * Main.MULTIPLIER * scaler)};
+
+                batch.draw(selectedSlotTexture, clickableRect.x + selectedSlot[0] * (slotSize * Main.MULTIPLIER * scaler) + selectedSlotOffset[0],
+                        clickableRect.y + selectedSlot[1] * (slotSize * Main.MULTIPLIER * scaler) + selectedSlotOffset[1],
+                        slotSize * Main.MULTIPLIER * scaler,
+                        slotSize * Main.MULTIPLIER * scaler);
+            }
+
             // draw items
             for (int i = 0; i < size[1]; i++) {
                 for (int j = 0; j < size[0]; j++) {
                     boolean isDragged = false;
+                    //System.out.println(draggedSlot[0] + " "+ draggedSlot[1]);
 
-                    if (draggedSlot[0] == j && draggedSlot[1] == i) {
+                    if (draggedSlot[0] == j && draggedSlot[1] == i && Main.inventory.draggedInventory == inventory) {
                         isDragged = true;
                     }
+
                     // items
                     int itemId = inventory[i][j][0];
                     if (itemId != -1) {
@@ -165,9 +174,18 @@ public class Customer {
                     } else {
                         draggedAmountX = amountX;
                         draggedAmountY = amountY;
-                        draggedAmount = amount;
+                        draggedAmountString = amount;
                     }
                 }
+            }
+            // draw dragged item, so its always on top
+            if (draggedItemTexture != null && draggedInventory == inventory) {
+                batch.draw(draggedItemTexture, draggedItemX, draggedItemY, 16 * Main.MULTIPLIER * scaler, 16 * Main.MULTIPLIER * scaler);
+            }
+
+            // draw dragged amount, so its always on top
+            if (draggedAmountString != null && draggedInventory == inventory) {
+                Main.font.draw(batch, draggedAmountString, draggedAmountX, draggedAmountY);
             }
         }
     }
