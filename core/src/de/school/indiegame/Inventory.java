@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static de.school.indiegame.Main.shape;
+
 public class Inventory {
     Json json = new Json();
     Gson gson = new Gson();
@@ -191,10 +193,14 @@ public class Inventory {
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         mouseRect.setPosition(mouseX, mouseY);
 
-        if (rect.contains(mouseRect) && isVisible) {
+        if (rect.overlaps(mouseRect) && isVisible) {
             Main.mouseAboveHud = true;
         } else {
             Main.mouseAboveHud = false;
+        }
+
+        if (Main.customer.mouseAboveHud) {
+            Main.mouseAboveHud = true;
         }
 
         // handle visibility
@@ -421,6 +427,7 @@ public class Inventory {
             if (draggedAmount != null) {
                 Main.font.draw(batch, draggedAmount, draggedAmountX, draggedAmountY);
             }
+            shape.rect(rect.x, rect.y, rect.width, rect.height);
         }
     }
 }

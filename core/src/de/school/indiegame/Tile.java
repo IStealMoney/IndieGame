@@ -151,11 +151,12 @@ public class Tile {
 
         // Customer inventory
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            System.out.println(Main.mouseAboveHud);
             if (!Main.mouseAboveHud) {
                 if (this.rect.overlaps(Tool.hitbox)) {
                     if (Tool.weaponType == 1) { //basket
                         if (isCustomer) {
-                            Customer.handleInput();
+                            Customer.changeVisibility();
                         }
                     }
                 }
