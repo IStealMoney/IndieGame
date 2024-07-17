@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Json;
@@ -63,10 +64,10 @@ public class Inventory {
     // dragged item inventory
     public static int[][][] draggedInventory;
     int draggedAmount;
-
-
+    
     // active item
     public static int[] activeItem = new int[2];
+    public static Sprite activeItemSprite;
     float activeItemX = Toolbar.xPosition + inventoryBorder + 4.5f * Main.MULTIPLIER;
     float activeItemY = Toolbar.yPosition + inventoryBorder + 4.5f * Main.MULTIPLIER + itemSize * 5.35f;
     Rectangle activeItemRect = new Rectangle(activeItemX, activeItemY, 16 * Main.MULTIPLIER, 16 * Main.MULTIPLIER);
@@ -78,7 +79,7 @@ public class Inventory {
         clickableRect = new Rectangle(x +  inventoryBorder, y + inventoryBorder, width - (inventoryBorder * 2), height - (inventoryBorder * 2)); // Rectangle without texture borders
         loadItemTextures();
         loadInventory();
-        System.out.println(Arrays.deepToString(inventory));
+        activeItemSprite = new Sprite(itemTextures.get(0));
     }
 
     public void loadItemTextures() {
@@ -230,9 +231,8 @@ public class Inventory {
             dy = mouseY - Main.customer.clickableRect.y;
         }
 
-
         // handle visibility
-        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) { // change to basket
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) { // change to basket
             Tool.weaponType = 1;
             Toolbar.changeSelectToolbar();
             Main.tool.refreshTexture();
@@ -369,7 +369,9 @@ public class Inventory {
 
         // draw active item
         if (activeItem[0] != -1) {
-            batch.draw(itemTextures.get(activeItem[0]), activeItemX, activeItemY, 16*Main.MULTIPLIER * 0.8f, 16*Main.MULTIPLIER * 0.8f);
+            activeItemSprite.setTexture(itemTextures.get(activeItem[0]));
+            activeItemSprite.setBounds(activeItemX, activeItemY, 16*Main.MULTIPLIER * 0.8f, 16*Main.MULTIPLIER * 0.8f);
+            activeItemSprite.draw(batch);
 
             // draw active item amount
             String activeItemAmount = String.valueOf(activeItem[1]);
