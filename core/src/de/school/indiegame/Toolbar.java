@@ -121,6 +121,15 @@ public class Toolbar {
     public void draw(SpriteBatch batch) {
         spriteTb.draw(batch);
         spriteStb.draw(batch);
+
+        // change opacity when player is below
+        if (Player.rect.overlaps(spriteTb.getBoundingRectangle())) {
+            spriteTb.setAlpha(0.2f);
+            spriteStb.setAlpha(0.2f);
+        } else {
+            spriteTb.setAlpha(1f);
+            spriteStb.setAlpha(1f);
+        }
     }
 
     public void update() {

@@ -73,6 +73,7 @@ public class Tool {
     }
 
     public void calculateHitbox() {
+        // update tool position to match players position
         if (isHidden) {
             hitbox.x = Main.player.rect.x + Main.player.width / 4;
             hitbox.y = Main.player.rect.y + Main.player.height / 2;
@@ -134,20 +135,28 @@ public class Tool {
             refreshTexture();
         }
 
+        sprite.setY(Player.rect.y  + offset[1]);
+
         // Flip Sprite
         if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (sprite.isFlipX()) {
                 sprite.setFlip(false, false);
                 sprite.setRotation(defaultRotation);
-                sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) + offset[0]);
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if (!sprite.isFlipX()) {
                 sprite.setFlip(true, false);
-                sprite.setX((Main.SCREEN_SIZE[0] / 2 - sprite.getWidth() / 2) - offset[0]);
                 sprite.setRotation(-defaultRotation);
             }
+        }
+
+        if (sprite.isFlipX()) {
+            sprite.setX(Player.rect.x - offset[0]);
+        }
+
+        if (!sprite.isFlipX()) {
+            sprite.setX(Player.rect.x + offset[0]);
         }
     }
 
@@ -176,6 +185,7 @@ public class Tool {
     }
 
     public void update() {
+
         handleInput();
         if (!isHidden) {
             animate();

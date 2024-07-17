@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Input.Keys;
 
+import java.util.HashMap;
+
 public class Player {
     // Drawing
     Texture texture = new Texture(Gdx.files.internal("player/Bob_vorne.png"));
@@ -28,6 +30,15 @@ public class Player {
     float translucentRadius = 200f;
     float minDistance = 140f; // Controls opacity of tree
 
+    // Camera collision
+    Rectangle mapLeftRect;
+    Rectangle mapRightRect;
+    Rectangle mapBottomRect;
+    Rectangle mapTopRect;
+    Boolean[] mapCollisions = {true, true, true, true};
+    float mapRectsSize = speedModifier;
+
+
     Player(float x, float y) {
         this.rect = new Rectangle(x - width / 2, y - height / 2, width, height - height / 2);
 
@@ -35,13 +46,17 @@ public class Player {
         sprite.setBounds(x, y, width, height);
         this.translucentCircle = new Circle(this.rect.x, this.rect.y, translucentRadius);
 
+        mapLeftRect = new Rectangle(0 - mapRectsSize, Main.SCREEN_SIZE[1] / 2, mapRectsSize, mapRectsSize);
+        mapRightRect = new Rectangle(Main.SCREEN_SIZE[0] , Main.SCREEN_SIZE[1] / 2, mapRectsSize, mapRectsSize);
+        mapTopRect = new Rectangle(Main.SCREEN_SIZE[0] / 2, Main.SCREEN_SIZE[1], mapRectsSize, mapRectsSize);
+        mapBottomRect = new Rectangle(Main.SCREEN_SIZE[0] / 2, 0 - mapRectsSize, mapRectsSize, mapRectsSize);
     }
 
     public void calculateTranslucentTiles() {
         for (Tile tile : Map.mapTiles) {
             if (tile.tileset.equals("environment")) {
-                float dx = Math.abs(tile.rect.x - this.rect.x);
-                float dy = Math.abs(tile.rect.y - this.rect.y);
+                float dx = Math.abs(tile.rect.x - rect.x);
+                float dy = Math.abs(tile.rect.y - rect.y);
                 double tileDistance = Math.sqrt((dx * dx) + (dy * dy));
 
                 if (tileDistance < translucentRadius) {
@@ -66,12 +81,74 @@ public class Player {
         }
     }
 
+    public boolean checkXMapCollision() {
+        // calculate if player would move out of map
+        mapCollisions[0] = false;
+        mapCollisions[1] = false;
+        for (Tile tile : Map.mapTiles) {
+            if (mapLeftRect.overlaps(tile.hitbox)) {
+                mapCollisions[0] = true;
+            }
+            if (mapRightRect.overlaps(tile.hitbox)) {
+                mapCollisions[1] = true;
+            }
+        }
+        boolean collidesWithXMap = true;
+
+        if (!mapCollisions[0] || !mapCollisions[1]) {
+            collidesWithXMap = false;
+        }
+
+        // ensure player moves back to center
+        // if player is left of center
+
+        if (rect.x + width / 2 < Main.SCREEN_SIZE[0] / 2 && mapCollisions[0] && movement.x > 0) {
+            collidesWithXMap = false;
+        }
+        if (rect.x + width / 2 > Main.SCREEN_SIZE[0] / 2 && mapCollisions[1] && movement.x < 0) {
+            collidesWithXMap = false;
+        }
+
+        // if player is right of center
+
+        return collidesWithXMap;
+    }
+
+    public boolean checkYMapCollision() {
+        // calculate if player would move out of map
+        mapCollisions[2] = false;
+        mapCollisions[3] = false;
+        for (Tile tile : Map.mapTiles) {
+            if (mapTopRect.overlaps(tile.hitbox)) {
+                mapCollisions[2] = true;
+            }
+            if (mapBottomRect.overlaps(tile.hitbox)) {
+                mapCollisions[3] = true;
+            }
+        }
+        boolean collidesWithYMap = true;
+
+        if (!mapCollisions[2] || !mapCollisions[3]) {
+            collidesWithYMap = false;
+        }
+
+        // ensure player moves back to center
+        // if player is above of center
+        if (rect.y > Main.SCREEN_SIZE[1] / 2 - height / 2 && movement.y < 0 && mapCollisions[2]) {
+            collidesWithYMap = false;
+        }
+        if (rect.y < Main.SCREEN_SIZE[1] / 2 - height / 2  && movement.y >  0&& mapCollisions[3]) {
+            collidesWithYMap = false;
+        }
+        return collidesWithYMap;
+    }
+
     public void handleMovement() {
         Input input = Gdx.input;
 
         // sprinting
         if (input.isKeyPressed(Keys.SHIFT_LEFT)) {
-            speedModifier = 6f;
+            speedModifier = 5f;
         } else {
             speedModifier = 5f;
         }
@@ -89,26 +166,37 @@ public class Player {
             movement.x = 0;
         }
 
-        // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || x-Axis
-        move();
 
+        // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || x-Axis
+        moveX();
 
         // Add collision for each axis
         // x-Axis collision
         for (Tile tile : Map.mapTiles) {
             if (tile.isBlockable) {
-                if (this.rect.overlaps(tile.hitbox)) {
+                if (rect.overlaps(tile.hitbox)) {
                     if (movement.x < 0) {
-                        float moveAmount =  this.rect.x - (tile.hitbox.x + tile.hitbox.width); // Distance between tile and player
-                        Map.moveMap(-moveAmount, 0);
+                        float moveAmount = rect.x - (tile.hitbox.x + tile.hitbox.width); // Distance between tile and player
+
+                        if (!checkXMapCollision()) {
+                            rect.x -= moveAmount;
+                        } else {
+                            Map.moveMap(-moveAmount, 0);
+                        }
                     }
                     if (movement.x > 0) {
-                        float moveAmount = (tile.hitbox.x - tile.hitbox.width) - this.rect.x; // Distance between tile and player
-                        Map.moveMap(moveAmount, 0);
+                        float moveAmount = (tile.hitbox.x - tile.hitbox.width) - rect.x; // Distance between tile and player
+
+                        if (!checkXMapCollision()) {
+                            rect.x += moveAmount;
+                        } else {
+                            Map.moveMap(moveAmount, 0);
+                        }
                     }
                 }
             }
         }
+
         movement.x = 0;
 
         // set the y-movement vector according to the input
@@ -123,19 +211,27 @@ public class Player {
         }
 
         // Calculate input, then move, then check if in collision -> if yes, move map back and set player position to according tile position || y-Axis
-        move();
+        moveY();
 
         // y-Axis collision
         for (Tile tile : Map.mapTiles) {
             if (tile.isBlockable) {
-                if (this.rect.overlaps(tile.hitbox)) {
+                if (rect.overlaps(tile.hitbox)) {
                     if (movement.y < 0) {
-                        float moveAmount =  this.rect.y - (tile.hitbox.y + tile.hitbox.height); // Distance between tile and player
-                        Map.moveMap(0, -moveAmount);
+                        float moveAmount =  rect.y - (tile.hitbox.y + tile.hitbox.height); // Distance between tile and player
+                        if (!checkYMapCollision()) {
+                            rect.y -= moveAmount;
+                        } else {
+                            Map.moveMap(0, -moveAmount);
+                        }
                     }
                     if (movement.y > 0) {
-                        float moveAmount =  (tile.hitbox.y - this.rect.height) - this.rect.y; // Distance between tile and player
-                        Map.moveMap(0, moveAmount);
+                        float moveAmount =  (tile.hitbox.y - rect.height) - rect.y; // Distance between tile and player
+                        if (!checkYMapCollision()) {
+                            rect.y += moveAmount;
+                        } else {
+                            Map.moveMap(0, moveAmount);
+                        }
                     }
                 }
             }
@@ -157,11 +253,57 @@ public class Player {
         }
     }
 
-    public void move() {
-        // Move map instead of player
-        Map.moveMap(movement.x, movement.y);
-        this.sprite.setPosition(this.rect.x, this.rect.y);
-        this.translucentCircle.setPosition(this.rect.x, this.rect.y);
+    public void moveX() {
+        // X movement
+        System.out.println(checkXMapCollision());
+        Map.moveMap(movement.x, 0);
+        System.out.println(checkXMapCollision());
+
+        // switch movement method, if player would move out of map
+        if (checkXMapCollision()) {
+            // Move map instead of player
+            Map.moveMap(movement.x, 0);
+        } else {
+            // move player
+            rect.x += movement.x;
+            // check if player would walk out of map
+            if (rect.x < 0) {
+                rect.x = 0;
+            }
+            if (rect.x + width > Main.SCREEN_SIZE[0]) {
+                rect.x= Main.SCREEN_SIZE[0] - width;
+            }
+        }
+
+        Map.moveMap(-movement.x, 0);
+    }
+
+    public void moveY() {
+
+        // Y movement
+        Map.moveMap(0, movement.y);
+        // switch movement method, if player would move out of map
+        if (checkYMapCollision()) {
+            // Move map instead of player
+            Map.moveMap(0, movement.y);
+        } else {
+            // move player
+            rect.y += movement.y;
+            // Y movement
+            // check if player would walk out of map
+            if (rect.y < 0) {
+                rect.y -= movement.y;
+            }
+            if (rect.y + height > Main.SCREEN_SIZE[1]) {
+                rect.y -= movement.y;
+            }
+        }
+
+        Map.moveMap(0, -movement.y);
+
+
+        this.sprite.setPosition(rect.x, rect.y);
+        this.translucentCircle.setPosition(rect.x, rect.y);
 
     }
 
