@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
 public class Tile {
     Texture texture;
     int[] textureIndex;
@@ -22,6 +24,7 @@ public class Tile {
     float width;
     float height;
     int type;
+    int defaultType;
     boolean isBlockable;
     boolean isTranslucent;
     boolean isHarvestable;
@@ -33,6 +36,11 @@ public class Tile {
 
     // Appearance
     float opacity = 1f;
+
+    // grass timer
+    double grassStartTime = System.currentTimeMillis();
+    double grassGrowTime = random.nextInt(15000, 30000);
+    double grassCurrentTime = System.currentTimeMillis();
 
     // Breaking
     int health;
@@ -54,6 +62,7 @@ public class Tile {
         this.mapX = mapX;
         this.mapY = mapY;
         this.type = type;
+        this.defaultType = type;
         setProperties();
     }
 
@@ -123,7 +132,6 @@ public class Tile {
                                     }
                                 }
 
-
                                 if (type == 2) { // is farm land
                                     Map.plants.add(new Plant(mapX, mapY, this.rect.x, this.rect.y, selectedItem, itemName, itemDuration, itemDuration, itemValue, Map.plantTextures.get(selectedItem).size() - 1, Map.plantTextures.get(selectedItem).size() - 1));
                                     Inventory.activeItem[1] -= 1;
@@ -184,14 +192,27 @@ public class Tile {
                             }
                             updateTileOnMap();
                         }
+                        if (isHarvestable) {
+                            if (this.type == 2) {
+                                boolean isPlant = false;
+                                for (Plant plant : Map.plants) {
+                                    if (plant.mapX == mapX && plant.mapY == mapY) {
+                                        isPlant = true;
+                                    }
+                                }
+                                if (!isPlant) {
+                                    this.type = 1;
+                                }
+                                updateTileOnMap();
+                            }
+                        }
                     }
                     if (Tool.weaponType == 4) { // hoe
                         if (isHarvestable) {
                             if (this.type == 0) {
                                 this.type = 1;
                                 updateTileOnMap();
-                            }
-                            if (this.type == 1) {
+                            } else if (this.type == 1) {
                                 this.type = 2;
                                 updateTileOnMap();
                             }
@@ -203,9 +224,22 @@ public class Tile {
         }
     }
 
+    public void grassTimer() {
+        grassCurrentTime = System.currentTimeMillis();
+        if (grassCurrentTime - grassStartTime > grassGrowTime) {
+            if (tileset.equals("ground") && type == 1 && defaultType == 0) {
+                type = 0;
+                grassStartTime = System.currentTimeMillis();
+                grassCurrentTime = System.currentTimeMillis();
+                updateTileOnMap();
+            }
+        }
+    }
+
     public void update() {
         harvest();
         plant();
+        grassTimer();
     }
 
     public void draw(SpriteBatch batch) {
