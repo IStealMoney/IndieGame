@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-
 import static de.school.indiegame.Main.batch;
 import static de.school.indiegame.MenuBird.*;
 import static de.school.indiegame.StartScreen.bgHeight;
@@ -60,12 +59,12 @@ public class PauseScreen implements Screen {
 
         // table
         pauseTable = new Table();
-        pauseTable.setFillParent(true);
 
         // menu text
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         pauseLabel = new Label("Pause", labelStyle);
+        pauseLabel.setBounds((1920-400)/2, (1080/5)*3, 400, 200);
 
         // continue btn
         continueTexture = new Texture(Gdx.files.internal("menu/continueBtn.png"));
@@ -125,13 +124,17 @@ public class PauseScreen implements Screen {
 
 
         // add elements to table
-        pauseTable.add(pauseLabel).row();
+        pauseTable.align(Align.center);
         pauseTable.add(continueBtn).size(200, 200).padRight(100);
         pauseTable.add(saveBtn).size(200, 200).padRight(100);
         pauseTable.add(homeBtn).size(200,200).padRight(100);
         pauseTable.add(quitBtn).size(200,200);
 
+        pauseTable.setFillParent(true);
+        //pauseTable.debugAll();
+
         pauseStage.addActor(pauseTable);
+        pauseStage.addActor(pauseLabel);
     }
 
     @Override
