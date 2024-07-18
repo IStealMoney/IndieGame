@@ -60,7 +60,7 @@ public class Plant {
 
     public void updateDuration() {
         currentDurationTime = System.currentTimeMillis();
-        if (currentDurationTime - durationStartTime >= 100) {
+        if (currentDurationTime - durationStartTime >= 1000) {
             if (duration > 0) {
                 duration -= 1;
                 growthState = (int) (duration / (startDuration / (maxGrowthState + 1)));

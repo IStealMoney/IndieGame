@@ -117,6 +117,10 @@ public class Main extends Game {
 			tile.texture.dispose();
 			tile.sprite.getTexture().dispose();
 		}
+
+		for (Plant plant : Map.plants) {
+			plant.texture.dispose();
+		}
 	}
 
 	public void showPauseScreen() {
