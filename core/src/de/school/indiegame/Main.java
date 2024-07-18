@@ -1,6 +1,7 @@
 package de.school.indiegame;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -120,6 +121,10 @@ public class Main extends Game {
 
 		for (Plant plant : Map.plants) {
 			plant.texture.dispose();
+		}
+
+		for (int i = 0; i < Inventory.itemTextures.size(); i++) {
+			Inventory.itemTextures.get(i).dispose();
 		}
 	}
 

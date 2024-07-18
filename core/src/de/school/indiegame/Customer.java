@@ -19,7 +19,7 @@ public class Customer {
     public static boolean cusInvVisible;
 
     public static int[] size = new int[] {9, 2};
-    public static int[][][] inventory = {{{-1, 0}, {5, 1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}},
+    public static int[][][] inventory = {{{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}},
                                         {{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}}}; // in the left column store the item id, in the right column store the item amount
 
     GlyphLayout layout = new GlyphLayout();
