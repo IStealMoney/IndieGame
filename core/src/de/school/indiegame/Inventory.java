@@ -147,7 +147,7 @@ public class Inventory {
                 int invId = inventory[i][j][0];
                 int invAmount = inventory[i][j][1];
                 int difAmount = 0;
-                if (invId == id) {
+                if (invId == id && invId != -1) {
                     if (amount < maxAmount && Math.abs(invAmount - maxAmount) >= amount) {
                         difAmount = amount;
                     }
@@ -264,6 +264,9 @@ public class Inventory {
                         inventory[(int) dy / itemSize][(int) dx / itemSize][1] = 0;
                     } else {
                         int[] tempItem = new int[] {activeItem[0], activeItem[1]};
+                        if (activeItem[0] == -1 && activeItem[1] == -1) {
+                            tempItem = new int[] {-1, 0};
+                        }
 
                         activeItem[0] = inventory[(int) dy / itemSize][(int) dx / itemSize][0];
                         activeItem[1] = inventory[(int) dy / itemSize][(int) dx / itemSize][1];
