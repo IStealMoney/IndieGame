@@ -227,8 +227,8 @@ public class Tile {
     public void grassTimer() {
         grassCurrentTime = System.currentTimeMillis();
         if (grassCurrentTime - grassStartTime > grassGrowTime) {
-            if (tileset.equals("ground") && type == 1 && (defaultType == 0 || defaultType == 32 || defaultType == 33 || defaultType == 64 || defaultType == 65)) {
-                type = defaultType;
+            if (tileset.equals("ground") && this.type == 1 /*&& (defaultType == 0 || defaultType == 32 || defaultType == 33 || defaultType == 64 || defaultType == 65)*/) {
+                type = 0;
                 grassStartTime = System.currentTimeMillis();
                 grassCurrentTime = System.currentTimeMillis();
                 updateTileOnMap();
