@@ -209,7 +209,7 @@ public class Tile {
                     }
                     if (Tool.weaponType == 4) { // hoe
                         if (isHarvestable) {
-                            if (this.type == 0) {
+                            if (this.type == 0 || this.type == 32 || this.type == 33 || this.type == 64 || this.type == 65) {
                                 this.type = 1;
                                 updateTileOnMap();
                             } else if (this.type == 1) {
@@ -227,8 +227,8 @@ public class Tile {
     public void grassTimer() {
         grassCurrentTime = System.currentTimeMillis();
         if (grassCurrentTime - grassStartTime > grassGrowTime) {
-            if (tileset.equals("ground") && type == 1 && defaultType == 0) {
-                type = 0;
+            if (tileset.equals("ground") && type == 1 && (defaultType == 0 || defaultType == 32 || defaultType == 33 || defaultType == 64 || defaultType == 65)) {
+                type = defaultType;
                 grassStartTime = System.currentTimeMillis();
                 grassCurrentTime = System.currentTimeMillis();
                 updateTileOnMap();

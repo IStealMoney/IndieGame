@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static de.school.indiegame.Main.shape;
-
 public class Inventory {
     Json json = new Json();
     Gson gson = new Gson();
