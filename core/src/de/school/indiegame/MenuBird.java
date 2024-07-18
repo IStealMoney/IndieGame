@@ -36,9 +36,9 @@ public class MenuBird {
 
     public void procedure() {
 
-        chooseTextureRandomly();
-        chooseHeightRandomly();
         chooseDirectionRandomly();
+        chooseHeightRandomly();
+        chooseTextureRandomly();
 
         sprite = new Sprite(texture);
         sprite.setPosition(-100, -100);
@@ -49,10 +49,10 @@ public class MenuBird {
         randDirection = rand.nextInt(2);
         if (randDirection == 0) {
             direction = "LeftToRight";
-            xPosition = 0 - width;
+            xPosition = 0 - (int) (29* MULTIPLIER);
         } else {
             direction = "RightToLeft";
-            xPosition = SCREEN_SIZE[0] + width;
+            xPosition = SCREEN_SIZE[0] + 20;
         }
     }
 
