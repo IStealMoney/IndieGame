@@ -12,12 +12,12 @@ import static de.school.indiegame.Main.*;
 import static de.school.indiegame.PauseScreen.*;
 
 public class MenuBird {
-    public static Sprite sprite;
-    public static Texture texture;
+    public Sprite sprite;
+    public Texture texture;
 
     private int duckFrame = 0;
-    public static float width, height;
-    public static float xPosition, yPosition;
+    public float width, height;
+    public float xPosition, yPosition;
     public static Rectangle birdRec;    // for clickable feature
     private String direction = "LeftToRight";
     private String currentDuck = "brownDuck";
@@ -35,11 +35,13 @@ public class MenuBird {
     }
 
     public void procedure() {
-        chooseDirectionRandomly();
-        chooseHeightRandomly();
+
         chooseTextureRandomly();
+        chooseHeightRandomly();
+        chooseDirectionRandomly();
 
         sprite = new Sprite(texture);
+        sprite.setPosition(-100, -100);
         sprite.setSize(width, height);
     }
 
@@ -47,15 +49,15 @@ public class MenuBird {
         randDirection = rand.nextInt(2);
         if (randDirection == 0) {
             direction = "LeftToRight";
-            xPosition = 0;
+            xPosition = 0 - width;
         } else {
             direction = "RightToLeft";
-            xPosition = SCREEN_SIZE[0];
+            xPosition = SCREEN_SIZE[0] + width;
         }
     }
 
     public void chooseHeightRandomly() {
-        yPosition = rand.nextInt(1920);
+        yPosition = rand.nextInt((1080 - (int) this.height));
     }
 
     public void chooseTextureRandomly() {
@@ -92,8 +94,8 @@ public class MenuBird {
         }
         xPosition += 1;
         sprite.setPosition(xPosition, yPosition);
-        if (xPosition == GAME_SIZE[0]) {
-            MenuBird menuBird = new MenuBird();
+        if (xPosition > GAME_SIZE[0] + width + 10) {
+            Main.menuBird = new MenuBird();
         }
     }
 
@@ -107,8 +109,8 @@ public class MenuBird {
         }
         xPosition -= 1;
         sprite.setPosition(xPosition, yPosition);
-        if (xPosition == 0) {
-            MenuBird menuBird = new MenuBird();
+        if (xPosition < 0 - width - 10) {
+            Main.menuBird = new MenuBird();
         }
     }
 

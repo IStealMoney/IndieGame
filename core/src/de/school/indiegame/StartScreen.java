@@ -154,7 +154,7 @@ public class StartScreen implements Screen {
             quitTexture.dispose();
         }
         backgroundTexture.dispose();
-        MenuBird.texture.dispose();
+        Main.menuBird.texture.dispose();
         batch.dispose();
     }
 }

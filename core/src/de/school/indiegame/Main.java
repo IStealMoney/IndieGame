@@ -112,7 +112,7 @@ public class Main extends Game {
 		inventory.selectedSlotTexture.dispose();
 		MoneySystem.coinTexture.dispose();
 		Customer.cusInvTexture.dispose();
-		MenuBird.texture.dispose();
+		Main.menuBird.texture.dispose();
 
 		for (Tile tile : Map.mapTiles) {
 			tile.texture.dispose();
