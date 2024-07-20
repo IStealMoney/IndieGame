@@ -1,0 +1,28 @@
+[
+  {
+    "duration": 0,
+    "maxGrowthState": 3,
+    "startDuration": 300.0,
+    "name": "strawberry",
+    "x": 1032.0,
+    "growthState": 0,
+    "y": 424.0,
+    "id": 1,
+    "value": 20.0,
+    "mapY": 20,
+    "mapX": 27
+  },
+  {
+    "duration": 0,
+    "maxGrowthState": 3,
+    "startDuration": 300.0,
+    "name": "strawberry",
+    "x": 1032.0,
+    "growthState": 0,
+    "y": 552.0,
+    "id": 1,
+    "value": 20.0,
+    "mapY": 18,
+    "mapX": 27
+  }
+]
