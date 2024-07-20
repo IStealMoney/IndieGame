@@ -53,6 +53,10 @@ public class MoneySystem {
         currentMoney += amount;
     }
 
+    public void substract(int amount) {
+        currentMoney -= amount;
+    }
+
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }

@@ -31,6 +31,7 @@ public class Tile {
     boolean isDestructible;
     boolean isIndestructible;
     boolean isCustomer;
+    boolean isPenguin;
     boolean isAxeable;
 
     // Appearance
@@ -68,6 +69,10 @@ public class Tile {
     public void setProperties() {
         if(tileset.equals("customer")) {
             isCustomer = true;
+            isIndestructible = true;
+        }
+        if(tileset.equals("penguin")) {
+            isPenguin = true;
             isIndestructible = true;
         }
         if (tileset.equals("indestructible")) {
@@ -166,10 +171,13 @@ public class Tile {
                             Customer.changeVisibility();
                         }
                     }
+                    //penguin
+                    if (isPenguin) {
+                        Penguin.decide();
+                    }
                 }
             }
         }
-
 
         // Tool harvest
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
