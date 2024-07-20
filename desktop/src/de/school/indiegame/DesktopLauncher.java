@@ -13,7 +13,6 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("IndieGame");
 		config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
-		//config.setWindowedMode(Main.SCREEN_SIZE[0], Main.SCREEN_SIZE[1]);
 		new Lwjgl3Application(new Main(), config);
 	}
 }
