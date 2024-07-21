@@ -1,19 +1,24 @@
 # IndieGame
-Schulprojekt
+> Peaceful farming game where you can perform activities to earn money and buy map extensions to unlock new adventures and items.
 
-## Ziel
-2D Spiel, das unter Linux und Windows kompatibel ist, in dem es um eine Farm geht, auf der man mithilfe von erwirtschaftetem Geld Erweiterungen kaufen kann.
+## spawn location
+![](README_pictures/IndieGame_spawnArea.png "spawn location")
 
-## Nicht-Ziel
-Website
+## Libraries
+libGDX
 
-## Weitere Ziele
-Geldsystem
-- Map-Erweiterung kaufbar machen bzw. hinzufügen
-
-## Weitere Ideen
-- Tag- und Nachtzyklus
-- Haus mit Bett
-- Story hinzufügen
-- Wichtel, bei denen man beim Klicken entweder Geld gewinnen kann oder verlieren
-- Wenn Kontostand ins Minus gerät, dann werden Tiles im Player-Radius verdorben (+Zeitspanne)
+## Compatibility 
+Tested on **Linux**
+                    
+## Goals and ideas
+- toolbar ✓
+- inventory ✓
+- farmland ✓
+- customer ✓
+- money system ✓
+- penguins to earn or loose money ✓
+- chest/ storage
+- map extensions
+- daytime and nighttime
+- lamps/ light source
+- story
