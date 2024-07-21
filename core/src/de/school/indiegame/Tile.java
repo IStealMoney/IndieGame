@@ -49,6 +49,9 @@ public class Tile {
     double pressedStartTime = System.currentTimeMillis();
     double currentPressedTime;
 
+    //penguin
+    public static int penguinClicks = 0;
+
     Tile(String tileset, int[] textureIndex, float x, float y, int mapX, int mapY, int type) {
         this.texture = new Texture(Map.tilesetPixmaps.get(tileset)[textureIndex[1]][textureIndex[0]]);
         this.textureIndex = textureIndex;
@@ -173,6 +176,7 @@ public class Tile {
                     }
                     //penguin
                     if (isPenguin) {
+                        penguinClicks++;
                         Penguin.decide();
                     }
                 }
