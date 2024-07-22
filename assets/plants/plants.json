@@ -1,0 +1,9 @@
+[
+    {"id": 0, "name": "wheat", "duration": 120, "value": "20"},
+    {"id": 1, "name": "strawberry", "duration": 300, "value": "20"},
+    {"id": 2, "name": "potato", "duration": 180, "value": "70"},
+    {"id": 3, "name": "apple", "duration": 900, "value": "80"},
+    {"id": 4, "name": "lemon", "duration": 900, "value": "80"},
+    {"id": 5, "name": "melon", "duration": 1200, "value": "100"},
+    {"id": 6, "name": "weed", "duration": 6000, "value": "1000"}
+]
