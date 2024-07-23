@@ -12,6 +12,7 @@ import com.badlogic.gdx.Input.Keys;
 
 import java.util.HashMap;
 
+import static de.school.indiegame.Main.SCREEN_SIZE;
 import static de.school.indiegame.Main.shape;
 
 public class Player {
@@ -47,10 +48,10 @@ public class Player {
         sprite.setBounds(x, y, width, height);
         this.translucentCircle = new Circle(this.rect.x, this.rect.y, translucentRadius);
 
-        mapLeftRect = new Rectangle(0 - mapRectsSize, Main.SCREEN_SIZE[1] / 2, mapRectsSize, mapRectsSize);
-        mapRightRect = new Rectangle(Main.SCREEN_SIZE[0] , Main.SCREEN_SIZE[1] / 2, mapRectsSize, mapRectsSize);
-        mapTopRect = new Rectangle(Main.SCREEN_SIZE[0] / 2, Main.SCREEN_SIZE[1], mapRectsSize, mapRectsSize);
-        mapBottomRect = new Rectangle(Main.SCREEN_SIZE[0] / 2, 0 - mapRectsSize, mapRectsSize, mapRectsSize);
+        mapLeftRect = new Rectangle(0 - mapRectsSize, SCREEN_SIZE[1] / 2, mapRectsSize, mapRectsSize);
+        mapRightRect = new Rectangle(SCREEN_SIZE[0] , SCREEN_SIZE[1] / 2, mapRectsSize, mapRectsSize);
+        mapTopRect = new Rectangle(SCREEN_SIZE[0] / 2, SCREEN_SIZE[1], mapRectsSize, mapRectsSize);
+        mapBottomRect = new Rectangle(SCREEN_SIZE[0] / 2, 0 - mapRectsSize, mapRectsSize, mapRectsSize);
     }
 
     public void calculateTranslucentTiles() {
@@ -103,10 +104,10 @@ public class Player {
         // ensure player moves back to center
         // if player is left of center
 
-        if (rect.x + width / 2 < Main.SCREEN_SIZE[0] / 2 && movement.x > 0) {
+        if (rect.x + width / 2 < SCREEN_SIZE[0] / 2 && movement.x > 0) {
             collidesWithXMap = false;
         }
-        if (rect.x + width / 2 > Main.SCREEN_SIZE[0] / 2 && movement.x < 0) {
+        if (rect.x + width / 2 > SCREEN_SIZE[0] / 2 && movement.x < 0) {
             collidesWithXMap = false;
         }
 
@@ -135,11 +136,11 @@ public class Player {
 
         // ensure player moves back to center
         // if player is above of center
-        if (rect.y + rect.height > Main.SCREEN_SIZE[1] / 2 && movement.y < 0) {
+        if (rect.y + rect.height > SCREEN_SIZE[1] / 2 && movement.y < 0) {
             collidesWithYMap = false;
         }
 
-        if (rect.y + rect.height < Main.SCREEN_SIZE[1] / 2  && movement.y > 0) {
+        if (rect.y + rect.height < SCREEN_SIZE[1] / 2  && movement.y > 0) {
             collidesWithYMap = false;
         }
         return collidesWithYMap;
@@ -253,6 +254,12 @@ public class Player {
 
     public void moveX() {
         Map.moveMap(movement.x, 0);
+        if (rect.x < 0) {
+            rect.x = 0;
+        }
+        if (rect.x + width > SCREEN_SIZE[0]) {
+            rect.x = SCREEN_SIZE[0] - width;
+        }
 
         this.sprite.setPosition(rect.x, rect.y);
         this.translucentCircle.setPosition(rect.x, rect.y);
@@ -261,6 +268,13 @@ public class Player {
     public void moveY() {
         // Y movement
         Map.moveMap(0, movement.y);
+
+        if (rect.y < 0) {
+            rect.y = 0;
+        }
+        if (rect.y + rect.height * 2 > SCREEN_SIZE[1]) {
+            rect.y = SCREEN_SIZE[1] - height;
+        }
 
         this.sprite.setPosition(rect.x, rect.y);
         this.translucentCircle.setPosition(rect.x, rect.y);
