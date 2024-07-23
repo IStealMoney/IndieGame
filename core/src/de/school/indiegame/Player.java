@@ -135,10 +135,10 @@ public class Player {
 
         // ensure player moves back to center
         // if player is above of center
-        if (rect.y - height / 2 > Main.SCREEN_SIZE[1] / 2 && movement.y < 0) {
+        if (rect.y + rect.height > Main.SCREEN_SIZE[1] / 2 && movement.y < 0) {
             collidesWithYMap = false;
         }
-        if (rect.y + rect.height / 2 < Main.SCREEN_SIZE[1] / 2  && movement.y > 0) {
+        if (rect.y + rect.height < Main.SCREEN_SIZE[1] / 2  && movement.y > 0) {
             collidesWithYMap = false;
         }
         return collidesWithYMap;
