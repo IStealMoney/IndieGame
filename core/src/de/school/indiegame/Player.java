@@ -138,6 +138,7 @@ public class Player {
         if (rect.y + rect.height > Main.SCREEN_SIZE[1] / 2 && movement.y < 0) {
             collidesWithYMap = false;
         }
+
         if (rect.y + rect.height < Main.SCREEN_SIZE[1] / 2  && movement.y > 0) {
             collidesWithYMap = false;
         }
@@ -177,23 +178,22 @@ public class Player {
                     if (movement.x < 0) {
                         float moveAmount = rect.x - (tile.hitbox.x + tile.hitbox.width); // Distance between tile and player
 
-                        if (!checkXMapCollision()) {
-                            rect.x -= moveAmount;
-                        } else {
-                            Map.moveMap(-moveAmount, 0);
-                        }
+                        rect.x -= moveAmount;
+
                     }
                     if (movement.x > 0) {
                         float moveAmount = (tile.hitbox.x - tile.hitbox.width) - rect.x; // Distance between tile and player
 
-                        if (!checkXMapCollision()) {
-                            rect.x += moveAmount;
-                        } else {
-                            Map.moveMap(moveAmount, 0);
-                        }
+                        rect.x += moveAmount;
                     }
                 }
             }
+        }
+
+        // X movement
+        if (!checkXMapCollision()) {
+            Map.moveMap(-movement.x, 0);
+            rect.x += movement.x;
         }
 
         movement.x = 0;
@@ -218,23 +218,21 @@ public class Player {
                 if (rect.overlaps(tile.hitbox)) {
                     if (movement.y < 0) {
                         float moveAmount = rect.y - (tile.hitbox.y + tile.hitbox.height); // Distance between tile and player
-                        if (!checkYMapCollision()) {
-                            rect.y -=moveAmount;
-                        } else {
-                            Map.moveMap(0, -moveAmount);
-                        }
+                        rect.y -=moveAmount;
                     }
                     if (movement.y > 0) {
                         float moveAmount =  (tile.hitbox.y - rect.height) - rect.y; // Distance between tile and player
-                        System.out.println(checkYMapCollision());
-                        if (!checkYMapCollision()) {
-                            rect.y += moveAmount;
-                        } else {
-                            Map.moveMap(0, moveAmount);
-                        }
+
+                        rect.y += moveAmount;
+
                     }
                 }
             }
+        }
+        // Y movement
+        if (!checkYMapCollision()) {
+            Map.moveMap(0, -movement.y);
+            rect.y += movement.y;
         }
         movement.y = 0;
 
@@ -254,53 +252,18 @@ public class Player {
     }
 
     public void moveX() {
-        // X movement
         Map.moveMap(movement.x, 0);
 
-        // switch movement method, if player would move out of map
-        if (checkXMapCollision()) {
-            // Move map instead of player
-            Map.moveMap(movement.x, 0);
-        } else {
-            // move player
-            rect.x += movement.x;
-            // check if player would walk out of map
-            if (rect.x < 0) {
-                rect.x = 0;
-            }
-            if (rect.x + width > Main.SCREEN_SIZE[0]) {
-                rect.x= Main.SCREEN_SIZE[0] - width;
-            }
-        }
-
-        Map.moveMap(-movement.x, 0);
+        this.sprite.setPosition(rect.x, rect.y);
+        this.translucentCircle.setPosition(rect.x, rect.y);
     }
 
     public void moveY() {
         // Y movement
         Map.moveMap(0, movement.y);
-        // switch movement method, if player would move out of map
-        if (checkYMapCollision()) {
-            // Move map instead of player
-            Map.moveMap(0, movement.y);
-        } else {
-            // move player
-            rect.y += movement.y;
-            // Y movement
-            // check if player would walk out of map
-            if (rect.y < 0) {
-                rect.y -= movement.y;
-            }
-            if (rect.y + height > Main.SCREEN_SIZE[1]) {
-                rect.y -= movement.y;
-            }
-        }
-
-        Map.moveMap(0, -movement.y);
 
         this.sprite.setPosition(rect.x, rect.y);
         this.translucentCircle.setPosition(rect.x, rect.y);
-
     }
 
     public void update() {
